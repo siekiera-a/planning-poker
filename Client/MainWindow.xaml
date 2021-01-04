@@ -4,9 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
+        xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
+        <controls:NavigationView Grid.Column="0" HorizontalAlignment="Left" DataContext="{Binding Navigator}" />
+        <ContentControl Grid.Column="1" Content="{Binding Navigator.CurrentViewModel}"/>
     </Grid>
 </Window>
