@@ -21,7 +21,8 @@ create table dbo.meeting
             primary key nonclustered,
     start_time datetime2(0) not null,
     end_time   datetime2(0),
-    team_id    int          not null
+    team_id    int          not null,
+    organizer  int          not null
 )
 go
 
@@ -47,6 +48,15 @@ create table dbo.result
 )
 go
 
+create table dbo.role
+(
+    id      int identity
+        constraint role_pk
+            primary key nonclustered,
+    name    varchar(20) not null          
+)
+go
+
 create table dbo.task
 (
     id          int identity
@@ -63,8 +73,7 @@ create table dbo.team
         constraint team_pk
             primary key nonclustered,
     name      nvarchar(100) not null,
-    join_code varchar(8),
-    owner_id  int           not null
+    join_code varchar(8)
 )
 go
 
@@ -78,7 +87,8 @@ create table dbo.team_member
         constraint team_member_pk
             primary key nonclustered,
     team_id int not null,
-    user_id int not null
+    user_id int not null,
+    role    int not null
 )
 go
 
