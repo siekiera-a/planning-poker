@@ -4,67 +4,17 @@ go
 use planning_poker
 go
 
-create table dbo.invitation
-(
-    id         int identity
-        constraint invitation_pk
-            primary key nonclustered,
-    meeting_id int not null,
-    user_id    int not null
-)
-go
-
-create table dbo.meeting
-(
-    id         int identity
-        constraint meeting_pk
-            primary key nonclustered,
-    start_time datetime2(0) not null,
-    end_time   datetime2(0),
-    team_id    int          not null,
-    organizer  int          not null
-)
-go
-
-create table dbo.refresh_token
-(
-    id              int identity
-        constraint refresh_token_pk
-            primary key nonclustered,
-    token           varchar(50)  not null,
-    expiration_time datetime2(0) not null,
-    user_id         int          not null
-)
-go
-
-create table dbo.result
-(
-    id             int identity
-        constraint result_pk
-            primary key nonclustered,
-    task_id        int      not null,
-    user_id        int      not null,
-    estimated_time smallint not null
-)
-go
-
 create table dbo.role
 (
-    id      int identity
+    id   int identity
         constraint role_pk
             primary key nonclustered,
-    name    varchar(20) not null          
+    name varchar(20) not null
 )
 go
 
-create table dbo.task
-(
-    id          int identity
-        constraint task_pk
-            primary key nonclustered,
-    description nvarchar(max) not null,
-    meeting_id  int           not null
-)
+create unique index role_name_uindex
+    on dbo.role (name)
 go
 
 create table dbo.team
@@ -81,17 +31,6 @@ create unique index team_join_code_uindex
     on dbo.team (join_code)
 go
 
-create table dbo.team_member
-(
-    id      int identity
-        constraint team_member_pk
-            primary key nonclustered,
-    team_id int not null,
-    user_id int not null,
-    role    int not null default 1 -- default user role
-)
-go
-
 create table dbo.[user]
 (
     id       int identity
@@ -100,6 +39,77 @@ create table dbo.[user]
     name     nvarchar(100) not null,
     email    nvarchar(100) not null,
     password varchar(100)  not null
+)
+go
+
+create table dbo.meeting
+(
+    id         int identity
+        constraint meeting_pk
+            primary key nonclustered,
+    start_time datetime2(0) not null,
+    end_time   datetime2(0),
+    team_id    int          not null
+        references dbo.team,
+    organizer  int          not null
+        references dbo.[user]
+)
+go
+
+create table dbo.invitation
+(
+    meeting_id int not null
+        references dbo.meeting,
+    user_id    int not null
+        references dbo.[user],
+    primary key (meeting_id, user_id)
+)
+go
+
+create table dbo.refresh_token
+(
+    id              int identity
+        constraint refresh_token_pk
+            primary key nonclustered,
+    token           varchar(50)  not null,
+    expiration_time datetime2(0) not null,
+    user_id         int          not null
+        references dbo.[user]
+)
+go
+
+create table dbo.task
+(
+    id          int identity
+        constraint task_pk
+            primary key nonclustered,
+    description nvarchar(max) not null,
+    meeting_id  int           not null
+        references dbo.meeting
+)
+go
+
+create table dbo.result
+(
+    task_id        int      not null
+        primary key
+        references dbo.task,
+    user_id        int      not null
+        references dbo.[user],
+    estimated_time smallint not null
+)
+go
+
+create table dbo.team_member
+(
+    team_id   int                                   not null
+        references dbo.team,
+    user_id   int                                   not null
+        references dbo.[user],
+    role      int          default 1                not null
+        references dbo.role,
+    join_time datetime2(0) default sysutcdatetime() not null,
+    primary key (team_id, user_id)
 )
 go
 
