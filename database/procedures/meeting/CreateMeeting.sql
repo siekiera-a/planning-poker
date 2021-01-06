@@ -5,7 +5,7 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO meeting VALUES (@StartTime, NULL, @TeamId, @Organizer)
+    INSERT INTO meeting OUTPUT inserted.id VALUES (@StartTime, NULL, @TeamId, @Organizer)
 END
 go
 
