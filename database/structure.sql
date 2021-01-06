@@ -88,7 +88,7 @@ create table dbo.team_member
             primary key nonclustered,
     team_id int not null,
     user_id int not null,
-    role    int not null
+    role    int not null default 1 -- default user role
 )
 go
 
