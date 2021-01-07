@@ -5,8 +5,7 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    IF (SELECT COUNT(*) FROM [user] WHERE email = @Email) = 0
-        INSERT INTO [user] OUTPUT inserted.id VALUES (@Name, @Email, @Password)
+    INSERT INTO [user] OUTPUT inserted.id VALUES (@Name, @Email, @Password)
 
 END
 go

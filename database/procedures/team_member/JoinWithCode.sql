@@ -6,6 +6,7 @@ BEGIN
 
     DECLARE @TeamId INT
 
+    -- check if exists team with given code
     SELECT @TeamId = id FROM team WHERE join_code = @Code
 
     IF @TeamId IS NOT NULL
