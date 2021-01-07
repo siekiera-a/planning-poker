@@ -1,6 +1,8 @@
-﻿namespace Client.ViewModels
+﻿using Client.Models;
+
+namespace Client.ViewModels
 {
-    public class ViewModelBase
+    public class ViewModelBase : ObservableObject
     {
     }
 }

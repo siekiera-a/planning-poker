@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Net.Mail;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +21,49 @@ namespace Client.Views
         public RegisterView()
         {
             InitializeComponent();
+        }
+
+        // private void SignInButtonClick(object sender, RoutedEventArgs e)
+        // {
+        //     this.Navigate(new LoginView());
+        // }
+        //
+        // private void Navigate(LoginView loginView)
+        // {
+        //     throw new NotImplementedException();
+        // }
+
+        private void CreateAccountButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (EmailTextBox.Text.Length == 0)
+            {
+                EmailTextBox.Focus();
+            }
+            else if (IsValid(EmailTextBox.Text))
+            {
+                EmailTextBox.Select(0, EmailTextBox.Text.Length);
+                EmailTextBox.Focus();
+            }
+            else
+            {
+                string userName = UserNameTextBox.Text;
+                string email = EmailTextBox.Text;
+                string password = PasswordBoxPassword.Password;
+
+            }
+        }
+
+        private bool IsValid(string emailAdress)
+        {
+            try
+            {
+                MailAddress mail = new MailAddress(emailAdress);
+                return true;
+            }
+            catch (FormatException e)
+            {
+                return false;
+            }
         }
     }
 }

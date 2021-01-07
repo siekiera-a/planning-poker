@@ -8,7 +8,9 @@ namespace Client.State.Navigators
         Home,
         Teams,
         Create,
-        Calendar
+        Calendar,
+        Login,
+        Register
     }
 
     public interface INavigator

@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:Client.Controls"
              xmlns:nav="clr-namespace:Client.State.Navigators"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="100">
-    <Grid Height="450" Background="{StaticResource BrushPrimary1}">
+             d:DesignHeight="450" d:DesignWidth="100"
+             Background="{StaticResource BrushPrimary1}">
+    <Grid Height="450" >
         <Grid.Resources>
             <Style BasedOn="{StaticResource NavigationButton}" TargetType="Button" />
         </Grid.Resources>
@@ -21,7 +22,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="1" Content="Home" 
+        <Button Grid.Row="1" Content="Home" Background="{Binding CurrentViewModel}"
                 Command="{Binding UpdateCurrentViewModelCommand}" 
                 CommandParameter="{x:Static nav:ViewType.Home}" />
 
@@ -29,7 +30,7 @@
                 Command="{Binding UpdateCurrentViewModelCommand}" 
                 CommandParameter="{x:Static nav:ViewType.Teams}" />
 
-        <Button Grid.Row="3" Content="Create"
+        <Button Grid.Row="3" Content="Join Team"
                 Command="{Binding UpdateCurrentViewModelCommand}" 
                 CommandParameter="{x:Static nav:ViewType.Create}" />
 

@@ -1,12 +1,41 @@
 ﻿<UserControl x:Class="Client.Views.CalendarView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Client.Views"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            <TextBlock Text="Calendar" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Calendar Grid.Column="0"
+                  VerticalAlignment="Top"
+                  Name="MyCalendar"
+                  SelectionMode="SingleRange"
+                  SelectedDatesChanged="MyCalendarSelectedDatesChanged"
+                  Style="{StaticResource StyleCalendar}" />
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="Meetings in day: " FontSize="20"/>
+                <TextBlock Name="MyDate"  FontSize="20"/>
+            </StackPanel>
+
+            <ListView Grid.Row="1"
+                      Name="DayMeetings" 
+                      FontSize="15"/>
+
+        </Grid>
+
+
     </Grid>
 </UserControl>

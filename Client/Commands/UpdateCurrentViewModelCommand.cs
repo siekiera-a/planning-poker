@@ -36,10 +36,16 @@ namespace Client.Commands
                         _navigator.CurrentViewModel = new TeamsViewModel();
                         break;
                     case ViewType.Create:
-                        _navigator.CurrentViewModel = new CreateViewModel();
+                        _navigator.CurrentViewModel = new JoinTeamModel();
                         break;
                     case ViewType.Calendar:
                         _navigator.CurrentViewModel = new CalendarViewModel();
+                        break;
+                    case ViewType.Login:
+                        _navigator.CurrentViewModel = new LoginViewModel();
+                        break;
+                    case ViewType.Register:
+                        _navigator.CurrentViewModel = new RegisterViewModel();
                         break;
                     default:
                         break;

@@ -9,6 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Common.xaml"/>
                 <ResourceDictionary Source="/Styles/NavigationButton.xaml"/>
+                <ResourceDictionary Source="/Styles/CalendarStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
@@ -19,7 +20,7 @@
                 <views:TeamsView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewmodels:CreateViewModel}">
+            <DataTemplate DataType="{x:Type viewmodels:JoinTeamModel}">
                 <views:CreateView/>
             </DataTemplate>
 

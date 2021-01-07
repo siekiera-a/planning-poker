@@ -7,6 +7,35 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="Home" />
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" FontSize="40" Padding="10">
+            <Run Text="Welcome" />
+            <!-- <Run Text="{Binding } " />Dorobic wiazanie do username -->
+            <Run Text="!" />
+        </TextBlock>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Margin="30,20"
+                       FontSize="20"
+                       Text="Twoje zadania z ostatniego tygodnia: " />
+
+            <ListView Grid.Row="1" Name="lista">
+                <!-- Tu cos dorzucic -->
+                <!-- ItemsSource="{Binding}" -->
+            </ListView>
+
+        </Grid>
+
     </Grid>
 </UserControl>
