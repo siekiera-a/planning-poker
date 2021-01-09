@@ -64,10 +64,9 @@ go
 
 create table dbo.refresh_token
 (
-    id              int identity
+    token           varchar(50)
         constraint refresh_token_pk
             primary key nonclustered,
-    token           varchar(50)  not null,
     expiration_time datetime2(0) not null,
     user_id         int          not null
         references dbo.[user]
