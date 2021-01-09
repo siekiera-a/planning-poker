@@ -27,10 +27,6 @@ create table dbo.team
 )
 go
 
-create unique index team_join_code_uindex
-    on dbo.team (join_code)
-go
-
 create table dbo.[user]
 (
     id       int identity
