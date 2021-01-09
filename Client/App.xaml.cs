@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Client.ViewModels;
+using Client.Views.Login;
 
 namespace Client
 {
@@ -10,9 +11,9 @@ namespace Client
 	{
         protected override void OnStartup(StartupEventArgs e)
         {
-            Window window = new MainWindow();
-            window.DataContext = new MainViewModel();
-            window.Show();
+            Window loginWindow = new LoginWindow();
+            loginWindow.Show();
+            
 
             base.OnStartup(e);
         }

@@ -72,12 +72,14 @@
                     FontSize="10"
                     Foreground="DodgerBlue"
                     Background="{x:Null}"
-                    BorderThickness="0" />
+                    BorderThickness="0"
+                    Click="RegisterButtonClick"/>
 
             <Button Grid.Row="3" Margin="50, 7"
                     Content="Login"
                     Padding="6"
-                    Background="{StaticResource BrushPrimary2}" />
+                    Background="{StaticResource BrushPrimary2}"
+                    Click="LoginButtonClick"/>
 
         </Grid>
     </Border>

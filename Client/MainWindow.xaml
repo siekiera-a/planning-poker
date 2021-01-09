@@ -6,14 +6,19 @@
         xmlns:local="clr-namespace:Client"
         xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        MinHeight="400" MinWidth="650">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <controls:NavigationView Grid.Column="0" HorizontalAlignment="Left" DataContext="{Binding Navigator}" />
-        <ContentControl Grid.Column="1" Content="{Binding Navigator.CurrentViewModel}"/>
+
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ContentControl  Content="{Binding Navigator.CurrentViewModel}" />
+        </ScrollViewer>
+
     </Grid>
 </Window>
