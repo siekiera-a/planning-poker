@@ -5,7 +5,7 @@ USER root
 RUN apt-get -y update && \
       mkdir /usr/db
 
-COPY structure.sql *.sh /usr/db/
+COPY all_in_one.sql *.sh /usr/db/
 
 WORKDIR /usr/db
 
