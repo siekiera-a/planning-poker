@@ -7,13 +7,13 @@ using Server.Utils;
 
 namespace Server.Services.Authentication
 {
-	public interface IUserService
-	{
+    public interface IUserService
+    {
 
-		Task<Optional<User>> Register(string username, string email, string password);
-		Task<Optional<User>> Login(string email, string password);
-		Task<Optional<User>> Login(string refreshToken);
-		Task Logout(int id);
+        Task<Optional<User>> Register(string username, string email, string password);
+        Task<Optional<User>> Login(string email, string password);
+        Task<Optional<User>> Login(string refreshToken);
+        Task Logout(int id);
 
-	}
+    }
 }

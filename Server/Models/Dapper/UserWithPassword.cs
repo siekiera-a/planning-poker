@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace Server.Models.Dapper
 {
-	public class UserWithPassword : User
-	{
+    public class UserWithPassword : User
+    {
 
-		public byte[] Password { get; set; }
+        public byte[] Password { get; set; }
 
-	}
+    }
 }
