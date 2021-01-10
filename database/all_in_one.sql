@@ -34,7 +34,7 @@ create table dbo.[user]
             primary key nonclustered,
     name     nvarchar(100) not null,
     email    nvarchar(100) not null,
-    password varchar(100)  not null
+    password binary(60)  not null
 )
 go
 
@@ -462,13 +462,19 @@ go
 -- from: ./procedures/user/CreateUser.sql
 CREATE PROCEDURE dbo.spUser_CreateUser @Name NVARCHAR(100),
                                        @Email NVARCHAR(100),
-                                       @Password VARCHAR(100)
+                                       @Password BINARY(60)
 AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO [user] OUTPUT inserted.id VALUES (@Name, @Email, @Password)
+    DECLARE @Table table
+                   (
+                       id INT
+                   )
 
+    INSERT INTO [user] OUTPUT inserted.id INTO @Table VALUES (@Name, @Email, @Password)
+
+    SELECT (SELECT id from @Table) as id, @Name as name, @Email as email
 END
 go
 
@@ -480,7 +486,7 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    SELECT id, email, password FROM [user] WHERE email = @Email
+    SELECT id, name, email, password FROM [user] WHERE email = @Email
 END
 go
 

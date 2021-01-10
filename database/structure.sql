@@ -34,7 +34,7 @@ create table dbo.[user]
             primary key nonclustered,
     name     nvarchar(100) not null,
     email    nvarchar(100) not null,
-    password varchar(100)  not null
+    password binary(60)  not null
 )
 go
 

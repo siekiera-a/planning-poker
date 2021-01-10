@@ -3,7 +3,7 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    SELECT id, email, password FROM [user] WHERE email = @Email
+    SELECT id, name, email, password FROM [user] WHERE email = @Email
 END
 go
 
