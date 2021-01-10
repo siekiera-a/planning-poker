@@ -8,22 +8,22 @@ using Microsoft.Extensions.Configuration;
 
 namespace Server.Services.DataAccess
 {
-	public class ConnectionFactory : IConnectionFactory
-	{
+    public class ConnectionFactory : IConnectionFactory
+    {
 
-		private readonly IConfiguration _config;
-		private readonly string _connectionString;
+        private readonly IConfiguration _config;
+        private readonly string _connectionString;
 
-		public ConnectionFactory(IConfiguration config)
-		{
-			_config = config;
-			_connectionString = "SqlServerConnection";
-		}
+        public ConnectionFactory(IConfiguration config)
+        {
+            _config = config;
+            _connectionString = "SqlServerConnection";
+        }
 
 
-		public IDbConnection CreateConnection()
-		{
-			return new SqlConnection(_config.GetConnectionString(_connectionString));
-		}
-	}
+        public IDbConnection CreateConnection()
+        {
+            return new SqlConnection(_config.GetConnectionString(_connectionString));
+        }
+    }
 }

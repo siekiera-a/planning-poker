@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Server.Services.DataAccess
 {
-	public interface IConnectionFactory
-	{
-		IDbConnection CreateConnection();
-	}
+    public interface IConnectionFactory
+    {
+        IDbConnection CreateConnection();
+    }
 }
