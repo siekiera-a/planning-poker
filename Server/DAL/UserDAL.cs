@@ -16,52 +16,47 @@ using Server.Models.Dapper;
 
 namespace Server.DAL
 {
-    public class UserDAL
+    public class UserDAL : BaseDAL
     {
 
-        private readonly IConnectionFactory _connectionFactory;
         private readonly ILogger<UserDAL> _logger;
+        private readonly string _prefix = "dbo.spUser";
 
-        public UserDAL(IConnectionFactory connectionFactory, ILogger<UserDAL> logger)
+        public UserDAL(IConnectionFactory connectionFactory, ILogger<UserDAL> logger) : base(connectionFactory)
         {
-            _connectionFactory = connectionFactory;
             _logger = logger;
         }
 
         public async Task<Optional<User>> Save(string username, string email, byte[] password)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using var connection = _connectionFactory.CreateConnection();
+            try
             {
-                try
-                {
-                    var user = await connection.QueryFirstAsync<User>("dbo.spUser_CreateUser",
-                        new { Name = username, Email = email, Password = password }, commandType: CommandType.StoredProcedure);
+                var user = await connection.QueryFirstAsync<User>($"{_prefix}_CreateUser",
+                    new { Name = username, Email = email, Password = password }, commandType: CommandType.StoredProcedure);
 
-                    return Optional<User>.of(user);
-                }
-                catch (SqlException)
-                {
-                    return Optional<User>.Empty();
-                }
+                return Optional<User>.of(user);
+            }
+            catch (SqlException)
+            {
+                return Optional<User>.Empty();
             }
         }
 
         public async Task<Optional<UserWithPassword>> GetUserByEmail(string email)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using var connection = _connectionFactory.CreateConnection();
+            try
             {
-                try
-                {
-                    var user = await connection.QueryFirstOrDefaultAsync<UserWithPassword>("dbo.spUser_GetUserByEmail", new { Email = email },
-                        commandType: CommandType.StoredProcedure);
+                var user = await connection.QueryFirstOrDefaultAsync<UserWithPassword>($"{_prefix}_GetUserByEmail", new { Email = email },
+                    commandType: CommandType.StoredProcedure);
 
-                    return Optional<UserWithPassword>.ofNullable(user);
-                }
-                catch (SqlException e)
-                {
-                    _logger.LogCritical(e.Message);
-                    return Optional<UserWithPassword>.Empty();
-                }
+                return Optional<UserWithPassword>.ofNullable(user);
+            }
+            catch (SqlException e)
+            {
+                _logger.LogError(e.Message);
+                return Optional<UserWithPassword>.Empty();
             }
         }
 
