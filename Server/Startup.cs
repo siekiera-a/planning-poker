@@ -26,14 +26,27 @@ namespace Server
 
         public IConfiguration Configuration { get; }
 
+        private void AddDALs(IServiceCollection services)
+        {
+            services.AddScoped<UserDAL>();
+            services.AddScoped<RefreshTokenDAL>();
+        }
+
+        private void AddServices(IServiceCollection services)
+        {
+            services.AddSingleton<IConnectionFactory, ConnectionFactory>();
+            services.AddSingleton<IPasswordEncoder, PasswordEncoder>();
+            services.AddScoped<IUserService, UserService>();
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
-            services.AddSingleton<IConnectionFactory, ConnectionFactory>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<UserDAL>();
+            
+            AddDALs(services);
+            AddServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

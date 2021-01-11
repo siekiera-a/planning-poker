@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Server.Models.Dapper;
 using Server.DAL;
 using Server.Utils;
@@ -13,15 +14,19 @@ namespace Server.Services.Authentication
     {
 
         private readonly UserDAL _userDal;
+        private readonly RefreshTokenDAL _refreshTokenDal;
+        private readonly IPasswordEncoder _passwordEncoder;
 
-        public UserService(UserDAL userDal)
+        public UserService(UserDAL userDal, RefreshTokenDAL refreshTokenDal, IPasswordEncoder passwordEncoder)
         {
             _userDal = userDal;
+            _refreshTokenDal = refreshTokenDal;
+            _passwordEncoder = passwordEncoder;
         }
 
         public async Task<Optional<User>> Register(string username, string email, string password)
         {
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+            string hashedPassword = _passwordEncoder.HashPassword(password);
             byte[] bytes = Encoding.UTF8.GetBytes(hashedPassword);
 
             return await _userDal.Save(username, email, bytes);
@@ -38,9 +43,8 @@ namespace Server.Services.Authentication
 
             string hash = Encoding.UTF8.GetString(user.Value.Password);
 
-
             // check if password match with hash
-            if (BCrypt.Net.BCrypt.Verify(password, hash))
+            if (_passwordEncoder.Verify(password, hash))
             {
                 return Optional<User>.of(new User
                 {
@@ -60,7 +64,7 @@ namespace Server.Services.Authentication
 
         public async Task Logout(int id)
         {
-            throw new NotImplementedException();
+            await _refreshTokenDal.Logout(id);
         }
     }
 }
