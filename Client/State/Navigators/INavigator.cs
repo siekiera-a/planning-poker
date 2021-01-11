@@ -7,15 +7,15 @@ namespace Client.State.Navigators
     {
         Home,
         Teams,
-        Create,
-        Calendar,
-        Login,
-        Register
+        Join,
+        Calendar
     }
 
     public interface INavigator
     {
         ViewModelBase CurrentViewModel { get; set; }
         ICommand UpdateCurrentViewModelCommand { get; }
+
+        ViewModelBase GetModelFromViewType(ViewType type);
     }
 }

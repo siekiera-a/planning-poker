@@ -4,6 +4,8 @@
 
     <Style x:Key="NavigationButton" TargetType="Button">
         <Setter Property="Background" Value="{x:Null}" />
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="Margin" Value="20"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -15,9 +17,8 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource BrushPrimary2}" />
+                <Setter Property="Background" Value="{StaticResource MahApps.Brushes.Accent}" />
             </Trigger>
         </Style.Triggers>
     </Style>
-
 </ResourceDictionary>

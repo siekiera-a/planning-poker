@@ -5,15 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Client.Views"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="{StaticResource MahApps.Brushes.Accent4}">
     <Grid>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" FontSize="40" Padding="10">
+        <TextBlock Grid.Row="0" FontSize="40" Padding="10" Margin="8">
             <Run Text="Welcome" />
             <!-- <Run Text="{Binding } " />Dorobic wiazanie do username -->
             <Run Text="!" />
@@ -28,12 +29,20 @@
             <TextBlock Grid.Row="0"
                        Margin="30,20"
                        FontSize="20"
-                       Text="Twoje zadania z ostatniego tygodnia: " />
+                       Text="Your tasks from last week: " />
 
-            <ListView Grid.Row="1" Name="lista">
-                <!-- Tu cos dorzucic -->
-                <!-- ItemsSource="{Binding}" -->
+            <ListView Grid.Row="1" Margin="8"
+                      Background="{StaticResource MahApps.Brushes.Button.Flat.Background.Pressed}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Team Name" Width="150" />
+                        <GridViewColumn Header="Meeting Name" Width="150" />
+                        <GridViewColumn Header="Task Details" Width="400" />
+                        <GridViewColumn Header="Time" Width="100" />
+                    </GridView>
+                </ListView.View>
             </ListView>
+
 
         </Grid>
 

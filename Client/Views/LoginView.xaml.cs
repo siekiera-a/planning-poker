@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,6 +16,7 @@ using System.Windows.Shapes;
 using Client.State.Navigators;
 using Client.ViewModels;
 using Client.Views.Login;
+using Client.Views.Game;
 
 namespace Client.Views
 {
@@ -28,16 +30,22 @@ namespace Client.Views
             InitializeComponent();
         }
 
-        private void LoginButtonClick(object sender, RoutedEventArgs e)
+        private async void LoginButtonClick(object sender, RoutedEventArgs e)
         {
-            Window window = new MainWindow();
-            window.DataContext = new MainViewModel();
+            Window window = new MainWindow
+            {
+                DataContext = new MainViewModel()
+            };
             window.Show();
 
             Window.GetWindow(this)?.Close();
+
+            GameWindow gameWindow = new GameWindow();
+            gameWindow.ShowDialog();
+
         }
 
-        private void RegisterButtonClick(object sender, RoutedEventArgs e)
+        private async void RegisterButtonClick(object sender, RoutedEventArgs e)
         {
             Window window = new RegisterWindow();
             window.Show();

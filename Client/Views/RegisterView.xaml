@@ -5,21 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Client.Views"
              xmlns:nav="clr-namespace:Client.State.Navigators"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              FontSize="15">
 
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-    </UserControl.Resources>
+    <!-- <UserControl.Resources> -->
+    <!--     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" /> -->
+    <!-- </UserControl.Resources> -->
     <UserControl.Background>
-        <SolidColorBrush Color="{StaticResource ColorAPrimary1 }" />
+        <SolidColorBrush Color="{StaticResource MahApps.Colors.SystemBaseMedium}"/>
     </UserControl.Background>
 
     <Border Margin="15" Padding="10"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Background="{StaticResource BrushPrimary3}"
+            Background="{StaticResource MahApps.Brushes.Button.Border.MouseOver}"
             CornerRadius="7">
         <Border.Effect>
             <DropShadowEffect ShadowDepth="1" />
@@ -46,52 +47,60 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
+                           Margin="10"
                            Text="Username"
                            VerticalAlignment="Center" />
 
                 <TextBox Grid.Row="0" Grid.Column="1"
-                         Text="tu zrobic wiazanie"
-                         Margin="10"
-                         Name="UserNameTextBox" />
+                         mah:TextBoxHelper.ClearTextButton="True"
+                         mah:TextBoxHelper.Watermark="Username"
+                         mah:TextBoxHelper.IsWaitingForData="True"
+                         VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
+                           Margin="10"
                            Text="Email"
                            VerticalAlignment="Center" />
 
                 <TextBox Grid.Row="1" Grid.Column="1"
-                         Text="tu zrobic wiazanie"
-                         Margin="10"
-                         Name="EmailTextBox" />
+                         mah:TextBoxHelper.ClearTextButton="True"
+                         mah:TextBoxHelper.Watermark="Write your email adress"
+                         mah:TextBoxHelper.IsWaitingForData="True"
+                         VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0"
+                           Margin="10"
                            Text="Password"
                            VerticalAlignment="Center" />
 
                 <!-- Dorobic banding -->
-                <PasswordBox Grid.Row="2" Grid.Column="1"
-                             Margin="10"
-                             Password=""
-                             Name="PasswordBoxPassword" />
+                <PasswordBox Grid.Row="2" Grid.Column="1" 
+                             mah:TextBoxHelper.ClearTextButton="True"
+                             mah:TextBoxHelper.Watermark="Password"
+                             VerticalAlignment="Center"
+                             mah:TextBoxHelper.IsWaitingForData="True"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0"
+                           Margin="10"
                            Text="Confirm Password"
                            VerticalAlignment="Center" />
 
                 <!-- Dorobic banding -->
-                <PasswordBox Grid.Row="3" Grid.Column="1"
-                             Margin="10"
-                             Password=""
-                             Name="ConfirmPasswordBoxPassword" />
+                <PasswordBox Grid.Row="3" Grid.Column="1" 
+                             mah:TextBoxHelper.ClearTextButton="True"
+                             mah:TextBoxHelper.Watermark="Password"
+                             VerticalAlignment="Center"
+                             mah:TextBoxHelper.IsWaitingForData="True"/>
             </Grid>
 
             <Button Grid.Row="2" Margin="85,5"
                     Content="Sign in to your account"
                     FontSize="10"
-                    Foreground="DodgerBlue"
+                    Foreground="{StaticResource MahApps.Brushes.Accent}"
                     Background="{x:Null}"
                     BorderThickness="0"
                     Click="LoginButtonClick" />
@@ -99,7 +108,9 @@
             <Button Grid.Row="3" Margin="50, 7"
                     Content="Create Account"
                     Padding="6"
-                    Background="{StaticResource BrushPrimary2}"
+                    FontSize="15"
+                    Background="{StaticResource MahApps.Brushes.Accent}"
+                    Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                     Click="CreateAccountButtonClick" />
 
         </Grid>

@@ -8,12 +8,10 @@ namespace Client.State.Navigators
     public class Navigator : ObservableObject, INavigator
     {
         private ViewModelBase _currentViewModel;
+
         public ViewModelBase CurrentViewModel
         {
-            get
-            {
-                return _currentViewModel;
-            }
+            get { return _currentViewModel; }
             set
             {
                 _currentViewModel = value;
@@ -21,7 +19,26 @@ namespace Client.State.Navigators
             }
         }
 
-        public ICommand UpdateCurrentViewModelCommand => new UpdateCurrentViewModelCommand(this);
+        public ICommand UpdateCurrentViewModelCommand => new UpdateCurrentViewModelCommand<Navigator>(this);
 
+        public ViewModelBase GetModelFromViewType(ViewType type)
+        {
+            switch (type)
+            {
+                case ViewType.Home:
+                    return new HomeViewModel();
+
+                case ViewType.Teams:
+                    return new TeamsViewModel();
+
+                case ViewType.Join:
+                    return new JoinTeamModel();
+
+                case ViewType.Calendar:
+                    return new CalendarViewModel();
+            }
+
+            return null;
+        }
     }
 }

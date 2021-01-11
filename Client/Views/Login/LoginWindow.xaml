@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:Client.Views.Login"
         xmlns:controls="clr-namespace:Client.Views"
         mc:Ignorable="d"
-        Title="LoginWindow"
         Height="450" Width="800"
         ResizeMode="NoResize">
     <Grid>
         <controls:LoginView />
+        
     </Grid>
 </Window>

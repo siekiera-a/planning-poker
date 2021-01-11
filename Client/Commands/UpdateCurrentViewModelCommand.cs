@@ -2,19 +2,21 @@
 using System.Windows.Input;
 using Client.State.Navigators;
 using Client.ViewModels;
+using Client.ViewModels.Teams;
 
 namespace Client.Commands
 {
-    public class UpdateCurrentViewModelCommand : ICommand
+    public class UpdateCurrentViewModelCommand<T> : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
-        private INavigator _navigator;
+        private T _navigator;
 
-        public UpdateCurrentViewModelCommand(INavigator navigator)
+        public UpdateCurrentViewModelCommand(T navigator)
         {
             _navigator = navigator;
         }
+
 
         public bool CanExecute(object parameter)
         {
@@ -23,33 +25,15 @@ namespace Client.Commands
 
         public void Execute(object parameter)
         {
-            if (parameter is ViewType)
+            if (_navigator is Navigator obj)
             {
                 ViewType viewType = (ViewType) parameter;
-
-                switch (viewType)
-                {
-                    case ViewType.Home:
-                        _navigator.CurrentViewModel = new HomeViewModel();
-                        break;
-                    case ViewType.Teams:
-                        _navigator.CurrentViewModel = new TeamsViewModel();
-                        break;
-                    case ViewType.Create:
-                        _navigator.CurrentViewModel = new JoinTeamModel();
-                        break;
-                    case ViewType.Calendar:
-                        _navigator.CurrentViewModel = new CalendarViewModel();
-                        break;
-                    case ViewType.Login:
-                        _navigator.CurrentViewModel = new LoginViewModel();
-                        break;
-                    case ViewType.Register:
-                        _navigator.CurrentViewModel = new RegisterViewModel();
-                        break;
-                    default:
-                        break;
-                }
+                obj.CurrentViewModel = obj.GetModelFromViewType(viewType);
+            }
+            else if (_navigator is NavigatorTeam obj1)
+            {
+                TeamViewType viewType = (TeamViewType) parameter;
+                obj1.CurrentViewModel = obj1.GetModelFromTeamViewType(viewType);
             }
         }
     }

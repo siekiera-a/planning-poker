@@ -11,13 +11,7 @@ namespace Client.Views
         public HomeView()
         {
             InitializeComponent();
-            showRequest();
         }
 
-        public void showRequest()
-        {
-            List<string> requests = new List<string>() {"zadanie1", "zadanie2", "zadanie3"};
-            lista.ItemsSource = requests;
-        }
     }
 }

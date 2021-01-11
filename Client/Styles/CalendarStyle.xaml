@@ -27,10 +27,10 @@
         </Setter>
         <Setter Property="CalendarDayButtonStyle" Value="{StaticResource StyleCalandarDayButton}" />
         <Setter Property="CalendarButtonStyle" Value="{StaticResource StyleCalandarButton}" />
-        <Setter Property="Foreground" Value="{StaticResource BrushPrimary3}" />
+        <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.Accent}" />
         <Setter Property="Background">
             <Setter.Value>
-                <SolidColorBrush Color="{StaticResource ColorAPrimary1}"/>
+                <SolidColorBrush Color="{StaticResource MahApps.Colors.Accent}"/>
             </Setter.Value>
         </Setter>
         <Setter Property="BorderThickness" Value="0" />

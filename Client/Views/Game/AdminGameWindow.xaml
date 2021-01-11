@@ -1,0 +1,38 @@
+﻿<Window x:Class="Client.Views.Game.AdminGameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client.Views.Game"
+        mc:Ignorable="d"
+        Title="Planning Poker" Height="450" Width="800">
+    <Grid Background="{StaticResource MahApps.Brushes.Accent4}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0"
+                   TextWrapping="Wrap"
+                   FontSize="22"
+                   Margin="10"
+                   HorizontalAlignment="Center"
+                   Text="Zrobic powiazanie do tresci pytania" />
+
+        <TextBlock Grid.Column="1" Padding="10">
+            <Run Text="Czas: " />
+            <Run Text="Powizanie do zegara" />
+        </TextBlock>
+
+        <ListView Margin="8" Grid.Column="2" Background="{StaticResource MahApps.Brushes.Button.Flat.Background.Pressed}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="120" />
+                    <GridViewColumn Header="Answer" Width="60" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+    </Grid>
+</Window>
