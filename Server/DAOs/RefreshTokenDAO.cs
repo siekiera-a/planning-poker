@@ -8,15 +8,15 @@ using Dapper;
 using Microsoft.Extensions.Logging;
 using Server.Services.DataAccess;
 
-namespace Server.DAL
+namespace Server.DAOs
 {
-    public class RefreshTokenDAL : BaseDAL
+    public class RefreshTokenDAO : BaseDAO
     {
 
-        private readonly ILogger<RefreshTokenDAL> _logger;
+        private readonly ILogger<RefreshTokenDAO> _logger;
         private readonly string _prefix = "dbo.spRefreshToken";
 
-        public RefreshTokenDAL(IConnectionFactory connectionFactory, ILogger<RefreshTokenDAL> logger) : base(connectionFactory)
+        public RefreshTokenDAO(IConnectionFactory connectionFactory, ILogger<RefreshTokenDAO> logger) : base(connectionFactory)
         {
             _logger = logger;
         }

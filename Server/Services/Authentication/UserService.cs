@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Server.Models.Dapper;
-using Server.DAL;
+using Server.DAOs;
 using Server.Utils;
 
 namespace Server.Services.Authentication
@@ -13,14 +12,14 @@ namespace Server.Services.Authentication
     public class UserService : IUserService
     {
 
-        private readonly UserDAL _userDal;
-        private readonly RefreshTokenDAL _refreshTokenDal;
+        private readonly UserDAO _userDao;
+        private readonly RefreshTokenDAO _refreshTokenDao;
         private readonly IPasswordEncoder _passwordEncoder;
 
-        public UserService(UserDAL userDal, RefreshTokenDAL refreshTokenDal, IPasswordEncoder passwordEncoder)
+        public UserService(UserDAO userDao, RefreshTokenDAO refreshTokenDao, IPasswordEncoder passwordEncoder)
         {
-            _userDal = userDal;
-            _refreshTokenDal = refreshTokenDal;
+            _userDao = userDao;
+            _refreshTokenDao = refreshTokenDao;
             _passwordEncoder = passwordEncoder;
         }
 
@@ -29,12 +28,12 @@ namespace Server.Services.Authentication
             string hashedPassword = _passwordEncoder.HashPassword(password);
             byte[] bytes = Encoding.UTF8.GetBytes(hashedPassword);
 
-            return await _userDal.Save(username, email, bytes);
+            return await _userDao.Save(username, email, bytes);
         }
 
         public async Task<Optional<User>> Login(string email, string password)
         {
-            var user = await _userDal.GetUserByEmail(email);
+            var user = await _userDao.GetUserByEmail(email);
 
             if (user.IsEmpty)
             {
@@ -64,7 +63,7 @@ namespace Server.Services.Authentication
 
         public async Task Logout(int id)
         {
-            await _refreshTokenDal.Logout(id);
+            await _refreshTokenDao.Logout(id);
         }
     }
 }

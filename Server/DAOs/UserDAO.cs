@@ -14,15 +14,15 @@ using Microsoft.Extensions.Logging;
 using Server.Models.Dapper;
 
 
-namespace Server.DAL
+namespace Server.DAOs
 {
-    public class UserDAL : BaseDAL
+    public class UserDAO : BaseDAO
     {
 
-        private readonly ILogger<UserDAL> _logger;
+        private readonly ILogger<UserDAO> _logger;
         private readonly string _prefix = "dbo.spUser";
 
-        public UserDAL(IConnectionFactory connectionFactory, ILogger<UserDAL> logger) : base(connectionFactory)
+        public UserDAO(IConnectionFactory connectionFactory, ILogger<UserDAO> logger) : base(connectionFactory)
         {
             _logger = logger;
         }

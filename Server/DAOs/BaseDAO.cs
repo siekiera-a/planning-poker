@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Server.Services.DataAccess;
 
-namespace Server.DAL
+namespace Server.DAOs
 {
-    public abstract class BaseDAL
+    public abstract class BaseDAO
     {
 
         protected readonly IConnectionFactory _connectionFactory;
 
-        protected BaseDAL(IConnectionFactory connectionFactory)
+        protected BaseDAO(IConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }

@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Server.Dtos.Incoming;
-using Server.DAL;
+using Server.DAOs;
 using Server.Services.Authentication;
 using Server.Services.DataAccess;
 
@@ -28,8 +28,8 @@ namespace Server
 
         private void AddDALs(IServiceCollection services)
         {
-            services.AddScoped<UserDAL>();
-            services.AddScoped<RefreshTokenDAL>();
+            services.AddScoped<UserDAO>();
+            services.AddScoped<RefreshTokenDAO>();
         }
 
         private void AddServices(IServiceCollection services)
