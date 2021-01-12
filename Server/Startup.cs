@@ -66,6 +66,8 @@ namespace Server
                 };
             });
 
+            services.AddSwaggerDocument();
+
             AddDALs(services);
             AddServices(services);
             services.AddSingleton<IJwtTokenManager>(new JwtTokenManager(tokenKey));
@@ -85,6 +87,9 @@ namespace Server
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {
