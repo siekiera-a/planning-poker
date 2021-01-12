@@ -5,50 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.Views.Game"
         xmlns:cards="clr-namespace:Client.Controls"
+        xmlns:question="clr-namespace:Client.Controls.Game"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Planning Poker" Height="450" Width="800">
     <Grid Background="{StaticResource MahApps.Brushes.Accent4}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="80" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Left game play time: "
-                       HorizontalAlignment="Right"
-                       Margin="8" />
+        <question:GameBase Grid.Row="0"/>
 
-            <TextBlock Grid.Column="1"
-                       Text="Czas"
-                       VerticalAlignment="Center"/>
-        </Grid>
+        <cards:CardListView Grid.Row="1" x:Name="Cards" />
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       TextWrapping="Wrap"
-                       Text="Zrobic powiazanie do tresci pytania"
-                       HorizontalAlignment="Center" FontSize="22" />
-            <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="18">
-                <Run Text="Czas: " />
-                <Run Text="Powizanie do zegara" />
-            </TextBlock>
-        </Grid>
-
-        <cards:CardListView Grid.Row="2" x:Name="Cards" />
-
-        <Button Grid.Row="3"
+        <Button Grid.Row="2"
                 Name="SendAnswerButton"
                 FontSize="20"
                 Background="{StaticResource MahApps.Brushes.Accent}"
