@@ -77,8 +77,12 @@
 
             <mah:DateTimePicker Grid.Row="0" Margin="8" />
 
-            <ComboBox Grid.Row="1" Margin="8" />
-            <ComboBox Grid.Row="2" Margin="8" />
+            <ComboBox Grid.Row="1" Margin="8"
+                      mah:TextBoxHelper.Watermark="Choose team"/>
+
+            <ComboBox Grid.Row="2" Margin="8"
+                      mah:TextBoxHelper.Watermark="Choose members"/>
+
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

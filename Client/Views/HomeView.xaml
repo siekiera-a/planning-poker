@@ -32,13 +32,13 @@
                        Text="Your tasks from last week: " />
 
             <ListView Grid.Row="1" Margin="8"
-                      Background="{StaticResource MahApps.Brushes.Button.Flat.Background.Pressed}">
+                      Background="{StaticResource MahApps.Brushes.Accent3}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Team Name" Width="150" />
-                        <GridViewColumn Header="Meeting Name" Width="150" />
-                        <GridViewColumn Header="Task Details" Width="400" />
-                        <GridViewColumn Header="Time" Width="100" />
+                        <GridViewColumn Header="Team Name" Width="100" />
+                        <GridViewColumn Header="Meeting Name" Width="100" />
+                        <GridViewColumn Header="Task Details" Width="300" />
+                        <GridViewColumn Header="Time" Width="80" />
                     </GridView>
                 </ListView.View>
             </ListView>
