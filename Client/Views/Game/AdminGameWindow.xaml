@@ -4,35 +4,89 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.Views.Game"
+        xmlns:question="clr-namespace:Client.Controls.Game"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Planning Poker" Height="450" Width="800">
     <Grid Background="{StaticResource MahApps.Brushes.Accent4}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="0"
-                   TextWrapping="Wrap"
-                   FontSize="22"
-                   Margin="10"
-                   HorizontalAlignment="Center"
-                   Text="Zrobic powiazanie do tresci pytania" />
+        <question:GameBase Grid.Row="0" />
 
-        <TextBlock Grid.Column="1" Padding="10">
-            <Run Text="Czas: " />
-            <Run Text="Powizanie do zegara" />
-        </TextBlock>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <ListView Margin="8" Grid.Column="2" Background="{StaticResource MahApps.Brushes.Button.Flat.Background.Pressed}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" Width="120" />
-                    <GridViewColumn Header="Answer" Width="60" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Margin="8"
+                           Text="Round ended:"
+                           FontSize="18" />
+
+                <TextBox Grid.Row="1"
+                         Margin="8"
+                         mah:TextBoxHelper.ClearTextButton="True"
+                         mah:TextBoxHelper.Watermark="Write number"
+                         Name="AnswerFilter" />
+
+                <ListView Grid.Row="2" Margin="8">
+                    <ListView Name="RoundEndedList">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="100" />
+                                <GridViewColumn Header="Value" Width="100" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </ListView>
+
+                <Button Grid.Row="3"
+                        Margin="8"
+                        Padding="10"
+                        Content="Choose winner"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Background="{StaticResource MahApps.Brushes.Accent}"
+                        Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Margin="8"
+                           Text="In the game"
+                           FontSize="18" />
+
+                <ListView Grid.Row="1" Margin="8">
+                    <ListView Name="PlayersInGame">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="200" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </ListView>
+
+            </Grid>
+
+        </Grid>
 
     </Grid>
 </Window>
