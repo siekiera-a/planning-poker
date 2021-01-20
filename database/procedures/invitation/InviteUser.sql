@@ -4,7 +4,12 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO invitation VALUES (@MeetingId, @UserId)
+    IF EXISTS(SELECT *
+              FROM meeting m
+                       INNER JOIN team t ON m.team_id = t.id
+              WHERE m.id = @MeetingId
+                AND EXISTS(SELECT * FROM team_member WHERE team_id = t.id AND user_id = @UserId))
+        INSERT INTO invitation VALUES (@MeetingId, @UserId)
 END
 go
 
