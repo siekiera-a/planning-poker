@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using Client.ViewModels;
+using Client.Views.Login;
 
 namespace Client
 {
@@ -13,5 +9,13 @@ namespace Client
 	/// </summary>
 	public partial class App : Application
 	{
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Window loginWindow = new LoginWindow();
+            loginWindow.Show();
+            
+
+            base.OnStartup(e);
+        }
 	}
 }

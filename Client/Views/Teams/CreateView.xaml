@@ -1,0 +1,117 @@
+﻿<UserControl x:Class="Client.Views.Teams.CreateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Client.Views.Teams"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="{StaticResource MahApps.Brushes.Accent4}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0"
+                     Padding="10"
+                     Margin="8"
+                     FontSize="15"
+                     mah:TextBoxHelper.ClearTextButton="True"
+                     mah:TextBoxHelper.Watermark="Write meeting name"
+                     mah:TextBoxHelper.IsWaitingForData="True"
+                     VerticalAlignment="Center" />
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Column="0"
+                         Margin="8"
+                         mah:TextBoxHelper.ClearTextButton="True"
+                         mah:TextBoxHelper.Watermark="Add task"
+                         mah:TextBoxHelper.IsWaitingForData="True"
+                         VerticalAlignment="Center"
+                         TextWrapping="WrapWithOverflow"
+                         Name="TaskDescription" />
+
+                <Button Grid.Row="0" Grid.Column="1"
+                        Margin="8"
+                        Name="AddButton"
+                        Click="AddTaskButtonClick"
+                        Content="Add"
+                        Padding="10" />
+
+                <ListBox Grid.Row="1" Grid.Column="0" Margin="8" Name="TaskListBox" />
+
+                <Button Grid.Row="1" Grid.Column="1"
+                        Name="DeleteButton"
+                        Click="DeleteTaskButtonClick"
+                        Content="X"
+                        VerticalAlignment="Top"
+                        Margin="8" />
+
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <mah:DateTimePicker Grid.Row="0" Margin="8" />
+
+            <ComboBox Grid.Row="1" Margin="8"
+                      mah:TextBoxHelper.Watermark="Choose team"/>
+
+            <ComboBox Grid.Row="2" Margin="8"
+                      mah:TextBoxHelper.Watermark="Choose members"/>
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+
+                <Button Grid.Column="0"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Content="Cancel"
+                        Background="{StaticResource MahApps.Brushes.Accent}"
+                        Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
+                        Padding="10"
+                        Margin="6" />
+
+                <Button Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Content="Create meeting"
+                        Background="{StaticResource MahApps.Brushes.Accent}"
+                        Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
+                        Padding="10"
+                        Margin="6" />
+            </Grid>
+
+
+        </Grid>
+
+
+    </Grid>
+</UserControl>
