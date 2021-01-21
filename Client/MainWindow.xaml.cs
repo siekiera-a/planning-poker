@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Client.ViewModels;
 using Client.Views.Login;
 
 namespace Client
@@ -15,7 +16,10 @@ namespace Client
 
         private void LogoutButtonClick(object sender, RoutedEventArgs e)
         {
-            Window window = new LoginWindow();
+            Window window = new LoginWindow
+            {
+                DataContext = new LoginViewModel()
+            };
             window.Show();
             
             Window.GetWindow(this)?.Close();

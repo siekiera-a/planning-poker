@@ -54,8 +54,10 @@ namespace Client.Views
             //
             // }
 
-            Window window = new MainWindow();
-            window.DataContext = new MainViewModel();
+            Window window = new MainWindow
+            {
+                DataContext = new MainViewModel()
+            };
             window.Show();
 
             Window.GetWindow(this)?.Close();
@@ -77,7 +79,10 @@ namespace Client.Views
 
         private void LoginButtonClick(object sender, RoutedEventArgs e)
         {
-            Window window = new LoginWindow();
+            Window window = new LoginWindow
+            {
+                DataContext = new LoginViewModel()
+            };
             window.Show();
 
             Window.GetWindow(this)?.Close();

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Runtime.Serialization;
+using System.Windows;
 using Client.ViewModels;
 using Client.Views.Login;
 
@@ -11,7 +12,10 @@ namespace Client
 	{
         protected override void OnStartup(StartupEventArgs e)
         {
-            Window loginWindow = new LoginWindow();
+            Window loginWindow = new LoginWindow
+            {
+                DataContext = new LoginViewModel()
+            };
             loginWindow.Show();
             
 

@@ -57,18 +57,26 @@
                          mah:TextBoxHelper.ClearTextButton="True"
                          mah:TextBoxHelper.Watermark="Write your email adress"
                          mah:TextBoxHelper.IsWaitingForData="True"
-                         VerticalAlignment="Center"/>
+                         VerticalAlignment="Center"
+                         Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="Password"
                            VerticalAlignment="Center"
                            Margin="10"/>
 
-                <PasswordBox Grid.Row="1" Grid.Column="1" 
+                <!-- <PasswordBox Grid.Row="1" Grid.Column="1" -->
+                <!--              mah:TextBoxHelper.ClearTextButton="True" -->
+                <!--              mah:TextBoxHelper.Watermark="Password" -->
+                <!--              VerticalAlignment="Center" -->
+                <!--              mah:TextBoxHelper.IsWaitingForData="True" /> -->
+
+                <TextBox Grid.Row="1" Grid.Column="1"
                              mah:TextBoxHelper.ClearTextButton="True"
                              mah:TextBoxHelper.Watermark="Password"
                              VerticalAlignment="Center"
-                             mah:TextBoxHelper.IsWaitingForData="True"/>
+                             mah:TextBoxHelper.IsWaitingForData="True" 
+                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
 
             </Grid>
 
@@ -81,12 +89,13 @@
                     Click="RegisterButtonClick"/>
 
             <Button Grid.Row="3" Margin="50, 7"
-                    Content="Login"
                     Padding="6"
                     Background="{StaticResource MahApps.Brushes.Accent}"
                     Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                     FontSize="15"
-                    Click="LoginButtonClick"/>
+                    Command="{Binding LoginCommand}"
+                    Click="LoginButtonClick"
+                    Content="Login"/>
 
         </Grid>
     </Border>
