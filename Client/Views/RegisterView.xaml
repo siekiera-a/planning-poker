@@ -59,7 +59,8 @@
                          mah:TextBoxHelper.ClearTextButton="True"
                          mah:TextBoxHelper.Watermark="Username"
                          mah:TextBoxHelper.IsWaitingForData="True"
-                         VerticalAlignment="Center"/>
+                         VerticalAlignment="Center"
+                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Margin="10"
@@ -70,7 +71,8 @@
                          mah:TextBoxHelper.ClearTextButton="True"
                          mah:TextBoxHelper.Watermark="Write your email adress"
                          mah:TextBoxHelper.IsWaitingForData="True"
-                         VerticalAlignment="Center"/>
+                         VerticalAlignment="Center"
+                         Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0"
                            Margin="10"
@@ -78,11 +80,18 @@
                            VerticalAlignment="Center" />
 
                 <!-- Dorobic banding -->
-                <PasswordBox Grid.Row="2" Grid.Column="1" 
+                <!-- <PasswordBox Grid.Row="2" Grid.Column="1"  -->
+                <!--              mah:TextBoxHelper.ClearTextButton="True" -->
+                <!--              mah:TextBoxHelper.Watermark="Password" -->
+                <!--              VerticalAlignment="Center" -->
+                <!--              mah:TextBoxHelper.IsWaitingForData="True"/> -->
+
+                <TextBox Grid.Row="2" Grid.Column="1" 
                              mah:TextBoxHelper.ClearTextButton="True"
                              mah:TextBoxHelper.Watermark="Password"
                              VerticalAlignment="Center"
-                             mah:TextBoxHelper.IsWaitingForData="True"/>
+                             mah:TextBoxHelper.IsWaitingForData="True"
+                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0"
                            Margin="10"
@@ -90,11 +99,18 @@
                            VerticalAlignment="Center" />
 
                 <!-- Dorobic banding -->
-                <PasswordBox Grid.Row="3" Grid.Column="1" 
+                <!-- <PasswordBox Grid.Row="3" Grid.Column="1"  -->
+                <!--              mah:TextBoxHelper.ClearTextButton="True" -->
+                <!--              mah:TextBoxHelper.Watermark="Password" -->
+                <!--              VerticalAlignment="Center" -->
+                <!--              mah:TextBoxHelper.IsWaitingForData="True"/> -->
+
+                <TextBox Grid.Row="3" Grid.Column="1" 
                              mah:TextBoxHelper.ClearTextButton="True"
                              mah:TextBoxHelper.Watermark="Password"
                              VerticalAlignment="Center"
-                             mah:TextBoxHelper.IsWaitingForData="True"/>
+                             mah:TextBoxHelper.IsWaitingForData="True"
+                             Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
 
             <Button Grid.Row="2" Margin="85,5"
@@ -111,7 +127,8 @@
                     FontSize="15"
                     Background="{StaticResource MahApps.Brushes.Accent}"
                     Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
-                    Click="CreateAccountButtonClick" />
+                    Click="CreateAccountButtonClick" 
+                    Command="{Binding RegisterCommand}"/>
 
         </Grid>
     </Border>

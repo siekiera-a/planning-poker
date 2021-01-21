@@ -47,7 +47,10 @@ namespace Client.Views
 
         private async void RegisterButtonClick(object sender, RoutedEventArgs e)
         {
-            Window window = new RegisterWindow();
+            Window window = new RegisterWindow
+            {
+                DataContext = new RegisterViewModel()
+            };
             window.Show();
 
             Window.GetWindow(this)?.Close();
