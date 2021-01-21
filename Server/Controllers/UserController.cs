@@ -43,6 +43,7 @@ namespace Server.Controllers
             return response;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest credentials)
         {
