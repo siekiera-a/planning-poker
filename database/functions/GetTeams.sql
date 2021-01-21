@@ -1,5 +1,5 @@
 -- zespoły dla użytkownika
-CREATE FUNCTION dbo.ufnTeams(@UserId INT)
+CREATE FUNCTION dbo.ufnGetTeams(@UserId INT)
     RETURNS TABLE AS
         RETURN
         SELECT t.id AS Id, t.name AS Name

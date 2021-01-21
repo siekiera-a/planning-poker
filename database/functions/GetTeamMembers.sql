@@ -1,5 +1,5 @@
 -- lista czlonkow dla zespolu
-CREATE FUNCTION dbo.ufnTeamMembers(@TeamId INT)
+CREATE FUNCTION dbo.ufnGetTeamMembers(@TeamId INT)
     RETURNS TABLE AS
         RETURN
         SELECT u.id AS Id, u.name AS Name, u.email AS Email
