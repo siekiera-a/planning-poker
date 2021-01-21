@@ -27,8 +27,8 @@ namespace Server.DAOs
             using var connection = _connectionFactory.CreateConnection();
             try
             {
-                var teams = await connection.QueryAsync<TeamBase>("SELECT * FROM dbo.ufnTeams(@UserId)",
-                    new {UserId = userId}, commandType: CommandType.Text);
+                var teams = await connection.QueryAsync<TeamBase>("SELECT * FROM dbo.ufnGetTeams(@UserId)",
+                    new { UserId = userId }, commandType: CommandType.Text);
                 return teams.AsList();
             }
             catch (SqlException e)
@@ -38,12 +38,28 @@ namespace Server.DAOs
             }
         }
 
-        public async Task<Optional<int>> CreateTeam(string name)
+        public async Task<List<User>> GetMembers(int teamId)
         {
             using var connection = _connectionFactory.CreateConnection();
             try
             {
-                var teamId = await connection.QueryFirstAsync<int>($"{_prefix}_CreateTeam", new { Name = name },
+                var members = await connection.QueryAsync<User>("SELECT * FROM dbo.ufnGetTeamMembers(@TeamId)",
+                    new { TeamId = teamId }, commandType: CommandType.Text);
+                return members.AsList();
+            }
+            catch (SqlException e)
+            {
+                _logger.LogError(e.Message);
+                return new List<User>();
+            }
+        }
+
+        public async Task<Optional<int>> CreateTeam(string name, int userId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            try
+            {
+                var teamId = await connection.QueryFirstAsync<int>($"{_prefix}_CreateTeam", new { Name = name, UserId = userId },
                     commandType: CommandType.StoredProcedure);
 
                 return Optional<int>.of(teamId);
