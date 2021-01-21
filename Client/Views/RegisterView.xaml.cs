@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Text;
 using System.Windows;
@@ -12,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.ViewModels;
 using Client.Views.Login;
+using Newtonsoft.Json;
 
 namespace Client.Views
 {
@@ -20,39 +24,32 @@ namespace Client.Views
     /// </summary>
     public partial class RegisterView : UserControl
     {
+        class User
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public string Username { get; set; }
+        }
+
         public RegisterView()
         {
             InitializeComponent();
         }
 
-        // private void SignInButtonClick(object sender, RoutedEventArgs e)
-        // {
-        //     this.Navigate(new LoginView());
-        // }
-        //
-        // private void Navigate(LoginView loginView)
-        // {
-        //     throw new NotImplementedException();
-        // }
-
-        private void CreateAccountButtonClick(object sender, RoutedEventArgs e)
+        private async void CreateAccountButtonClick(object sender, RoutedEventArgs e)
         {
-            // if (EmailTextBox.Text.Length == 0)
-            // {
-            //     EmailTextBox.Focus();
-            // }
-            // else if (IsValid(EmailTextBox.Text))
-            // {
-            //     EmailTextBox.Select(0, EmailTextBox.Text.Length);
-            //     EmailTextBox.Focus();
-            // }
-            // else
-            // {
-            //     string userName = UserNameTextBox.Text;
-            //     string email = EmailTextBox.Text;
-            //     string password = PasswordBoxPassword.Password;
-            //
-            // }
+
+            User userData = new User { Email = Email.Text, Password = Password.Text, Username = Username.Text};
+
+            var json = JsonConvert.SerializeObject(userData);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            
+            var url = "https://localhost:5001/api/User/register";
+            using var client = new HttpClient();
+            
+            var response = await client.PostAsync(url, data);
+
+            string content = await response.Content.ReadAsStringAsync();
 
             Window window = new MainWindow
             {
@@ -61,20 +58,6 @@ namespace Client.Views
             window.Show();
 
             Window.GetWindow(this)?.Close();
-
-        }
-
-        private bool IsValid(string emailAdress)
-        {
-            try
-            {
-                MailAddress mail = new MailAddress(emailAdress);
-                return true;
-            }
-            catch (FormatException e)
-            {
-                return false;
-            }
         }
 
         private void LoginButtonClick(object sender, RoutedEventArgs e)

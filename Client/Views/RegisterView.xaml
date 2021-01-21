@@ -56,6 +56,7 @@
                            VerticalAlignment="Center" />
 
                 <TextBox Grid.Row="0" Grid.Column="1"
+                         Name="Username"
                          mah:TextBoxHelper.ClearTextButton="True"
                          mah:TextBoxHelper.Watermark="Username"
                          mah:TextBoxHelper.IsWaitingForData="True"
@@ -68,6 +69,7 @@
                            VerticalAlignment="Center" />
 
                 <TextBox Grid.Row="1" Grid.Column="1"
+                         Name="Email"
                          mah:TextBoxHelper.ClearTextButton="True"
                          mah:TextBoxHelper.Watermark="Write your email adress"
                          mah:TextBoxHelper.IsWaitingForData="True"
@@ -91,7 +93,8 @@
                              mah:TextBoxHelper.Watermark="Password"
                              VerticalAlignment="Center"
                              mah:TextBoxHelper.IsWaitingForData="True"
-                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                             Name="Password"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0"
                            Margin="10"
