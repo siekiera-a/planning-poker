@@ -27,19 +27,22 @@ namespace Server.Services.Team
             return await _teamDao.GetTeams(userId);
         }
 
-        public Task<bool> ChangeName(int TeamId, string newName)
+        public async Task<bool> ChangeName(int teamId, string newName)
         {
-            throw new NotImplementedException();
+            var result = await _teamDao.ChangeName(teamId, newName);
+            return result;
         }
 
-        public Task<Optional<string>> GenerateJoinCode(int teamId)
+        public async Task<Optional<string>> GenerateJoinCode(int teamId)
         {
-            throw new NotImplementedException();
+            var code = await _teamDao.GenerateJoinCode(teamId);
+            return code;
         }
 
-        public Task<bool> RemoveJoinCode(int teamId)
+        public async Task<bool> RemoveJoinCode(int teamId)
         {
-            throw new NotImplementedException();
+            var result = await _teamDao.RemoveJoinCode(teamId);
+            return result;
         }
 
         public async Task<Optional<TeamBase>> CreateTeam(string name)
@@ -59,9 +62,10 @@ namespace Server.Services.Team
             });
         }
 
-        public Task<List<User>> GetMembers(int teamId)
+        public async Task<List<User>> GetMembers(int teamId)
         {
-            throw new NotImplementedException();
+            var members = await _teamDao.GetMembers(teamId);
+            return members;
         }
     }
 }
