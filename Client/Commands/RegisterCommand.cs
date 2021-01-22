@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using System.Windows;
 using System.Windows.Input;
 using Client.ViewModels;
 
@@ -31,10 +28,6 @@ namespace Client.Commands
 
         public void Execute(object parameter)
         {
-            MessageBox.Show(
-                $"Username: {_viewModel.Username}\nMail: {_viewModel.Mail}\nPassword: {_viewModel.Password}\nConfirmPassword: {_viewModel.ConfirmPassword}",
-                "Info",
-                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

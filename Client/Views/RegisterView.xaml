@@ -10,11 +10,8 @@
              d:DesignHeight="450" d:DesignWidth="800"
              FontSize="15">
 
-    <!-- <UserControl.Resources> -->
-    <!--     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" /> -->
-    <!-- </UserControl.Resources> -->
     <UserControl.Background>
-        <SolidColorBrush Color="{StaticResource MahApps.Colors.SystemBaseMedium}"/>
+        <SolidColorBrush Color="{StaticResource MahApps.Colors.SystemBaseMedium}" />
     </UserControl.Background>
 
     <Border Margin="15" Padding="10"
@@ -61,7 +58,7 @@
                          mah:TextBoxHelper.Watermark="Username"
                          mah:TextBoxHelper.IsWaitingForData="True"
                          VerticalAlignment="Center"
-                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Margin="10"
@@ -74,46 +71,35 @@
                          mah:TextBoxHelper.Watermark="Write your email adress"
                          mah:TextBoxHelper.IsWaitingForData="True"
                          VerticalAlignment="Center"
-                         Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0"
                            Margin="10"
                            Text="Password"
                            VerticalAlignment="Center" />
 
-                <!-- Dorobic banding -->
-                <!-- <PasswordBox Grid.Row="2" Grid.Column="1"  -->
-                <!--              mah:TextBoxHelper.ClearTextButton="True" -->
-                <!--              mah:TextBoxHelper.Watermark="Password" -->
-                <!--              VerticalAlignment="Center" -->
-                <!--              mah:TextBoxHelper.IsWaitingForData="True"/> -->
-
-                <TextBox Grid.Row="2" Grid.Column="1" 
+                <PasswordBox Grid.Row="2" Grid.Column="1"
                              mah:TextBoxHelper.ClearTextButton="True"
                              mah:TextBoxHelper.Watermark="Password"
                              VerticalAlignment="Center"
+                             Name="Password"
                              mah:TextBoxHelper.IsWaitingForData="True"
-                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-                             Name="Password"/>
+                             PasswordChanged="Password_OnPasswordChanged" />
 
                 <TextBlock Grid.Row="3" Grid.Column="0"
                            Margin="10"
                            Text="Confirm Password"
                            VerticalAlignment="Center" />
 
-                <!-- Dorobic banding -->
-                <!-- <PasswordBox Grid.Row="3" Grid.Column="1"  -->
-                <!--              mah:TextBoxHelper.ClearTextButton="True" -->
-                <!--              mah:TextBoxHelper.Watermark="Password" -->
-                <!--              VerticalAlignment="Center" -->
-                <!--              mah:TextBoxHelper.IsWaitingForData="True"/> -->
-
-                <TextBox Grid.Row="3" Grid.Column="1" 
+                <PasswordBox Grid.Row="3" Grid.Column="1"
                              mah:TextBoxHelper.ClearTextButton="True"
                              mah:TextBoxHelper.Watermark="Password"
                              VerticalAlignment="Center"
+                             Name="ConfirmPassword"
                              mah:TextBoxHelper.IsWaitingForData="True"
-                             Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}"/>
+                             PasswordChanged="ConfirmPassword_OnPasswordChanged" />
+
+
             </Grid>
 
             <Button Grid.Row="2" Margin="85,5"
@@ -130,8 +116,8 @@
                     FontSize="15"
                     Background="{StaticResource MahApps.Brushes.Accent}"
                     Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
-                    Click="CreateAccountButtonClick" 
-                    Command="{Binding RegisterCommand}"/>
+                    Click="CreateAccountButtonClick"
+                    Command="{Binding RegisterCommand}" />
 
         </Grid>
     </Border>

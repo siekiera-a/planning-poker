@@ -9,10 +9,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              FontSize="15">
-    <!-- -->
-    <!-- <UserControl.Resources> -->
-    <!--     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" /> -->
-    <!-- </UserControl.Resources> -->
+    
     <UserControl.Background>
         <SolidColorBrush Color="{StaticResource MahApps.Colors.SystemBaseMedium}" />
     </UserControl.Background>
@@ -51,32 +48,29 @@
                 <TextBlock Grid.Row="0" Grid.Column="0"
                            Text="Email"
                            VerticalAlignment="Center"
-                           Margin="10"/>
+                           Margin="10" />
 
                 <TextBox Grid.Row="0" Grid.Column="1"
                          mah:TextBoxHelper.ClearTextButton="True"
                          mah:TextBoxHelper.Watermark="Write your email adress"
                          mah:TextBoxHelper.IsWaitingForData="True"
                          VerticalAlignment="Center"
-                         Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}"/>
+                         Name="Email"
+                         Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="Password"
                            VerticalAlignment="Center"
-                           Margin="10"/>
+                           Margin="10" />
 
-                <!-- <PasswordBox Grid.Row="1" Grid.Column="1" -->
-                <!--              mah:TextBoxHelper.ClearTextButton="True" -->
-                <!--              mah:TextBoxHelper.Watermark="Password" -->
-                <!--              VerticalAlignment="Center" -->
-                <!--              mah:TextBoxHelper.IsWaitingForData="True" /> -->
-
-                <TextBox Grid.Row="1" Grid.Column="1"
+                <PasswordBox Grid.Row="1" Grid.Column="1"
                              mah:TextBoxHelper.ClearTextButton="True"
                              mah:TextBoxHelper.Watermark="Password"
                              VerticalAlignment="Center"
-                             mah:TextBoxHelper.IsWaitingForData="True" 
-                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+                             Name="Password"
+                             mah:TextBoxHelper.IsWaitingForData="True"
+                             PasswordChanged="Password_OnPasswordChanged" />
+                
 
             </Grid>
 
@@ -86,7 +80,7 @@
                     Foreground="{StaticResource MahApps.Brushes.Accent}"
                     Background="{x:Null}"
                     BorderThickness="0"
-                    Click="RegisterButtonClick"/>
+                    Click="RegisterButtonClick" />
 
             <Button Grid.Row="3" Margin="50, 7"
                     Padding="6"
@@ -95,7 +89,7 @@
                     FontSize="15"
                     Command="{Binding LoginCommand}"
                     Click="LoginButtonClick"
-                    Content="Login"/>
+                    Content="Login" />
 
         </Grid>
     </Border>

@@ -38,26 +38,29 @@ namespace Client.Views
 
         private async void CreateAccountButtonClick(object sender, RoutedEventArgs e)
         {
-
-            User userData = new User { Email = Email.Text, Password = Password.Text, Username = Username.Text};
+            User userData = new User
+                {Email = Email.Text, Password = Password.Password, Username = Username.Text};
 
             var json = JsonConvert.SerializeObject(userData);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            
+
             var url = "https://localhost:5001/api/User/register";
             using var client = new HttpClient();
-            
+
             var response = await client.PostAsync(url, data);
 
-            string content = await response.Content.ReadAsStringAsync();
-
-            Window window = new MainWindow
+            if (response.IsSuccessStatusCode)
             {
-                DataContext = new MainViewModel()
-            };
-            window.Show();
+                string content = await response.Content.ReadAsStringAsync();
 
-            Window.GetWindow(this)?.Close();
+                Window window = new MainWindow
+                {
+                    DataContext = new MainViewModel()
+                };
+                window.Show();
+
+                Window.GetWindow(this)?.Close();
+            }
         }
 
         private void LoginButtonClick(object sender, RoutedEventArgs e)
@@ -69,6 +72,22 @@ namespace Client.Views
             window.Show();
 
             Window.GetWindow(this)?.Close();
+        }
+
+        private void Password_OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is RegisterViewModel context)
+            {
+                context.Password = Password.Password;
+            }
+        }
+
+        private void ConfirmPassword_OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is RegisterViewModel context)
+            {
+                context.ConfirmPassword = ConfirmPassword.Password;
+            }
         }
     }
 }
