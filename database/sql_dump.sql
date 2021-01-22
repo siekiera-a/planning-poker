@@ -31,6 +31,117 @@ go
 
 
 
+-- from: ./functions/GetMeetings.sql
+-- przyszłe spotkania we wszystkich zespołach dla danego uzytkownika
+CREATE FUNCTION dbo.ufnGetMeetings(@UserId INT)
+    RETURNS TABLE AS
+        RETURN
+        SELECT m.id AS Id, m.start_time AS StartTime, m.organizer AS Organizer, m.team_id AS TeamId, t.name As TeamName
+        FROM meeting m
+                 JOIN invitation i on m.id = i.meeting_id
+                 JOIN team t on m.team_id = t.id
+        WHERE i.user_id = @UserId
+          AND m.start_time > SYSUTCDATETIME()
+go
+
+
+
+-- from: ./functions/GetPastMeetingsForTeam.sql
+-- wszystkie zakończone spotkania w zespole i ich wyniki
+CREATE FUNCTION dbo.ufnGetPastMeetingsForTeam(@TeamId INT, @StartTime DATETIME2)
+    RETURNS TABLE AS
+        RETURN
+        SELECT t.id             AS TeamId,
+               t.name           AS Nam,
+               m.start_time     AS StartTime,
+               m.end_time       AS EndTime,
+               u.name           AS 'User',
+               u.email          AS Email,
+               r.estimated_time AS EstimatedTime,
+               ta.description   AS Description
+        FROM team t
+                 INNER JOIN meeting m ON t.id = m.team_id
+                 INNER JOIN task ta on m.id = ta.meeting_id
+                 INNER JOIN result r on ta.id = r.task_id
+                 INNER JOIN [user] u on r.user_id = u.id
+                 INNER JOIN [user] org on org.id = m.organizer
+        WHERE t.id = @TeamId
+          AND m.end_time BETWEEN @StartTime AND SYSUTCDATETIME()
+go
+
+
+
+-- from: ./functions/GetResultsForUser.sql
+-- zwróci wszystkie wyniki powiązane z użytkownikiem z danego czasu
+CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
+    RETURNS TABLE AS
+        RETURN
+        SELECT t.description    AS Description,
+               r.estimated_time AS EstimatedTime,
+               m.start_time     AS StartTime,
+               m.end_time       AS EndTime,
+               tm.name          AS TeamName,
+               tm.id            AS TeamId
+        FROM task t
+                 INNER JOIN result r on t.id = r.task_id
+                 INNER JOIN meeting m on t.meeting_id = m.id
+                 INNER JOIN team tm ON m.team_id = tm.id
+        WHERE r.user_id = @UserId
+          AND m.end_time BETWEEN @StartTime AND SYSUTCDATETIME()
+go
+
+
+
+-- from: ./functions/GetRoles.sql
+CREATE FUNCTION dbo.ufnGetRoles(@UserId INT, @TeamId INT)
+    RETURNS TABLE AS
+        RETURN SELECT r.name AS role
+               FROM role r
+                        INNER JOIN team_member tm on r.id = tm.role
+               WHERE tm.user_id = @UserId
+                 AND tm.team_id = @TeamId
+go
+
+
+
+-- from: ./functions/GetTeamMembers.sql
+-- lista czlonkow dla zespolu
+CREATE FUNCTION dbo.ufnGetTeamMembers(@TeamId INT)
+    RETURNS TABLE AS
+        RETURN
+        SELECT u.id AS Id, u.name AS Name, u.email AS Email
+        FROM team_member tm
+                 join [user] u on tm.user_id = u.id
+        WHERE tm.team_id = @TeamId
+go
+
+
+
+-- from: ./functions/GetTeams.sql
+-- zespoły dla użytkownika
+CREATE FUNCTION dbo.ufnGetTeams(@UserId INT)
+    RETURNS TABLE AS
+        RETURN
+        SELECT t.id AS Id, t.name AS Name
+        FROM team t
+                 JOIN team_member tm on t.id = tm.team_id
+                 JOIN [user] u on tm.user_id = u.id
+        WHERE u.id = @UserId
+go
+
+
+
+-- from: ./functions/IsTheMeetingOrganizer.sql
+CREATE FUNCTION dbo.ufnIsTheMeetingOrganizer(@UserId INT, @MeetingId INT)
+    RETURNS TABLE AS
+        RETURN SELECT COUNT(*) AS IsOrganizer
+               FROM meeting
+               WHERE id = @MeetingId
+                 AND organizer = @UserId
+go
+
+
+
 -- from: ./procedures/invitation/InviteUser.sql
 CREATE PROCEDURE dbo.spInvitation_InviteUser @MeetingId INT,
                                              @UserId INT
@@ -38,7 +149,12 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO invitation VALUES (@MeetingId, @UserId)
+    IF EXISTS(SELECT *
+              FROM meeting m
+                       INNER JOIN team t ON m.team_id = t.id
+              WHERE m.id = @MeetingId
+                AND EXISTS(SELECT * FROM team_member WHERE team_id = t.id AND user_id = @UserId))
+        INSERT INTO invitation VALUES (@MeetingId, @UserId)
 END
 go
 
@@ -233,12 +349,20 @@ go
 
 
 -- from: ./procedures/team/CreateTeam.sql
-CREATE PROCEDURE dbo.spTeam_CreateTeam @Name NVARCHAR(100)
+CREATE PROCEDURE dbo.spTeam_CreateTeam @Name NVARCHAR(100), @UserId INT
 AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO team OUTPUT inserted.id VALUES (@Name, NULL)
+    DECLARE @Table table
+                   (
+                       id INT
+                   )
+
+    INSERT INTO team OUTPUT inserted.id INTO @Table VALUES (@Name, NULL)
+    INSERT INTO team_member(team_id, user_id, role)
+    VALUES ((SELECT id FROM @Table), @UserId, (SELECT id FROM role WHERE name = 'ADMIN'))
+    SELECT id FROM @Table
 END
 go
 

@@ -15,7 +15,6 @@ using Server.Services.Authentication;
 namespace Server.Controllers
 {
 
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -57,7 +56,6 @@ namespace Server.Controllers
             return Unauthorized(new { Message = "Authentication Failed!" });
         }
 
-        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest credentials)
         {
@@ -72,10 +70,10 @@ namespace Server.Controllers
         }
 
 
-        public async Task<IActionResult> Logout()
-        {
-            throw new NotImplementedException("logout");
-        }
+        //public async Task<IActionResult> Logout()
+        //{
+        //    throw new NotImplementedException("logout");
+        //}
 
     }
 }

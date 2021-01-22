@@ -17,6 +17,7 @@ using Server.Dtos.Incoming;
 using Server.DAOs;
 using Server.Services.Authentication;
 using Server.Services.DataAccess;
+using Server.Services.Team;
 
 namespace Server
 {
@@ -33,6 +34,7 @@ namespace Server
         {
             services.AddScoped<UserDAO>();
             services.AddScoped<RefreshTokenDAO>();
+            services.AddScoped<TeamDAO>();
         }
 
         private void AddServices(IServiceCollection services)
@@ -40,6 +42,8 @@ namespace Server
             services.AddSingleton<IConnectionFactory, ConnectionFactory>();
             services.AddSingleton<IPasswordEncoder, PasswordEncoder>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserProvider, UserProvider>();
+            services.AddScoped<ITeamService, TeamService>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -67,6 +71,7 @@ namespace Server
             });
 
             services.AddSwaggerDocument();
+            services.AddHttpContextAccessor();
 
             AddDALs(services);
             AddServices(services);
