@@ -1,11 +1,11 @@
--- from: .\views\NewId.sql
+-- from: ./views/NewId.sql
 CREATE VIEW dbo.NewId as
 SELECT NEWID() as new_id
 go
 
 
 
--- from: .\functions\GenerateRandomString.sql
+-- from: ./functions/GenerateRandomString.sql
 CREATE FUNCTION dbo.ufnGenerateRandomString(@Length INT) RETURNS VARCHAR(max)
 AS
 BEGIN
@@ -31,7 +31,7 @@ go
 
 
 
--- from: .\functions\GetMeetings.sql
+-- from: ./functions/GetMeetings.sql
 -- przyszłe spotkania we wszystkich zespołach dla danego uzytkownika
 CREATE FUNCTION dbo.ufnGetMeetings(@UserId INT)
     RETURNS TABLE AS
@@ -46,7 +46,7 @@ go
 
 
 
--- from: .\functions\GetPastMeetingsForTeam.sql
+-- from: ./functions/GetPastMeetingsForTeam.sql
 -- wszystkie zakończone spotkania w zespole i ich wyniki
 CREATE FUNCTION dbo.ufnGetPastMeetingsForTeam(@TeamId INT, @StartTime DATETIME2)
     RETURNS TABLE AS
@@ -71,7 +71,7 @@ go
 
 
 
--- from: .\functions\GetResultsForUser.sql
+-- from: ./functions/GetResultsForUser.sql
 -- zwróci wszystkie wyniki powiązane z użytkownikiem z danego czasu
 CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
     RETURNS TABLE AS
@@ -92,7 +92,19 @@ go
 
 
 
--- from: .\functions\GetTeamMembers.sql
+-- from: ./functions/GetRoles.sql
+CREATE FUNCTION dbo.ufnGetRoles(@UserId INT, @TeamId INT)
+    RETURNS TABLE AS
+        RETURN SELECT r.name AS role
+               FROM role r
+                        INNER JOIN team_member tm on r.id = tm.role
+               WHERE tm.user_id = @UserId
+                 AND tm.team_id = @TeamId
+go
+
+
+
+-- from: ./functions/GetTeamMembers.sql
 -- lista czlonkow dla zespolu
 CREATE FUNCTION dbo.ufnGetTeamMembers(@TeamId INT)
     RETURNS TABLE AS
@@ -105,7 +117,7 @@ go
 
 
 
--- from: .\functions\GetTeams.sql
+-- from: ./functions/GetTeams.sql
 -- zespoły dla użytkownika
 CREATE FUNCTION dbo.ufnGetTeams(@UserId INT)
     RETURNS TABLE AS
@@ -119,7 +131,18 @@ go
 
 
 
--- from: .\procedures\invitation\InviteUser.sql
+-- from: ./functions/IsTheMeetingOrganizer.sql
+CREATE FUNCTION dbo.ufnIsTheMeetingOrganizer(@UserId INT, @MeetingId INT)
+    RETURNS TABLE AS
+        RETURN SELECT COUNT(*) AS IsOrganizer
+               FROM meeting
+               WHERE id = @MeetingId
+                 AND organizer = @UserId
+go
+
+
+
+-- from: ./procedures/invitation/InviteUser.sql
 CREATE PROCEDURE dbo.spInvitation_InviteUser @MeetingId INT,
                                              @UserId INT
 AS
@@ -137,7 +160,7 @@ go
 
 
 
--- from: .\procedures\invitation\RemoveInvitation.sql
+-- from: ./procedures/invitation/RemoveInvitation.sql
 CREATE PROCEDURE dbo.spInvitation_RemoveInvitation @MeetingId INT,
                                                    @UserId INT
 AS
@@ -150,7 +173,7 @@ go
 
 
 
--- from: .\procedures\meeting\CreateMeeting.sql
+-- from: ./procedures/meeting/CreateMeeting.sql
 CREATE PROCEDURE dbo.spMeeting_CreateMeeting @StartTime DATETIME2(0),
                                              @TeamId INT,
                                              @Organizer INT
@@ -164,7 +187,7 @@ go
 
 
 
--- from: .\procedures\meeting\EndMeeting.sql
+-- from: ./procedures/meeting/EndMeeting.sql
 CREATE PROCEDURE dbo.spMeeting_EndMeeting @Id INT
 AS
 BEGIN
@@ -186,7 +209,7 @@ go
 
 
 
--- from: .\procedures\meeting\RemoveMeeting.sql
+-- from: ./procedures/meeting/RemoveMeeting.sql
 CREATE PROCEDURE dbo.spMeeting_RemoveMeeting @Id INT
 AS
 BEGIN
@@ -204,7 +227,7 @@ go
 
 
 
--- from: .\procedures\meeting\RescheduleMeeting.sql
+-- from: ./procedures/meeting/RescheduleMeeting.sql
 CREATE PROCEDURE dbo.spMeeting_RescheduleMeeting @Id INT,
                                                  @NewStartTime DATETIME2(0)
 AS
@@ -220,7 +243,7 @@ go
 
 
 
--- from: .\procedures\refresh_token\CreateToken.sql
+-- from: ./procedures/refresh_token/CreateToken.sql
 CREATE PROCEDURE dbo.spRefreshToken_CreateToken @UserId INT,
                                                        @Token VARCHAR(50)
 AS
@@ -234,7 +257,7 @@ go
 
 
 
--- from: .\procedures\refresh_token\Logout.sql
+-- from: ./procedures/refresh_token/Logout.sql
 CREATE PROCEDURE dbo.spRefreshToken_Logout @UserId INT
 AS
 BEGIN
@@ -246,7 +269,7 @@ go
 
 
 
--- from: .\procedures\refresh_token\RemoveExpiredTokens.sql
+-- from: ./procedures/refresh_token/RemoveExpiredTokens.sql
 CREATE PROCEDURE dbo.spRefreshToken_RemoveExpiredTokens
 AS
 BEGIN
@@ -258,7 +281,7 @@ go
 
 
 
--- from: .\procedures\result\AssignUserToTask.sql
+-- from: ./procedures/result/AssignUserToTask.sql
 CREATE PROCEDURE dbo.spResult_AssignUserToTask @UserId INT,
                                                @TaskId INT,
                                                @EstimatedTime SMALLINT
@@ -272,7 +295,7 @@ go
 
 
 
--- from: .\procedures\task\AddTask.sql
+-- from: ./procedures/task/AddTask.sql
 CREATE PROCEDURE dbo.spTask_AddTask @Description NVARCHAR(MAX),
                                     @MeetingId INT
 AS
@@ -285,7 +308,7 @@ go
 
 
 
--- from: .\procedures\task\EditTask.sql
+-- from: ./procedures/task/EditTask.sql
 CREATE PROCEDURE dbo.spTask_EditTask @Id INT,
                                      @NewDescription NVARCHAR(MAX)
 AS
@@ -298,7 +321,7 @@ go
 
 
 
--- from: .\procedures\task\RemoveTask.sql
+-- from: ./procedures/task/RemoveTask.sql
 CREATE PROCEDURE dbo.spTask_RemoveTask @Id INT
 AS
 BEGIN
@@ -312,7 +335,7 @@ go
 
 
 
--- from: .\procedures\team\ChangeName.sql
+-- from: ./procedures/team/ChangeName.sql
 CREATE PROCEDURE dbo.spTeam_ChangeName @Id INT,
                                        @NewName NVARCHAR(100)
 AS
@@ -325,7 +348,7 @@ go
 
 
 
--- from: .\procedures\team\CreateTeam.sql
+-- from: ./procedures/team/CreateTeam.sql
 CREATE PROCEDURE dbo.spTeam_CreateTeam @Name NVARCHAR(100), @UserId INT
 AS
 BEGIN
@@ -345,7 +368,7 @@ go
 
 
 
--- from: .\procedures\team\GenerateJoinCode.sql
+-- from: ./procedures/team/GenerateJoinCode.sql
 CREATE PROCEDURE dbo.spTeam_GenerateJoinCode @Id INT
 AS
 BEGIN
@@ -364,7 +387,7 @@ go
 
 
 
--- from: .\procedures\team\RemoveJoinCode.sql
+-- from: ./procedures/team/RemoveJoinCode.sql
 CREATE PROCEDURE dbo.spTeam_RemoveJoinCode @Id INT
 AS
 BEGIN
@@ -376,7 +399,7 @@ go
 
 
 
--- from: .\procedures\team_member\AddMember.sql
+-- from: ./procedures/team_member/AddMember.sql
 CREATE PROCEDURE dbo.spTeamMember_AddMember @TeamId INT,
                                             @UserId INT
 AS
@@ -390,7 +413,7 @@ go
 
 
 
--- from: .\procedures\team_member\ChangeUserRole.sql
+-- from: ./procedures/team_member/ChangeUserRole.sql
 CREATE PROCEDURE dbo.spTeamMember_ChangeUserRole @TeamId INT,
                                                  @UserId INT,
                                                  @Role int
@@ -404,7 +427,7 @@ go
 
 
 
--- from: .\procedures\team_member\JoinWithCode.sql
+-- from: ./procedures/team_member/JoinWithCode.sql
 CREATE PROCEDURE dbo.spTeamMember_JoinWithCode @UserId INT,
                                                @Code VARCHAR(8)
 AS
@@ -426,7 +449,7 @@ go
 
 
 
--- from: .\procedures\team_member\RemoveMember.sql
+-- from: ./procedures/team_member/RemoveMember.sql
 CREATE PROCEDURE dbo.spTeamMember_RemoveMember @TeamId INT,
                                                @UserId INT
 AS
@@ -445,7 +468,7 @@ go
 
 
 
--- from: .\procedures\user\CreateUser.sql
+-- from: ./procedures/user/CreateUser.sql
 CREATE PROCEDURE dbo.spUser_CreateUser @Name NVARCHAR(100),
                                        @Email NVARCHAR(100),
                                        @Password BINARY(60)
@@ -466,7 +489,7 @@ go
 
 
 
--- from: .\procedures\user\GetUserByEmail.sql
+-- from: ./procedures/user/GetUserByEmail.sql
 CREATE PROCEDURE dbo.spUser_GetUserByEmail @Email NVARCHAR(100)
 AS
 BEGIN
