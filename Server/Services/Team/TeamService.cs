@@ -13,12 +13,14 @@ namespace Server.Services.Team
     {
 
         private readonly TeamDAO _teamDao;
+        private readonly TeamMemberDAO _teamMemberDao;
         private readonly IUserProvider _userProvider;
 
-        public TeamService(IUserProvider userProvider, TeamDAO teamDao)
+        public TeamService(IUserProvider userProvider, TeamDAO teamDao, TeamMemberDAO teamMemberDao)
         {
             _userProvider = userProvider;
             _teamDao = teamDao;
+            _teamMemberDao = teamMemberDao;
         }
 
         public async Task<List<TeamBase>> GetTeams()
@@ -66,6 +68,31 @@ namespace Server.Services.Team
         {
             var members = await _teamDao.GetMembers(teamId);
             return members;
+        }
+
+        public async Task<bool> AddMember(int teamId, string email)
+        {
+            var response = await _teamMemberDao.AddMember(teamId, email);
+            return response;
+        }
+
+        public async Task<bool> RemoveMember(int teamId, int userId)
+        {
+            var response = await _teamMemberDao.RemoveMember(teamId, userId);
+            return response;
+        }
+
+        public async Task<Optional<int>> JoinWithCode(string code)
+        {
+            int userId = _userProvider.GetUserId();
+            var response = await _teamMemberDao.JoinWithCode(userId, code);
+            return response;
+        }
+
+        public async Task<bool> ChangeUserRole(int teamId, int userId, int role)
+        {
+            var response = await _teamMemberDao.ChangeUserRole(teamId, userId, role);
+            return response;
         }
     }
 }

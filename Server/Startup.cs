@@ -30,11 +30,12 @@ namespace Server
 
         public IConfiguration Configuration { get; }
 
-        private void AddDALs(IServiceCollection services)
+        private void AddDAOs(IServiceCollection services)
         {
             services.AddScoped<UserDAO>();
             services.AddScoped<RefreshTokenDAO>();
             services.AddScoped<TeamDAO>();
+            services.AddScoped<TeamMemberDAO>();
         }
 
         private void AddServices(IServiceCollection services)
@@ -73,7 +74,7 @@ namespace Server
             services.AddSwaggerDocument();
             services.AddHttpContextAccessor();
 
-            AddDALs(services);
+            AddDAOs(services);
             AddServices(services);
             services.AddSingleton<IJwtTokenManager>(new JwtTokenManager(tokenKey));
         }
