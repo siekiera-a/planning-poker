@@ -28,7 +28,6 @@ namespace Server.Services.Authorization
 
         public async Task<bool> Authorize(int userId, int teamId, Action action)
         {
-
             List<string> userRoles = await _rolesDao.GetRoles(userId, teamId);
             List<string> acceptedRoles;
 
