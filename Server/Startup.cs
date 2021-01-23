@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Server.Dtos.Incoming;
 using Server.DAOs;
 using Server.Services.Authentication;
+using Server.Services.Authorization;
 using Server.Services.DataAccess;
 using Server.Services.Team;
 
@@ -36,6 +37,7 @@ namespace Server
             services.AddScoped<RefreshTokenDAO>();
             services.AddScoped<TeamDAO>();
             services.AddScoped<TeamMemberDAO>();
+            services.AddScoped<RolesDAO>();
         }
 
         private void AddServices(IServiceCollection services)
@@ -45,6 +47,7 @@ namespace Server
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IUserAuthorization, UserAuthorization>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
