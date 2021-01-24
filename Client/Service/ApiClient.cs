@@ -13,6 +13,7 @@ namespace Client.Service
         Task<Response<T>> PostAsync<T>(string url, object o);
         Task<Response<T>> PostAsyncAuth<T>(string url, object o);
         Task<Response<T>> GetAsyncAuth<T>(string url);
+        Task<Response<T>> DeleteAsyncAuth<T>(string url);
     }
 
     public class ApiClient : IApiClient
@@ -42,6 +43,13 @@ namespace Client.Service
         {
             using var httpClient = _client.Create();
             return await SendPostAsync<T>(url, o, httpClient);
+        }
+
+        public async Task<Response<T>> DeleteAsyncAuth<T>(string url)
+        {
+            using var httpClient = _client.CreateAuthenticated(_token.Token);
+            var response = await httpClient.DeleteAsync(_client.Path(url));
+            return await GetResponse<T>(response);
         }
 
         private async Task<Response<T>> SendPostAsync<T>(string url, object o, HttpClient httpClient)

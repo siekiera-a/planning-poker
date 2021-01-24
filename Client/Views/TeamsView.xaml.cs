@@ -16,12 +16,10 @@ namespace Client.Views
     /// </summary>
     public partial class TeamsView : UserControl
     {
-        private readonly IApiClient _apiClient;
 
         public TeamsView()
         {
             InitializeComponent();
-            _apiClient = Services.GetService<IApiClient>();
             Loaded += FetchTeams;
         }
 
@@ -58,6 +56,15 @@ namespace Client.Views
                 {
                     await context.FetchMembers(selectedItem.Id);
                 }
+            }
+        }
+
+        private async void DeleteJoinCodeButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is TeamsViewModel context)
+            {
+                await context.DeleteCode();
+                ShowNotification(context);
             }
         }
 

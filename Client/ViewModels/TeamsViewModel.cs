@@ -46,13 +46,7 @@ namespace Client.ViewModels
             }
         }
 
-        private string _notificationText = "";
-
-        public string NotificationText
-        {
-            get => _notificationText;
-            set => _notificationText = value;
-        }
+        public string NotificationText { get; set; } = "";
 
         public async Task FetchTeams()
         {
@@ -94,14 +88,48 @@ namespace Client.ViewModels
                 if (response.IsOk)
                 {
                     Code = response.Value.Code;
+                    NotificationText = "Join code created successfully";
                 }
                 else
                 {
                     if (response.HttpStatusCode == HttpStatusCode.Forbidden)
                     {
-                        Code = response.Error.Message;
+                        NotificationText = "You don't have access";
                     }
                 }
+            }
+            else
+            {
+                NotificationText = "Choose team to generate code";
+            }
+        }
+
+        public async Task DeleteCode()
+        {
+            if (_teamId != 0)
+            {
+                var response = await _apiClient.DeleteAsyncAuth<BoolResponse>($"/team/{_teamId}/join-code");
+
+                if (response.IsOk)
+                {
+                    if (response.Value.Success)
+                    {
+                        Code = "";
+                        NotificationText = "Join code deleted successfully";
+                    }
+                    else
+                    {
+                        NotificationText = "Unable to delete join code";
+                    }
+                }
+                else
+                {
+                    NotificationText = "You don't have access";
+                }
+            }
+            else
+            {
+                NotificationText = "Choose team to delete code";
             }
         }
 

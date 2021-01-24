@@ -12,7 +12,7 @@
              Background="{StaticResource MahApps.Brushes.Accent4}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="230" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -67,6 +67,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Column="0"
@@ -84,6 +85,14 @@
                             Padding="10"
                             Background="{StaticResource MahApps.Brushes.Accent}"
                             Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
+
+                    <Button Grid.Column="2"
+                            Margin="8"
+                            Content="x"
+                            Padding="5"
+                            Click="DeleteJoinCodeButtonClick"
+                            Background="{StaticResource MahApps.Brushes.Accent}"
+                            Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"/>
 
                 </Grid>
             </Grid>
