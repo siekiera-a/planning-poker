@@ -1,15 +1,97 @@
-﻿using System.Windows.Controls;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using Client.Models;
+using User = Server.Models.Dapper.User;
 
 namespace Client.Views
 {
+    class TeamData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    class MembersRequest
+    {
+        public int TeamId { get; set; }
+
+        public List<User> Members { get; set; }
+    }
+
+    class JoinCode
+    {
+        public int TeadId { get; set; }
+        public string Code { get; set; }
+    }
+
+
     /// <summary>
     /// Interaction logic for TeamsView.xaml
     /// </summary>
     public partial class TeamsView : UserControl
     {
+        private readonly IApiClient _apiClient;
+        private int _teamId;
+
         public TeamsView()
         {
             InitializeComponent();
+            _apiClient = Services.GetService<IApiClient>();
+            Loaded += FetchTeams;
+        }
+
+        private void AddMemberByEmail(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private async void GenerateCodeButtonClick(object sender, RoutedEventArgs e)
+        {
+            var response = await _apiClient.GetAsyncAuth<JoinCode>($"/team/{_teamId}/join-code");
+
+            if (response.IsOk)
+            {
+                JoinCode.Text = response.Value.Code;
+            }
+            else
+            {
+                if (response.HttpStatusCode == HttpStatusCode.Forbidden)
+                {
+                    MessageBox.Show(response.Error.Message);
+                }
+            }
+        }
+
+        private async void FetchTeams(object sender, RoutedEventArgs e)
+        {
+            var response = await _apiClient.GetAsyncAuth<TeamData[]>("/team");
+
+            if (response.IsOk)
+            {
+                ComboBox.ItemsSource = response.Value;
+                ComboBox.Items.Refresh();
+                ComboBox.DisplayMemberPath = "Name";
+                ComboBox.SelectedValuePath = "Id";
+            }
+        }
+
+        private async void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems[0] is TeamData selectedItem)
+            {
+                _teamId = selectedItem.Id;
+                var members = await _apiClient.GetAsyncAuth<MembersRequest>($"/team/{_teamId}/members");
+
+                if (members.IsOk)
+                {
+                    Members.ItemsSource = members.Value.Members;
+                    Members.DisplayMemberPath = "Name";
+                    Members.SelectedValuePath = "Id";
+                    Members.Items.Refresh();
+                }
+            }
         }
     }
 }

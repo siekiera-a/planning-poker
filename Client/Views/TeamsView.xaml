@@ -11,30 +11,83 @@
              Background="{StaticResource MahApps.Brushes.Accent4}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <ComboBox Grid.Row="0" Margin="8"
+                      Name="ComboBox"
                       mah:TextBoxHelper.Watermark="Choose team"
-                      VerticalAlignment="Top" />
+                      VerticalAlignment="Top"
+                      DisplayMemberPath="TeamName"
+                      SelectionChanged="ComboBox_OnSelectionChanged"/>
 
-            <controls:TeamsBase Grid.Row="1"/>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <ListView Grid.Row="2" Margin="8"
-                      Background="{StaticResource MahApps.Brushes.Accent3}">
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            </ListView>
+                    <TextBox Grid.Column="0"
+                             Margin="8"
+                             mah:TextBoxHelper.ClearTextButton="True"
+                             mah:TextBoxHelper.Watermark="Write mail"
+                             VerticalAlignment="Center"
+                             TextWrapping="WrapWithOverflow"
+                             Name="TaskDescription" />
+
+                    <Button Grid.Column="1"
+                            Margin="8"
+                            Name="AddButton"
+                            Click="AddMemberByEmail"
+                            Content="Add"
+                            Padding="10"
+                            Background="{StaticResource MahApps.Brushes.Accent}"
+                            Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
+
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Margin="8"
+                               VerticalAlignment="Center"
+                               TextWrapping="WrapWithOverflow"
+                               Name="JoinCode" />
+
+                    <Button Grid.Column="1"
+                            Margin="8"
+                            Name="GenerateCode"
+                            Click="GenerateCodeButtonClick"
+                            Content="Generate"
+                            Padding="10"
+                            Background="{StaticResource MahApps.Brushes.Accent}"
+                            Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
+
+                </Grid>
+            </Grid>
+
+            <ListView Grid.Row="2" Margin="8" Name="Members"
+                      Background="{StaticResource MahApps.Brushes.Accent3}" />
 
         </Grid>
-
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
