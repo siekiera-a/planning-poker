@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Server.Dtos.Incoming;
 using Server.Dtos.Outgoing;
 using Server.Services.Meeting;
+using Server.Utils;
 
 namespace Server.Controllers
 {
@@ -29,7 +30,17 @@ namespace Server.Controllers
         {
             try
             {
-                var meetingId = await _meetingService.CreateMeeting(request.StartTime, id);
+                Optional<int> meetingId;
+
+                if (request != null)
+                {
+                    meetingId = await _meetingService.CreateMeeting(request.StartTime, id);
+                }
+                else
+                {
+                    meetingId = await _meetingService.CreateMeeting(id);
+                }
+
 
                 if (meetingId.IsEmpty)
                 {
@@ -52,7 +63,42 @@ namespace Server.Controllers
         [HttpPost("team/{id}/now")]
         public async Task<IActionResult> CreateMeeting(int id)
         {
-            return await CreateMeeting(id, new DateTimeRequest { StartTime = DateTime.UtcNow.AddSeconds(10) });
+            return await CreateMeeting(id, null);
+        }
+
+        [HttpPost("{id}/invite")]
+        public async Task<IActionResult> InviteUser(int id, UserIdRequest request)
+        {
+            try
+            {
+                var result = await _meetingService.InviteUser(id, request.UserId);
+                return Ok(new BoolResponse { Success = result });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+        }
+
+        [HttpDelete("{meetingId}/invite/{userId}")]
+        public async Task<IActionResult> RemoveInvitation(int meetingId, int userId)
+        {
+            try
+            {
+                var result = await _meetingService.RemoveInvitation(meetingId, userId);
+                return Ok(new BoolResponse { Success = result });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+        }
+
+        [HttpGet("")]
+        public async Task<IActionResult> GetFutureMeetings()
+        {
+            var meetings = await _meetingService.GetFutureMeetings();
+            return Ok(meetings); // List<MeetingDetails>
         }
     }
 }

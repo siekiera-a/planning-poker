@@ -60,9 +60,8 @@ namespace Server.Services.Authorization
             return false;
         }
 
-        public async Task<bool> Authorize(int userId, int meetingId, int teamId, MeetingAction action)
+        public async Task<bool> Authorize(int userId, int meetingId, MeetingAction action)
         {
-            List<string> userRoles = await _rolesDao.GetRoles(userId, teamId);
             var isOrganizer = await _meetingDao.IsTheMeetingOrganizer(userId, meetingId);
 
             switch (action)
@@ -74,7 +73,7 @@ namespace Server.Services.Authorization
 
                 case MeetingAction.RescheduleMeeting:
                 case MeetingAction.RemoveMeeting:
-                    return isOrganizer || userRoles.Contains(_adminRole);
+                    return isOrganizer;
             }
 
             return false;

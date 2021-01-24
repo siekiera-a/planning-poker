@@ -16,12 +16,14 @@ namespace Server.Services.Meeting
 
         private readonly IUserAuthorization _userAuthorization;
         private readonly MeetingDAO _meetingDao;
+        private readonly InvitationDAO _invitationDao;
         private readonly int _userId;
 
-        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao)
+        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao, InvitationDAO invitationDao)
         {
             _userAuthorization = userAuthorization;
             _meetingDao = meetingDao;
+            _invitationDao = invitationDao;
             _userId = userProvider.GetUserId();
         }
 
@@ -50,9 +52,9 @@ namespace Server.Services.Meeting
         }
 
 
-        public Task<Optional<Models.Dapper.Meeting>> EndMeeting(int meetingId)
+        public async Task<Optional<Models.Dapper.Meeting>> EndMeeting(int meetingId)
         {
-            throw new NotImplementedException();
+            return await _meetingDao.EndMeeting(meetingId);
         }
 
         public Task<bool> RemoveMeeting(int meetingId)
@@ -65,19 +67,33 @@ namespace Server.Services.Meeting
             throw new NotImplementedException();
         }
 
-        public Task<List<MeetingDetails>> GetFutureMeetings()
+        public async Task<List<MeetingDetails>> GetFutureMeetings()
         {
-            throw new NotImplementedException();
+            return await _meetingDao.GetFutureMeetings(_userId);
         }
 
-        public Task<bool> InviteUser(int meetingId, int userId)
+        public async Task<bool> InviteUser(int meetingId, int userId)
         {
-            throw new NotImplementedException();
+            var hasPermissions = await _userAuthorization.Authorize(_userId, meetingId, MeetingAction.InviteUser);
+
+            if (hasPermissions)
+            {
+                return await _invitationDao.InviteUser(meetingId, userId);
+            }
+
+            throw new UnauthorizedAccessException();
         }
 
-        public Task<bool> RemoveInvitation(int meetingId, int userId)
+        public async Task<bool> RemoveInvitation(int meetingId, int userId)
         {
-            throw new NotImplementedException();
+            var hasPermissions = await _userAuthorization.Authorize(_userId, meetingId, MeetingAction.RemoveInvitation);
+
+            if (hasPermissions)
+            {
+                return await _invitationDao.RemoveInvitation(meetingId, userId);
+            }
+
+            throw new UnauthorizedAccessException();
         }
     }
 }

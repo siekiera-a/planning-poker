@@ -11,7 +11,7 @@ namespace Server.Services.Authorization
     {
 
         public Task<bool> Authorize(int userId, int teamId, TeamAction action);
-        public Task<bool> Authorize(int userId, int meetingId, int teamId, MeetingAction action);
+        public Task<bool> Authorize(int userId, int meetingId, MeetingAction action);
 
     }
 }
