@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.Models;
+using Client.Service;
 using Client.State.Navigators;
 using Client.ViewModels;
 using Client.Views.Login;

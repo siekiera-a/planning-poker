@@ -4,9 +4,10 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Client.Models;
 using Newtonsoft.Json;
 
-namespace Client.Models
+namespace Client.Service
 {
     public class Response<T>
     {

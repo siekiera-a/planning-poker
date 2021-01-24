@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Input;
+using Client.Service;
 using Client.ViewModels;
+using Server.Dtos.Outgoing;
 
 namespace Client.Commands.JoinTeam
 {
@@ -26,7 +28,6 @@ namespace Client.Commands.JoinTeam
 
         public void Execute(object parameter)
         {
-            
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

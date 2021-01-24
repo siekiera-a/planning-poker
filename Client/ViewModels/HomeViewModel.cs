@@ -1,4 +1,5 @@
 ﻿using Client.Models;
+using Client.Service;
 
 namespace Client.ViewModels
 {
@@ -10,14 +11,8 @@ namespace Client.ViewModels
 
         public string Username
         {
-            get
-            {
-                return _username;
-            }
-            set
-            {
-                _username = value;
-            }
+            get => _username;
+            set => _username = value;
         }
 
         public HomeViewModel()

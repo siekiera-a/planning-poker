@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Client.Models;
 using Newtonsoft.Json;
 
-namespace Client.Models
+namespace Client.Service
 {
     public interface IApiClient
     {

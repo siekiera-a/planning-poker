@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using Client.Models;
+using Client.Service;
 using Server.Dtos.Outgoing;
 
 namespace Client.Views

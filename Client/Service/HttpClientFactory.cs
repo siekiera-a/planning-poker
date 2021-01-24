@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Client.Models
+namespace Client.Service
 {
     public interface IHttpClientFactory
     {

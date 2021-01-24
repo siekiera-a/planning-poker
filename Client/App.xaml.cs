@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Windows;
 using Client.Models;
+using Client.Service;
 using Client.ViewModels;
 using Client.Views.Login;
 using Microsoft.Extensions.DependencyInjection;

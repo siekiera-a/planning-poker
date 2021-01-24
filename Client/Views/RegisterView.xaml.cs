@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.Models;
+using Client.Service;
 using Client.ViewModels;
 using Client.Views.Login;
 using Newtonsoft.Json;

@@ -3,6 +3,8 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using Client.Models;
+using Client.Service;
+using Client.ViewModels;
 using Notifications.Wpf.Core;
 using Server.Dtos.Outgoing;
 
@@ -13,61 +15,38 @@ namespace Client.Views
     /// </summary>
     public partial class JoinTeamView : UserControl
     {
-        private readonly IApiClient _apiClient;
-        private string message = "";
+        private string _message = "";
 
         public JoinTeamView()
         {
             InitializeComponent();
-            _apiClient = Services.GetService<IApiClient>();
         }
 
         private async void JoinTeamButtonClick(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.PostAsyncAuth<TeamResponse>("/team/join-code", new {Code = TeamName.Text});
-
-            if (response.IsOk)
+            if (DataContext is JoinTeamModel context)
             {
-                message = "You've joined the team";
+                await context.FetchDataJoinTeam();
+                ShowNotification(context);
             }
-            else
-            {
-                if (response.HttpStatusCode == HttpStatusCode.BadRequest ||
-                    response.HttpStatusCode == HttpStatusCode.NotFound)
-                {
-                    message = response.Error.Message;
-                }
-            }
-
-            TeamName.Clear();
-            ShowNotification(message);
         }
 
         private async void CreateTeamButtonClick(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.PostAsyncAuth<TeamResponse>("/team", new {Name = NewTeamName.Text});
-
-            if (response.IsOk)
+            if (DataContext is JoinTeamModel context)
             {
-                message = "New team created successfully";
+                await context.FetchDataCreateTeam();
+                ShowNotification(context);
             }
-            else
-            {
-                message = "Unable to create team";
-            }
-
-            NewTeamName.Clear();
-            ShowNotification(message);
         }
 
-        private async void ShowNotification(string messageText)
+        private async void ShowNotification(JoinTeamModel context)
         {
             var notificationManager = new NotificationManager();
-
             await notificationManager.ShowAsync(
                 new NotificationContent
                 {
-                    Title = messageText,
+                    Title = context.NotificationText,
                 },
                 areaName: "WindowArea");
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Client.Models
+namespace Client.Service
 {
     public interface ITokenManager
     {

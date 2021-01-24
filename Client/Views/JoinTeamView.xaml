@@ -78,7 +78,8 @@
         <notifications:NotificationArea Grid.Row="5"
                                         x:Name="WindowArea"
                                         MaxItems="2"
-                                        Position="BottomRight" />
+                                        Position="BottomRight"
+                                        DataContext="{Binding NotificationText}"/>
 
 
     </Grid>

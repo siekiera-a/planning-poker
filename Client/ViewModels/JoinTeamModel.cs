@@ -1,16 +1,22 @@
-﻿using System.Windows.Input;
+﻿using System.Net;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Client.Commands;
 using Client.Commands.JoinTeam;
+using Client.Service;
+using Server.Dtos.Outgoing;
 
 namespace Client.ViewModels
 {
     public class JoinTeamModel : ViewModelBase
     {
+        private readonly IApiClient _apiClient;
+
         private string _teamName;
 
         public string TeamName
         {
-            get { return _teamName; }
+            get => _teamName;
             set
             {
                 _teamName = value;
@@ -22,7 +28,7 @@ namespace Client.ViewModels
 
         public string NewTeamName
         {
-            get { return _newTeamName; }
+            get => _newTeamName;
             set
             {
                 _newTeamName = value;
@@ -37,6 +43,52 @@ namespace Client.ViewModels
         {
             JoinTeamCommand = new JoinTeamCommand(this);
             CreateTeamCommand = new CreateTeamCommand(this);
+            _apiClient = Services.GetService<IApiClient>();
+        }
+
+        private string _notificationText = "";
+
+        public string NotificationText
+        {
+            get => _notificationText;
+            set => _notificationText = value;
+        }
+
+        public async Task FetchDataJoinTeam()
+        {
+            var response =
+                await _apiClient.PostAsyncAuth<TeamIdResponse>("/team/join-code", new {Code = TeamName});
+
+            if (response.IsOk)
+            {
+                NotificationText = "You've joined the team";
+            }
+            else
+            {
+                if (response.HttpStatusCode == HttpStatusCode.BadRequest ||
+                    response.HttpStatusCode == HttpStatusCode.NotFound)
+                {
+                    NotificationText = response.Error.Message;
+                }
+            }
+
+            TeamName = "";
+        }
+
+        public async Task FetchDataCreateTeam()
+        {
+            var response = await _apiClient.PostAsyncAuth<TeamResponse>("/team", new {Name = NewTeamName});
+
+            if (response.IsOk)
+            {
+                NotificationText = "New team created successfully";
+            }
+            else
+            {
+                NotificationText = "Unable to create team";
+            }
+
+            NewTeamName = "";
         }
     }
 }
