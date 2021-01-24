@@ -38,6 +38,7 @@ namespace Server
             services.AddScoped<TeamDAO>();
             services.AddScoped<TeamMemberDAO>();
             services.AddScoped<RolesDAO>();
+            services.AddScoped<MeetingDAO>();
         }
 
         private void AddServices(IServiceCollection services)
@@ -79,6 +80,7 @@ namespace Server
 
             AddDAOs(services);
             AddServices(services);
+
             services.AddSingleton<IJwtTokenManager>(new JwtTokenManager(tokenKey));
         }
 
