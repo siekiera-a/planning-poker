@@ -31,15 +31,20 @@ go
 
 
 
--- from: ./functions/GetMeetings.sql
--- przyszłe spotkania we wszystkich zespołach dla danego uzytkownika
-CREATE FUNCTION dbo.ufnGetMeetings(@UserId INT)
+-- from: ./functions/GetFutureMeetings.sql
+CREATE FUNCTION dbo.ufnGetFutureMeetings(@UserId INT)
     RETURNS TABLE AS
         RETURN
-        SELECT m.id AS Id, m.start_time AS StartTime, m.organizer AS Organizer, m.team_id AS TeamId, t.name As TeamName
+        SELECT m.id         AS Id,
+               m.start_time AS StartTime,
+               m.organizer  AS OrganizerId,
+               u.name       AS OrganizerName,
+               m.team_id    AS TeamId,
+               t.name       As TeamName
         FROM meeting m
                  JOIN invitation i on m.id = i.meeting_id
                  JOIN team t on m.team_id = t.id
+                 JOIN [user] u on u.id = m.organizer
         WHERE i.user_id = @UserId
           AND m.start_time > SYSUTCDATETIME()
 go
@@ -87,6 +92,7 @@ CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
                  INNER JOIN meeting m on t.meeting_id = m.id
                  INNER JOIN team tm ON m.team_id = tm.id
         WHERE r.user_id = @UserId
+          AND m.end_time IS NOT NULL 
           AND m.end_time BETWEEN @StartTime AND SYSUTCDATETIME()
 go
 
@@ -400,8 +406,6 @@ go
 CREATE PROCEDURE dbo.spTeam_RemoveJoinCode @Id INT
 AS
 BEGIN
-    SET NOCOUNT ON
-
     UPDATE team SET join_code = NULL WHERE id = @Id
 END
 go
@@ -418,9 +422,12 @@ BEGIN
     DECLARE @Id INT
     SELECT @Id = id FROM [user] WHERE email = @Email
 
-    IF @Id IS NOT NULL 
-        -- create member with default role (1) and join_time (current utc time)
-        INSERT INTO team_member (team_id, user_id) VALUES (@TeamId, @Id)
+    IF @Id IS NOT NULL
+        BEGIN
+            -- create member with default role (1) and join_time (current utc time)
+            INSERT INTO team_member (team_id, user_id) VALUES (@TeamId, @Id)
+            SELECT 1
+        END
 END
 go
 
