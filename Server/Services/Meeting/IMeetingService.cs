@@ -11,6 +11,7 @@ namespace Server.Services.Meeting
     {
 
         Task<Optional<int>> CreateMeeting(DateTime startTime, int teamId);
+        Task<Optional<int>> CreateMeeting(int teamId);
         Task<Optional<Models.Dapper.Meeting>> EndMeeting(int meetingId);
         Task<bool> RemoveMeeting(int meetingId);
         Task<bool> RescheduleMeeting(int meetingId, DateTime newStartTime);

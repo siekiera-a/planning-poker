@@ -18,6 +18,7 @@ using Server.DAOs;
 using Server.Services.Authentication;
 using Server.Services.Authorization;
 using Server.Services.DataAccess;
+using Server.Services.Meeting;
 using Server.Services.Team;
 
 namespace Server
@@ -41,6 +42,7 @@ namespace Server
             services.AddScoped<MeetingDAO>();
             services.AddScoped<InvitationDAO>();
             services.AddScoped<TaskDAO>();
+            services.AddScoped<ResultDAO>();
         }
 
         private void AddServices(IServiceCollection services)
@@ -51,6 +53,7 @@ namespace Server
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IUserAuthorization, UserAuthorization>();
+            services.AddScoped<IMeetingService, MeetingService>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
