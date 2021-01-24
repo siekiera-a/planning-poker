@@ -33,6 +33,7 @@ namespace Client.Views
     {
         private readonly IApiClient _apiClient;
         private readonly ITokenManager _tokenManager;
+
         public LoginView()
         {
             InitializeComponent();
@@ -42,9 +43,8 @@ namespace Client.Views
 
         private async void LoginButtonClick(object sender, RoutedEventArgs e)
         {
-            User userData = new User { Email = Email.Text, Password = Password.Password };
-
-            var response = await _apiClient.PostAsync<LoginResponse>("/User/login", userData);
+            var response = await _apiClient.PostAsync<LoginResponse>("/User/login",
+                new {Email = Email.Text, Password = Password.Password});
 
             if (response.IsOk)
             {
@@ -64,7 +64,6 @@ namespace Client.Views
                     ErrorMessage.Visibility = Visibility.Visible;
                 }
             }
-
         }
 
         private void RegisterButtonClick(object sender, RoutedEventArgs e)

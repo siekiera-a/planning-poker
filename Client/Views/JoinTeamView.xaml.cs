@@ -4,14 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using Client.Models;
 using Notifications.Wpf.Core;
+using Server.Dtos.Outgoing;
 
 namespace Client.Views
 {
-    public class Joincsos
-    {
-        public int TeamId { get; set; }
-    }
-
     /// <summary>
     /// Interaction logic for CreateView.xaml
     /// </summary>
@@ -27,21 +23,18 @@ namespace Client.Views
 
         private async void JoinTeamButtonClick(object sender, RoutedEventArgs e)
         {
-
-            var response = await _apiClient.PostAsyncAuth<Joincsos>("/team/join-code", new {Code = TeamName.Text});
+            var response = await _apiClient.PostAsyncAuth<TeamResponse>("/team/join-code", new {Code = TeamName.Text});
 
             string message = "";
 
             if (response.IsOk)
             {
                 message = "You've joined the team";
-
-                
-
             }
             else
             {
-                if (response.HttpStatusCode == HttpStatusCode.BadRequest || response.HttpStatusCode == HttpStatusCode.NotFound)
+                if (response.HttpStatusCode == HttpStatusCode.BadRequest ||
+                    response.HttpStatusCode == HttpStatusCode.NotFound)
                 {
                     message = response.Error.Message;
                 }
@@ -56,11 +49,8 @@ namespace Client.Views
                 new NotificationContent
                 {
                     Title = message,
-
                 },
                 areaName: "WindowArea");
-
-
         }
     }
 }

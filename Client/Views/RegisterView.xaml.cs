@@ -18,7 +18,7 @@ using Client.Models;
 using Client.ViewModels;
 using Client.Views.Login;
 using Newtonsoft.Json;
-using Server.Dtos.Outgoing;
+using Server.Dtos.Incoming;
 
 namespace Client.Views
 {
@@ -37,29 +37,27 @@ namespace Client.Views
 
         private async void CreateAccountButtonClick(object sender, RoutedEventArgs e)
         {
-            // User userData = new User
-            //     {Email = Email.Text, Password = Password.Password, Username = Username.Text};
-            //
-            // var response = await _apiClient.PostAsync<RegisterResponse>("/User/register", userData);
-            //
-            // if (response.IsOk)
-            // {
-            //     Window window = new MainWindow
-            //     {
-            //         DataContext = new MainViewModel()
-            //     };
-            //     window.Show();
-            //
-            //     Window.GetWindow(this)?.Close();
-            // }
-            // else
-            // {
-            //     if (response.HttpStatusCode == HttpStatusCode.Conflict)
-            //     {
-            //         ErrorMessage.Text = response.Error.Message;
-            //         ErrorMessage.Visibility = Visibility.Visible;
-            //     }
-            // }
+            var response = await _apiClient.PostAsync<RegisterRequest>("/user/register",
+                new {Email = Email.Text, Password = Password.Password, Username = Username.Text});
+
+            if (response.IsOk)
+            {
+                Window window = new MainWindow
+                {
+                    DataContext = new MainViewModel()
+                };
+                window.Show();
+
+                Window.GetWindow(this)?.Close();
+            }
+            else
+            {
+                if (response.HttpStatusCode == HttpStatusCode.Conflict)
+                {
+                    ErrorMessage.Text = response.Error.Message;
+                    ErrorMessage.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         private void LoginButtonClick(object sender, RoutedEventArgs e)

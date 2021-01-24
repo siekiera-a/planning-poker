@@ -4,30 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using Client.Models;
-using User = Server.Models.Dapper.User;
+using Server.Dtos.Outgoing;
 
 namespace Client.Views
 {
-    class TeamData
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    class MembersRequest
-    {
-        public int TeamId { get; set; }
-
-        public List<User> Members { get; set; }
-    }
-
-    class JoinCode
-    {
-        public int TeadId { get; set; }
-        public string Code { get; set; }
-    }
-
-
     /// <summary>
     /// Interaction logic for TeamsView.xaml
     /// </summary>
@@ -49,7 +29,7 @@ namespace Client.Views
 
         private async void GenerateCodeButtonClick(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.GetAsyncAuth<JoinCode>($"/team/{_teamId}/join-code");
+            var response = await _apiClient.GetAsyncAuth<CodeResponse>($"/team/{_teamId}/join-code");
 
             if (response.IsOk)
             {
@@ -66,7 +46,7 @@ namespace Client.Views
 
         private async void FetchTeams(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.GetAsyncAuth<TeamData[]>("/team");
+            var response = await _apiClient.GetAsyncAuth<TeamResponse[]>("/team");
 
             if (response.IsOk)
             {
@@ -79,10 +59,10 @@ namespace Client.Views
 
         private async void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems[0] is TeamData selectedItem)
+            if (e.AddedItems[0] is TeamResponse selectedItem)
             {
                 _teamId = selectedItem.Id;
-                var members = await _apiClient.GetAsyncAuth<MembersRequest>($"/team/{_teamId}/members");
+                var members = await _apiClient.GetAsyncAuth<GetMembersResponse>($"/team/{_teamId}/members");
 
                 if (members.IsOk)
                 {
