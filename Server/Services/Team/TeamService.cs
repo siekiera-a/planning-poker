@@ -33,7 +33,7 @@ namespace Server.Services.Team
 
         public async Task<bool> ChangeName(int teamId, string newName)
         {
-            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, Action.RenameTeam);
+            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, TeamAction.RenameTeam);
 
             if (hasPermissions)
             {
@@ -45,7 +45,7 @@ namespace Server.Services.Team
 
         public async Task<Optional<string>> GenerateJoinCode(int teamId)
         {
-            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, Action.GenerateJoinCode);
+            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, TeamAction.GenerateJoinCode);
 
             if (hasPermissions)
             {
@@ -57,7 +57,7 @@ namespace Server.Services.Team
 
         public async Task<bool> RemoveJoinCode(int teamId)
         {
-            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, Action.RemoveJoinCode);
+            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, TeamAction.RemoveJoinCode);
 
             if (hasPermissions)
             {
@@ -85,7 +85,7 @@ namespace Server.Services.Team
 
         public async Task<List<User>> GetMembers(int teamId)
         {
-            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, Action.MemberAccess);
+            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, TeamAction.MemberAccess);
 
             if (hasPermissions)
             {
@@ -97,7 +97,7 @@ namespace Server.Services.Team
 
         public async Task<bool> AddMember(int teamId, string email)
         {
-            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, Action.AddMember);
+            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, TeamAction.AddMember);
 
             if (hasPermissions)
             {
@@ -109,7 +109,7 @@ namespace Server.Services.Team
 
         public async Task<bool> RemoveMember(int teamId, int userId)
         {
-            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, Action.RemoveMember);
+            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, TeamAction.RemoveMember);
 
             if (hasPermissions)
             {
@@ -126,7 +126,7 @@ namespace Server.Services.Team
 
         public async Task<bool> ChangeUserRole(int teamId, int userId, int role)
         {
-            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, Action.ChangeRole);
+            var hasPermissions = await _userAuthorization.Authorize(_userId, teamId, TeamAction.ChangeRole);
 
             if (hasPermissions)
             {
