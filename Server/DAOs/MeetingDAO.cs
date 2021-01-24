@@ -93,5 +93,38 @@ namespace Server.DAOs
             }
         }
 
+        public async Task<List<MeetingDetails>> GetFutureMeetings(int userId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            try
+            {
+                var meetings = await connection.QueryAsync<MeetingDetails>("SELECT * FROM ufnGetFutureMeetings(@UserId)",
+                    new { UserId = userId }, commandType: CommandType.Text);
+                return meetings.AsList();
+            }
+            catch (SqlException e)
+            {
+                _logger.LogError(e.Message);
+                return new List<MeetingDetails>();
+            }
+        }
+
+        public async Task<bool> IsTheMeetingOrganizer(int userId, int meetingId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            try
+            {
+                return await connection.QueryFirstOrDefaultAsync<bool>("SELECT * FROM dbo.ufnIsTheMeetingOrganizer(@UserId, @MeetingId)",
+                    new { UserId = userId, MeetingId = meetingId }, commandType: CommandType.Text);
+            }
+            catch (SqlException e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
+
     }
 }
