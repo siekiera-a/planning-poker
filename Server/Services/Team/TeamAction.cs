@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Server.Services.Team
 {
-    public enum Action
+    public enum TeamAction
     {
         RemoveTeam,
         AddMember,
