@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace Server.Dtos.Incoming
 {
-    public class TeamRequest : IdRequest
+    public class AddMemberRequest
     {
-        public string Name { get; set; }
+
+        public string Email { get; set; }
+
     }
 }

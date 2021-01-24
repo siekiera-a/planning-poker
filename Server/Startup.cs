@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Server.Dtos.Incoming;
 using Server.DAOs;
 using Server.Services.Authentication;
+using Server.Services.Authorization;
 using Server.Services.DataAccess;
 using Server.Services.Team;
 
@@ -30,11 +31,13 @@ namespace Server
 
         public IConfiguration Configuration { get; }
 
-        private void AddDALs(IServiceCollection services)
+        private void AddDAOs(IServiceCollection services)
         {
             services.AddScoped<UserDAO>();
             services.AddScoped<RefreshTokenDAO>();
             services.AddScoped<TeamDAO>();
+            services.AddScoped<TeamMemberDAO>();
+            services.AddScoped<RolesDAO>();
         }
 
         private void AddServices(IServiceCollection services)
@@ -44,6 +47,7 @@ namespace Server
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IUserAuthorization, UserAuthorization>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -73,7 +77,7 @@ namespace Server
             services.AddSwaggerDocument();
             services.AddHttpContextAccessor();
 
-            AddDALs(services);
+            AddDAOs(services);
             AddServices(services);
             services.AddSingleton<IJwtTokenManager>(new JwtTokenManager(tokenKey));
         }
@@ -86,7 +90,7 @@ namespace Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Server.Dtos.Incoming
+namespace Server.Dtos.Outgoing
 {
-    public class IdRequest
+    public class ErrorResponse
     {
-        public int Id { get; set; }
+
+        public string Message { get; set; }
+
     }
 }
