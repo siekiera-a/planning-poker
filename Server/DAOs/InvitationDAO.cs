@@ -20,18 +20,17 @@ namespace Server.DAOs
             _logger = logger;
         }
 
-        // probably to change
         public async Task<bool> InviteUser(int meetingId, int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
 
             try
             {
-                await connection.ExecuteAsync($"{_prefix}_InviteUser",
+                var result = await connection.QueryFirstOrDefaultAsync<int>($"{_prefix}_InviteUser",
                     new { MeetingId = meetingId, UserId = userId },
                     commandType: CommandType.StoredProcedure);
 
-                return true;
+                return result != 0;
             }
             catch (Exception e)
             {

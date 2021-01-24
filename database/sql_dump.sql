@@ -154,7 +154,10 @@ BEGIN
                        INNER JOIN team t ON m.team_id = t.id
               WHERE m.id = @MeetingId
                 AND EXISTS(SELECT * FROM team_member WHERE team_id = t.id AND user_id = @UserId))
-        INSERT INTO invitation VALUES (@MeetingId, @UserId)
+        BEGIN
+                INSERT INTO invitation VALUES (@MeetingId, @UserId)
+                SELECT 1
+        END
 END
 go
 
@@ -201,8 +204,10 @@ BEGIN
     SELECT @Start = start_time, @End = end_time FROM meeting WHERE id = @Id
 
     IF @Start < @Time AND @End IS NULL
-        UPDATE meeting SET end_time = @Time WHERE id = @Id
-        SELECT id AS Id, start_time AS StartTime, end_time AS EndTime, team_id AS TeamId, organizer AS Organizer FROM meeting WHERE id = @Id
+        BEGIN
+            UPDATE meeting SET end_time = @Time WHERE id = @Id
+            SELECT id AS Id, start_time AS StartTime, end_time AS EndTime, team_id AS TeamId, organizer AS Organizer FROM meeting WHERE id = @Id
+        END
 
 END
 go
@@ -236,8 +241,10 @@ BEGIN
 
     -- meeting cannot be reschedule to the past time
     IF @NewStartTime > SYSUTCDATETIME()
-        UPDATE meeting SET start_time = @NewStartTime WHERE id = @Id
-        SELECT @Id AS Id
+        BEGIN
+            UPDATE meeting SET start_time = @NewStartTime WHERE id = @Id
+            SELECT @Id AS Id
+        END
 
 END
 go
@@ -445,10 +452,10 @@ BEGIN
     SELECT @TeamId = id FROM team WHERE join_code = @Code
 
     IF @TeamId IS NOT NULL
-    BEGIN
-        EXEC dbo.spTeamMember_AddMember @TeamId, @UserId
-        SELECT @TeamId
-    END
+        BEGIN
+            INSERT INTO team_member(team_id, user_id) VALUES (@TeamId, @UserId)
+            SELECT @TeamId
+        END
 END
 go
 
