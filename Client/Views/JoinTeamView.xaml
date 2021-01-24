@@ -72,7 +72,7 @@
                     Padding="8"
                     Style="{StaticResource MahApps.Styles.Button}"
                     Command="{Binding CreateTeamCommand}"
-                    Click="JoinTeamButtonClick" />
+                    Click="CreateTeamButtonClick" />
         </Grid>
 
         <notifications:NotificationArea Grid.Row="5"

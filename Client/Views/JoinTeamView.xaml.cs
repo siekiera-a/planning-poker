@@ -14,6 +14,7 @@ namespace Client.Views
     public partial class JoinTeamView : UserControl
     {
         private readonly IApiClient _apiClient;
+        private string message = "";
 
         public JoinTeamView()
         {
@@ -24,8 +25,6 @@ namespace Client.Views
         private async void JoinTeamButtonClick(object sender, RoutedEventArgs e)
         {
             var response = await _apiClient.PostAsyncAuth<TeamResponse>("/team/join-code", new {Code = TeamName.Text});
-
-            string message = "";
 
             if (response.IsOk)
             {
@@ -40,15 +39,35 @@ namespace Client.Views
                 }
             }
 
-
             TeamName.Clear();
+            ShowNotification(message);
+        }
 
+        private async void CreateTeamButtonClick(object sender, RoutedEventArgs e)
+        {
+            var response = await _apiClient.PostAsyncAuth<TeamResponse>("/team", new {Name = NewTeamName.Text});
+
+            if (response.IsOk)
+            {
+                message = "New team created successfully";
+            }
+            else
+            {
+                message = "Unable to create team";
+            }
+
+            NewTeamName.Clear();
+            ShowNotification(message);
+        }
+
+        private async void ShowNotification(string messageText)
+        {
             var notificationManager = new NotificationManager();
 
             await notificationManager.ShowAsync(
                 new NotificationContent
                 {
-                    Title = message,
+                    Title = messageText,
                 },
                 areaName: "WindowArea");
         }
