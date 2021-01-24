@@ -31,7 +31,7 @@ namespace Server.Controllers
 
         private LoginResponse MapUserToResponse(User user)
         {
-            var response = new LoginResponse()
+            var response = new LoginResponse
             {
                 Email = user.Email,
                 Username = user.Name,
@@ -52,7 +52,7 @@ namespace Server.Controllers
                 return Ok(MapUserToResponse(user.Value));
             }
 
-            return Unauthorized(new { Message = "Authentication Failed!" });
+            return Unauthorized(new ErrorResponse { Message = "Authentication Failed!" });
         }
 
         [HttpPost("register")]
@@ -62,7 +62,7 @@ namespace Server.Controllers
 
             if (user.IsEmpty)
             {
-                return Conflict(new { Message = $"User with email: '{credentials.Email}' already exists!" });
+                return Conflict(new ErrorResponse { Message = $"User with email: '{credentials.Email}' already exists!" });
             }
 
             return Ok(MapUserToResponse(user.Value));
