@@ -26,7 +26,8 @@
                       Name="ComboBox"
                       mah:TextBoxHelper.Watermark="Choose team"
                       VerticalAlignment="Top"
-                      DisplayMemberPath="TeamName"
+                      ItemsSource="{Binding Teams}"
+                      DisplayMemberPath="Name"
                       SelectionChanged="ComboBox_OnSelectionChanged"/>
 
             <Grid Grid.Row="1">

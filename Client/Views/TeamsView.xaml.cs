@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using Client.Models;
 using Client.Service;
+using Client.ViewModels;
 using Server.Dtos.Outgoing;
 
 namespace Client.Views
@@ -47,14 +48,9 @@ namespace Client.Views
 
         private async void FetchTeams(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.GetAsyncAuth<TeamResponse[]>("/team");
-
-            if (response.IsOk)
+            if (DataContext is TeamsViewModel context)
             {
-                ComboBox.ItemsSource = response.Value;
-                ComboBox.Items.Refresh();
-                ComboBox.DisplayMemberPath = "Name";
-                ComboBox.SelectedValuePath = "Id";
+                await context.FetchTeams();
             }
         }
 
