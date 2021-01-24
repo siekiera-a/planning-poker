@@ -28,9 +28,8 @@ namespace Server.DAOs
             using var connection = _connectionFactory.CreateConnection();
             try
             {
-                await connection.ExecuteAsync($"{_prefix}_AddMember", new { TeamId = teamId, Email = email },
+                return await connection.QueryFirstOrDefaultAsync<bool>($"{_prefix}_AddMember", new { TeamId = teamId, Email = email },
                     commandType: CommandType.StoredProcedure);
-                return true;
             }
             catch (SqlException e)
             {
