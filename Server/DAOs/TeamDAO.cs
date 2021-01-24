@@ -93,10 +93,10 @@ namespace Server.DAOs
             using var connection = _connectionFactory.CreateConnection();
             try
             {
-                await connection.ExecuteAsync($"{_prefix}_RemoveJoinCode", new { Id = teamId },
+                int rowsAffected = await connection.ExecuteAsync($"{_prefix}_RemoveJoinCode", new { Id = teamId },
                      commandType: CommandType.StoredProcedure);
 
-                return true;
+                return rowsAffected > 0;
             }
             catch (SqlException e)
             {

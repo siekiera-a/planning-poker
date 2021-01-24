@@ -6,7 +6,10 @@ BEGIN
 
     -- meeting cannot be reschedule to the past time
     IF @NewStartTime > SYSUTCDATETIME()
-        UPDATE meeting SET start_time = @NewStartTime WHERE id = @Id
+        BEGIN
+            UPDATE meeting SET start_time = @NewStartTime WHERE id = @Id
+            SELECT @Id AS Id
+        END
 
 END
 go

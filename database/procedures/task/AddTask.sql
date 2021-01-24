@@ -4,7 +4,7 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO task VALUES (@Description, @MeetingId)
+    INSERT INTO task OUTPUT inserted.id VALUES (@Description, @MeetingId)
 END
 go
 

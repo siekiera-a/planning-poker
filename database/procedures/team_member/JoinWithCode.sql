@@ -10,10 +10,10 @@ BEGIN
     SELECT @TeamId = id FROM team WHERE join_code = @Code
 
     IF @TeamId IS NOT NULL
-    BEGIN
-        EXEC dbo.spTeamMember_AddMember @TeamId, @UserId
-        SELECT @TeamId
-    END
+        BEGIN
+            INSERT INTO team_member(team_id, user_id) VALUES (@TeamId, @UserId)
+            SELECT @TeamId
+        END
 END
 go
 

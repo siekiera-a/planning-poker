@@ -31,15 +31,20 @@ go
 
 
 
--- from: ./functions/GetMeetings.sql
--- przyszłe spotkania we wszystkich zespołach dla danego uzytkownika
-CREATE FUNCTION dbo.ufnGetMeetings(@UserId INT)
+-- from: ./functions/GetFutureMeetings.sql
+CREATE FUNCTION dbo.ufnGetFutureMeetings(@UserId INT)
     RETURNS TABLE AS
         RETURN
-        SELECT m.id AS Id, m.start_time AS StartTime, m.organizer AS Organizer, m.team_id AS TeamId, t.name As TeamName
+        SELECT m.id         AS Id,
+               m.start_time AS StartTime,
+               m.organizer  AS OrganizerId,
+               u.name       AS OrganizerName,
+               m.team_id    AS TeamId,
+               t.name       As TeamName
         FROM meeting m
                  JOIN invitation i on m.id = i.meeting_id
                  JOIN team t on m.team_id = t.id
+                 JOIN [user] u on u.id = m.organizer
         WHERE i.user_id = @UserId
           AND m.start_time > SYSUTCDATETIME()
 go
@@ -87,6 +92,7 @@ CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
                  INNER JOIN meeting m on t.meeting_id = m.id
                  INNER JOIN team tm ON m.team_id = tm.id
         WHERE r.user_id = @UserId
+          AND m.end_time IS NOT NULL 
           AND m.end_time BETWEEN @StartTime AND SYSUTCDATETIME()
 go
 
@@ -154,7 +160,10 @@ BEGIN
                        INNER JOIN team t ON m.team_id = t.id
               WHERE m.id = @MeetingId
                 AND EXISTS(SELECT * FROM team_member WHERE team_id = t.id AND user_id = @UserId))
-        INSERT INTO invitation VALUES (@MeetingId, @UserId)
+        BEGIN
+                INSERT INTO invitation VALUES (@MeetingId, @UserId)
+                SELECT 1
+        END
 END
 go
 
@@ -201,9 +210,11 @@ BEGIN
     SELECT @Start = start_time, @End = end_time FROM meeting WHERE id = @Id
 
     IF @Start < @Time AND @End IS NULL
-        UPDATE meeting SET end_time = @Time WHERE id = @Id
+        BEGIN
+            UPDATE meeting SET end_time = @Time WHERE id = @Id
+            SELECT id AS Id, start_time AS StartTime, end_time AS EndTime, team_id AS TeamId, organizer AS Organizer FROM meeting WHERE id = @Id
+        END
 
-    SELECT id, start_time, end_time, team_id, organizer FROM meeting WHERE id = @Id
 END
 go
 
@@ -236,7 +247,10 @@ BEGIN
 
     -- meeting cannot be reschedule to the past time
     IF @NewStartTime > SYSUTCDATETIME()
-        UPDATE meeting SET start_time = @NewStartTime WHERE id = @Id
+        BEGIN
+            UPDATE meeting SET start_time = @NewStartTime WHERE id = @Id
+            SELECT @Id AS Id
+        END
 
 END
 go
@@ -302,7 +316,7 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO task VALUES (@Description, @MeetingId)
+    INSERT INTO task OUTPUT inserted.id VALUES (@Description, @MeetingId)
 END
 go
 
@@ -313,8 +327,6 @@ CREATE PROCEDURE dbo.spTask_EditTask @Id INT,
                                      @NewDescription NVARCHAR(MAX)
 AS
 BEGIN
-    SET NOCOUNT ON
-
     UPDATE task SET description = @NewDescription WHERE id = @Id
 END
 go
@@ -329,7 +341,10 @@ BEGIN
     
     -- task can be removed only if it is not assigned to user
     IF (NOT EXISTS (SELECT * FROM result WHERE task_id = @Id))
-        DELETE FROM task WHERE id = @Id
+        BEGIN
+            DELETE FROM task WHERE id = @Id
+            SELECT 1
+        END
 END
 go
 
@@ -391,8 +406,6 @@ go
 CREATE PROCEDURE dbo.spTeam_RemoveJoinCode @Id INT
 AS
 BEGIN
-    SET NOCOUNT ON
-
     UPDATE team SET join_code = NULL WHERE id = @Id
 END
 go
@@ -401,13 +414,20 @@ go
 
 -- from: ./procedures/team_member/AddMember.sql
 CREATE PROCEDURE dbo.spTeamMember_AddMember @TeamId INT,
-                                            @UserId INT
+                                            @Email NVARCHAR(100)
 AS
 BEGIN
     SET NOCOUNT ON
 
-    -- create member with default role (1) and join_time (current utc time)
-    INSERT INTO team_member (team_id, user_id) VALUES (@TeamId, @UserId)
+    DECLARE @Id INT
+    SELECT @Id = id FROM [user] WHERE email = @Email
+
+    IF @Id IS NOT NULL
+        BEGIN
+            -- create member with default role (1) and join_time (current utc time)
+            INSERT INTO team_member (team_id, user_id) VALUES (@TeamId, @Id)
+            SELECT 1
+        END
 END
 go
 
@@ -440,10 +460,10 @@ BEGIN
     SELECT @TeamId = id FROM team WHERE join_code = @Code
 
     IF @TeamId IS NOT NULL
-    BEGIN
-        EXEC dbo.spTeamMember_AddMember @TeamId, @UserId
-        SELECT @TeamId
-    END
+        BEGIN
+            INSERT INTO team_member(team_id, user_id) VALUES (@TeamId, @UserId)
+            SELECT @TeamId
+        END
 END
 go
 

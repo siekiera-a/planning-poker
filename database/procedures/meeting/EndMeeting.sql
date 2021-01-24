@@ -11,9 +11,11 @@ BEGIN
     SELECT @Start = start_time, @End = end_time FROM meeting WHERE id = @Id
 
     IF @Start < @Time AND @End IS NULL
-        UPDATE meeting SET end_time = @Time WHERE id = @Id
+        BEGIN
+            UPDATE meeting SET end_time = @Time WHERE id = @Id
+            SELECT id AS Id, start_time AS StartTime, end_time AS EndTime, team_id AS TeamId, organizer AS Organizer FROM meeting WHERE id = @Id
+        END
 
-    SELECT id, start_time, end_time, team_id, organizer FROM meeting WHERE id = @Id
 END
 go
 
