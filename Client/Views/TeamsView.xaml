@@ -28,7 +28,7 @@
                       VerticalAlignment="Top"
                       ItemsSource="{Binding Teams}"
                       DisplayMemberPath="Name"
-                      SelectionChanged="ComboBox_OnSelectionChanged"/>
+                      SelectionChanged="ComboBox_OnSelectionChanged" />
 
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -67,11 +67,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0"
-                               Margin="8"
-                               VerticalAlignment="Center"
-                               TextWrapping="WrapWithOverflow"
-                               Name="JoinCode" />
+                    <TextBox Grid.Column="0"
+                             Margin="8"
+                             VerticalAlignment="Center"
+                             TextWrapping="WrapWithOverflow"
+                             Name="JoinCode"
+                             Text="{Binding Path=Code, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Button Grid.Column="1"
                             Margin="8"
@@ -86,7 +87,10 @@
             </Grid>
 
             <ListView Grid.Row="2" Margin="8" Name="Members"
-                      Background="{StaticResource MahApps.Brushes.Accent3}" />
+                      Background="{StaticResource MahApps.Brushes.Accent3}"
+                      ItemsSource="{Binding Members}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id" />
 
         </Grid>
 

@@ -16,7 +16,6 @@ namespace Client.Views
     public partial class TeamsView : UserControl
     {
         private readonly IApiClient _apiClient;
-        private int _teamId;
 
         public TeamsView()
         {
@@ -31,18 +30,10 @@ namespace Client.Views
 
         private async void GenerateCodeButtonClick(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.GetAsyncAuth<CodeResponse>($"/team/{_teamId}/join-code");
-
-            if (response.IsOk)
+            if (DataContext is TeamsViewModel context)
             {
-                JoinCode.Text = response.Value.Code;
-            }
-            else
-            {
-                if (response.HttpStatusCode == HttpStatusCode.Forbidden)
-                {
-                    MessageBox.Show(response.Error.Message);
-                }
+                await context.GenerateCode();
+                JoinCode.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             }
         }
 
@@ -56,17 +47,11 @@ namespace Client.Views
 
         private async void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems[0] is TeamResponse selectedItem)
+            if (DataContext is TeamsViewModel context)
             {
-                _teamId = selectedItem.Id;
-                var members = await _apiClient.GetAsyncAuth<GetMembersResponse>($"/team/{_teamId}/members");
-
-                if (members.IsOk)
+                if (e.AddedItems[0] is TeamResponse selectedItem)
                 {
-                    Members.ItemsSource = members.Value.Members;
-                    Members.DisplayMemberPath = "Name";
-                    Members.SelectedValuePath = "Id";
-                    Members.Items.Refresh();
+                    await context.FetchMembers(selectedItem.Id);
                 }
             }
         }
