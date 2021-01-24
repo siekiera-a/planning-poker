@@ -10,7 +10,7 @@ namespace Client.Commands.JoinTeam
     public class JoinTeamCommand : ICommand
     {
         private readonly JoinTeamModel _viewModel;
-
+        
         public JoinTeamCommand(JoinTeamModel viewModel)
         {
             _viewModel = viewModel;
