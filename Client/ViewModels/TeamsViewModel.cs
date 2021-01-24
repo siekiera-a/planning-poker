@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Client.Service;
 using Client.State.Navigators;
+using Server.Dtos.Incoming;
 using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
 
@@ -22,6 +23,7 @@ namespace Client.ViewModels
         private int _teamId;
 
         private string _code;
+
         public string Code
         {
             get => _code;
@@ -30,6 +32,26 @@ namespace Client.ViewModels
                 _code = value;
                 OnPropertyChanged(nameof(Code));
             }
+        }
+
+        private string _mail;
+
+        public string Mail
+        {
+            get => _mail;
+            set
+            {
+                _mail = value;
+                OnPropertyChanged(nameof(Mail));
+            }
+        }
+
+        private string _notificationText = "";
+
+        public string NotificationText
+        {
+            get => _notificationText;
+            set => _notificationText = value;
         }
 
         public async Task FetchTeams()
@@ -65,19 +87,47 @@ namespace Client.ViewModels
 
         public async Task GenerateCode()
         {
-            var response = await _apiClient.GetAsyncAuth<CodeResponse>($"/team/{_teamId}/join-code");
+            if (_teamId != 0)
+            {
+                var response = await _apiClient.GetAsyncAuth<CodeResponse>($"/team/{_teamId}/join-code");
+
+                if (response.IsOk)
+                {
+                    Code = response.Value.Code;
+                }
+                else
+                {
+                    if (response.HttpStatusCode == HttpStatusCode.Forbidden)
+                    {
+                        Code = response.Error.Message;
+                    }
+                }
+            }
+        }
+
+        public async Task AddByMail()
+        {
+            var response =
+                await _apiClient.PostAsyncAuth<BoolResponse>($"/team/{_teamId}/members",
+                    new AddMemberRequest {Email = Mail});
 
             if (response.IsOk)
             {
-                Code = response.Value.Code;
-            }
-            else
-            {
-                if (response.HttpStatusCode == HttpStatusCode.Forbidden)
+                if (response.Value.Success)
                 {
-                    Code = response.Error.Message;
+                    NotificationText = "Member added successfully";
+                }
+                else
+                {
+                    NotificationText = "Unable to add member";
                 }
             }
+            else if (response.HttpStatusCode == HttpStatusCode.Forbidden)
+            {
+                NotificationText = "You don't have access";
+            }
+
+            Mail = "";
         }
 
         public INavigatorTeam NavigatorTeam { get; set; } = new NavigatorTeam();

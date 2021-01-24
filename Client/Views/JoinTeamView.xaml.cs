@@ -15,8 +15,6 @@ namespace Client.Views
     /// </summary>
     public partial class JoinTeamView : UserControl
     {
-        private string _message = "";
-
         public JoinTeamView()
         {
             InitializeComponent();

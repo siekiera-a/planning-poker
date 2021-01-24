@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using Client.Models;
 using Client.Service;
 using Client.ViewModels;
+using Notifications.Wpf.Core;
 using Server.Dtos.Outgoing;
 
 namespace Client.Views
@@ -24,8 +25,13 @@ namespace Client.Views
             Loaded += FetchTeams;
         }
 
-        private void AddMemberByEmail(object sender, RoutedEventArgs e)
+        private async void AddMemberByEmail(object sender, RoutedEventArgs e)
         {
+            if (DataContext is TeamsViewModel context)
+            {
+                await context.AddByMail();
+                ShowNotification(context);
+            }
         }
 
         private async void GenerateCodeButtonClick(object sender, RoutedEventArgs e)
@@ -33,7 +39,6 @@ namespace Client.Views
             if (DataContext is TeamsViewModel context)
             {
                 await context.GenerateCode();
-                JoinCode.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             }
         }
 
@@ -54,6 +59,17 @@ namespace Client.Views
                     await context.FetchMembers(selectedItem.Id);
                 }
             }
+        }
+
+        private async void ShowNotification(TeamsViewModel context)
+        {
+            var notificationManager = new NotificationManager();
+            await notificationManager.ShowAsync(
+                new NotificationContent
+                {
+                    Title = context.NotificationText,
+                },
+                areaName: "WindowArea");
         }
     }
 }

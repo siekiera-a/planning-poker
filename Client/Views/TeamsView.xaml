@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Client.Views"
              xmlns:controls="clr-namespace:Client.Controls.Teams"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:controls1="clr-namespace:Notifications.Wpf.Core.Controls;assembly=Notifications.Wpf.Core"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              Background="{StaticResource MahApps.Brushes.Accent4}">
@@ -48,7 +49,8 @@
                              mah:TextBoxHelper.Watermark="Write mail"
                              VerticalAlignment="Center"
                              TextWrapping="WrapWithOverflow"
-                             Name="TaskDescription" />
+                             Name="Mail"
+                             Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}" />
 
                     <Button Grid.Column="1"
                             Margin="8"
@@ -72,7 +74,7 @@
                              VerticalAlignment="Center"
                              TextWrapping="WrapWithOverflow"
                              Name="JoinCode"
-                             Text="{Binding Path=Code, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding Path=Code, UpdateSourceTrigger=PropertyChanged}" />
 
                     <Button Grid.Column="1"
                             Margin="8"
@@ -106,6 +108,12 @@
                 <ContentControl Content="{Binding NavigatorTeam.CurrentViewModel}" />
             </ScrollViewer>
         </Grid>
+
+        <controls1:NotificationArea Grid.Column="1"
+                                    x:Name="WindowArea"
+                                    MaxItems="2"
+                                    Position="BottomRight"
+                                    DataContext="{Binding NotificationText}" />
 
 
     </Grid>
