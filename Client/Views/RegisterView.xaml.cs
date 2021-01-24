@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mail;
@@ -13,9 +14,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Client.Models;
 using Client.ViewModels;
 using Client.Views.Login;
 using Newtonsoft.Json;
+using Server.Dtos.Outgoing;
 
 namespace Client.Views
 {
@@ -24,43 +27,39 @@ namespace Client.Views
     /// </summary>
     public partial class RegisterView : UserControl
     {
-        class User
-        {
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public string Username { get; set; }
-        }
+        private readonly IApiClient _apiClient;
 
         public RegisterView()
         {
             InitializeComponent();
+            _apiClient = Services.GetService<IApiClient>();
         }
 
         private async void CreateAccountButtonClick(object sender, RoutedEventArgs e)
         {
-            User userData = new User
-                {Email = Email.Text, Password = Password.Password, Username = Username.Text};
-
-            var json = JsonConvert.SerializeObject(userData);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var url = "https://localhost:5001/api/User/register";
-            using var client = new HttpClient();
-
-            var response = await client.PostAsync(url, data);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string content = await response.Content.ReadAsStringAsync();
-
-                Window window = new MainWindow
-                {
-                    DataContext = new MainViewModel()
-                };
-                window.Show();
-
-                Window.GetWindow(this)?.Close();
-            }
+            // User userData = new User
+            //     {Email = Email.Text, Password = Password.Password, Username = Username.Text};
+            //
+            // var response = await _apiClient.PostAsync<RegisterResponse>("/User/register", userData);
+            //
+            // if (response.IsOk)
+            // {
+            //     Window window = new MainWindow
+            //     {
+            //         DataContext = new MainViewModel()
+            //     };
+            //     window.Show();
+            //
+            //     Window.GetWindow(this)?.Close();
+            // }
+            // else
+            // {
+            //     if (response.HttpStatusCode == HttpStatusCode.Conflict)
+            //     {
+            //         ErrorMessage.Text = response.Error.Message;
+            //         ErrorMessage.Visibility = Visibility.Visible;
+            //     }
+            // }
         }
 
         private void LoginButtonClick(object sender, RoutedEventArgs e)

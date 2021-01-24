@@ -28,6 +28,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Margin="20"
@@ -118,6 +119,13 @@
                     Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                     Click="CreateAccountButtonClick"
                     Command="{Binding RegisterCommand}" />
+
+            <TextBlock Grid.Row="4"
+                       Visibility="Hidden"
+                       Name="ErrorMessage"
+                       FontSize="13"
+                       Foreground="Red"
+                       HorizontalAlignment="Center" />
 
         </Grid>
     </Border>
