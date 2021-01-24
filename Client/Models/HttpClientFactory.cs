@@ -7,32 +7,40 @@ using Newtonsoft.Json;
 
 namespace Client.Models
 {
-    public class HttpClientFactory
+    public interface IHttpClientFactory
     {
-        private static HttpClient _client;
-        private static readonly string BaseUrl;
+        HttpClient CreateAuthenticated(string token);
+        HttpClient Create();
+        string Path(string endpoint);
+    }
 
-        static HttpClientFactory()
+    public class HttpClientFactory : IHttpClientFactory
+    {
+        private readonly Uri _baseAddress;
+
+        public HttpClientFactory()
         {
-            _client = new HttpClient();
-            BaseUrl = "https://localhost:5001/";
+            _baseAddress = new Uri("http://192.168.0.73:5000/api");
         }
 
-        public static HttpClient Authorized(string url, string token)
+        public HttpClient CreateAuthenticated(string token)
         {
-            _client = UnAuthorized(url);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            return _client;
+            var client = Create();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return client;
         }
 
-        public static HttpClient UnAuthorized(string url)
+        public HttpClient Create()
         {
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.BaseAddress = new Uri(BaseUrl + url);
-
-            return _client;
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.BaseAddress = _baseAddress;
+            return client;
         }
 
-}
+        public string Path(string endpoint)
+        {
+            return _baseAddress.AbsolutePath + endpoint;
+        }
+    }
 }
