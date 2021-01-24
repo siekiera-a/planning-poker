@@ -310,7 +310,7 @@ AS
 BEGIN
     SET NOCOUNT ON
 
-    INSERT INTO task VALUES (@Description, @MeetingId)
+    INSERT INTO task OUTPUT inserted.id VALUES (@Description, @MeetingId)
 END
 go
 
@@ -321,8 +321,6 @@ CREATE PROCEDURE dbo.spTask_EditTask @Id INT,
                                      @NewDescription NVARCHAR(MAX)
 AS
 BEGIN
-    SET NOCOUNT ON
-
     UPDATE task SET description = @NewDescription WHERE id = @Id
 END
 go
@@ -337,7 +335,10 @@ BEGIN
     
     -- task can be removed only if it is not assigned to user
     IF (NOT EXISTS (SELECT * FROM result WHERE task_id = @Id))
-        DELETE FROM task WHERE id = @Id
+        BEGIN
+            DELETE FROM task WHERE id = @Id
+            SELECT 1
+        END
 END
 go
 

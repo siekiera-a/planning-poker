@@ -26,11 +26,9 @@ namespace Server.DAOs
 
             try
             {
-                var result = await connection.QueryFirstOrDefaultAsync<int>($"{_prefix}_InviteUser",
+                return await connection.QueryFirstOrDefaultAsync<bool>($"{_prefix}_InviteUser",
                     new { MeetingId = meetingId, UserId = userId },
                     commandType: CommandType.StoredProcedure);
-
-                return result != 0;
             }
             catch (Exception e)
             {
