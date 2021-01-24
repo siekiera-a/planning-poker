@@ -40,6 +40,7 @@ namespace Server
             services.AddScoped<RolesDAO>();
             services.AddScoped<MeetingDAO>();
             services.AddScoped<InvitationDAO>();
+            services.AddScoped<TaskDAO>();
         }
 
         private void AddServices(IServiceCollection services)
