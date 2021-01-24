@@ -141,12 +141,12 @@ namespace Server.Controllers
             }
         }
 
-        [HttpDelete("{id}/members")]
-        public async Task<IActionResult> RemoveMember(int id, UserIdRequest request)
+        [HttpDelete("{id}/members/{userId}")]
+        public async Task<IActionResult> RemoveMember(int id, int userId)
         {
             try
             {
-                var result = await _teamService.RemoveMember(id, request.UserId);
+                var result = await _teamService.RemoveMember(id, userId);
                 return Ok(new BoolResponse { Success = result });
             }
             catch (UnauthorizedAccessException)
