@@ -9,12 +9,12 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              FontSize="15">
-    
+
     <UserControl.Background>
         <SolidColorBrush Color="{StaticResource MahApps.Colors.SystemBaseMedium}" />
     </UserControl.Background>
 
-    <Border Margin="15" Padding="50"
+    <Border Margin="15" Padding="30"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Background="{StaticResource MahApps.Brushes.Button.Border.MouseOver}"
@@ -24,6 +24,7 @@
         </Border.Effect>
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -70,7 +71,7 @@
                              Name="Password"
                              mah:TextBoxHelper.IsWaitingForData="True"
                              PasswordChanged="Password_OnPasswordChanged" />
-                
+
 
             </Grid>
 
@@ -90,6 +91,13 @@
                     Command="{Binding LoginCommand}"
                     Click="LoginButtonClick"
                     Content="Login" />
+
+            <TextBlock Grid.Row="4"
+                       Visibility="Hidden"
+                       Name="ErrorMessage"
+                       FontSize="13"
+                       Foreground="Red"
+                       HorizontalAlignment="Center" />
 
         </Grid>
     </Border>

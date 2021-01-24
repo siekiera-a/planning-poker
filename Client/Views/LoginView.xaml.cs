@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Compression;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,11 +15,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Client.Models;
 using Client.State.Navigators;
 using Client.ViewModels;
 using Client.Views.Login;
 using Client.Views.Game;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Server.Dtos.Outgoing;
 
 namespace Client.Views
 {
@@ -27,47 +31,43 @@ namespace Client.Views
     /// </summary>
     public partial class LoginView : UserControl
     {
-        class User
-        {
-            public string Email { get; set; }
-            public string Password { get; set; }
-        }
-
+        private readonly IApiClient _apiClient;
+        private readonly ITokenManager _tokenManager;
         public LoginView()
         {
             InitializeComponent();
+            _apiClient = Services.GetService<IApiClient>();
+            _tokenManager = Services.GetService<ITokenManager>();
         }
 
         private async void LoginButtonClick(object sender, RoutedEventArgs e)
         {
-            User userData = new User {Email = Email.Text, Password = Password.Password};
+            User userData = new User { Email = Email.Text, Password = Password.Password };
 
-            var json = JsonConvert.SerializeObject(userData);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _apiClient.PostAsync<LoginResponse>("/User/login", userData);
 
-            var url = "https://localhost:5001/api/User/login";
-            using var client = new HttpClient();
-
-            var response = await client.PostAsync(url, data);
-
-            if (response.IsSuccessStatusCode)
+            if (response.IsOk)
             {
-                string content = await response.Content.ReadAsStringAsync();
-
+                _tokenManager.Token = response.Value.Token;
                 Window window = new MainWindow
                 {
                     DataContext = new MainViewModel()
                 };
                 window.Show();
-
                 Window.GetWindow(this)?.Close();
-
-                GameWindow gameWindow = new GameWindow();
-                gameWindow.ShowDialog();
             }
+            else
+            {
+                if (response.HttpStatusCode == HttpStatusCode.Unauthorized)
+                {
+                    ErrorMessage.Text = response.Error.Message;
+                    ErrorMessage.Visibility = Visibility.Visible;
+                }
+            }
+
         }
 
-        private async void RegisterButtonClick(object sender, RoutedEventArgs e)
+        private void RegisterButtonClick(object sender, RoutedEventArgs e)
         {
             Window window = new RegisterWindow
             {

@@ -14,10 +14,7 @@ namespace Client.ViewModels
 
         public string Mail
         {
-            get
-            {
-                return _mail;
-            }
+            get { return _mail; }
             set
             {
                 _mail = value;
@@ -29,10 +26,7 @@ namespace Client.ViewModels
 
         public string Password
         {
-            get
-            {
-                return _password;
-            }
+            get { return _password; }
             set
             {
                 _password = value;
@@ -46,6 +40,5 @@ namespace Client.ViewModels
         {
             LoginCommand = new LoginCommand(this);
         }
-
     }
 }
