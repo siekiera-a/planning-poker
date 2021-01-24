@@ -38,6 +38,7 @@ namespace Client
             services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
             services.AddSingleton<IApiClient, ApiClient>();
             services.AddSingleton<ITokenManager, TokenManager>();
+            services.AddSingleton<IUserDataProvider, UserDataProvider>();
         }
         
 	}

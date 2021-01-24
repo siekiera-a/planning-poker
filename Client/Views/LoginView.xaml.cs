@@ -33,22 +33,27 @@ namespace Client.Views
     {
         private readonly IApiClient _apiClient;
         private readonly ITokenManager _tokenManager;
+        private readonly IUserDataProvider _userData;
 
         public LoginView()
         {
             InitializeComponent();
             _apiClient = Services.GetService<IApiClient>();
             _tokenManager = Services.GetService<ITokenManager>();
+            _userData = Services.GetService<IUserDataProvider>();
         }
 
         private async void LoginButtonClick(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.PostAsync<LoginResponse>("/User/login",
+            var response = await _apiClient.PostAsync<LoginResponse>("/user/login",
                 new {Email = Email.Text, Password = Password.Password});
 
             if (response.IsOk)
             {
                 _tokenManager.Token = response.Value.Token;
+                _userData.Username = response.Value.Username;
+                _userData.Email = response.Value.Email;
+
                 Window window = new MainWindow
                 {
                     DataContext = new MainViewModel()

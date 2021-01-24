@@ -19,6 +19,7 @@ using Client.ViewModels;
 using Client.Views.Login;
 using Newtonsoft.Json;
 using Server.Dtos.Incoming;
+using Server.Dtos.Outgoing;
 
 namespace Client.Views
 {
@@ -28,20 +29,28 @@ namespace Client.Views
     public partial class RegisterView : UserControl
     {
         private readonly IApiClient _apiClient;
+        private readonly ITokenManager _tokenManager;
+        private readonly IUserDataProvider _userData;
 
         public RegisterView()
         {
             InitializeComponent();
             _apiClient = Services.GetService<IApiClient>();
+            _tokenManager = Services.GetService<ITokenManager>();
+            _userData = Services.GetService<IUserDataProvider>();
         }
 
         private async void CreateAccountButtonClick(object sender, RoutedEventArgs e)
         {
-            var response = await _apiClient.PostAsync<RegisterRequest>("/user/register",
-                new {Email = Email.Text, Password = Password.Password, Username = Username.Text});
+            var response = await _apiClient.PostAsync<LoginResponse>("/user/register",
+                new RegisterRequest {Email = Email.Text, Password = Password.Password, Username = Username.Text});
 
             if (response.IsOk)
             {
+                _tokenManager.Token = response.Value.Token;
+                _userData.Username = response.Value.Username;
+                _userData.Email = response.Value.Email;
+
                 Window window = new MainWindow
                 {
                     DataContext = new MainViewModel()

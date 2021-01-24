@@ -16,7 +16,7 @@
 
         <TextBlock Grid.Row="0" FontSize="40" Padding="10" Margin="8">
             <Run Text="Welcome" />
-            <!-- <Run Text="{Binding } " />Dorobic wiazanie do username -->
+            <Run Text="{Binding Username}" />
             <Run Text="!" />
         </TextBlock>
 
