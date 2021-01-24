@@ -47,10 +47,10 @@ namespace Server.DAOs
 
             try
             {
-                var meeting = await connection.QueryFirstAsync<Meeting>($"{_prefix}_EndMeeting",
+                var meeting = await connection.QueryFirstOrDefaultAsync<Meeting>($"{_prefix}_EndMeeting",
                     new { Id = meetingId },
                     commandType: CommandType.StoredProcedure);
-                return Optional<Meeting>.of(meeting);
+                return Optional<Meeting>.ofNullable(meeting);
             }
             catch (SqlException e)
             {
@@ -82,9 +82,9 @@ namespace Server.DAOs
 
             try
             {
-                await connection.ExecuteAsync($"{_prefix}_RescheduleMeeting", new { Id = meetingId, NewStartTime = newStartTime },
+                var id = await connection.QueryFirstOrDefaultAsync<int>($"{_prefix}_RescheduleMeeting", new { Id = meetingId, NewStartTime = newStartTime },
                     commandType: CommandType.StoredProcedure);
-                return true;
+                return id != 0;
             }
             catch (SqlException e)
             {

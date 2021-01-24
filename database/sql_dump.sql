@@ -202,8 +202,8 @@ BEGIN
 
     IF @Start < @Time AND @End IS NULL
         UPDATE meeting SET end_time = @Time WHERE id = @Id
+        SELECT id AS Id, start_time AS StartTime, end_time AS EndTime, team_id AS TeamId, organizer AS Organizer FROM meeting WHERE id = @Id
 
-    SELECT id, start_time, end_time, team_id, organizer FROM meeting WHERE id = @Id
 END
 go
 
@@ -237,6 +237,7 @@ BEGIN
     -- meeting cannot be reschedule to the past time
     IF @NewStartTime > SYSUTCDATETIME()
         UPDATE meeting SET start_time = @NewStartTime WHERE id = @Id
+        SELECT @Id AS Id
 
 END
 go
@@ -401,13 +402,17 @@ go
 
 -- from: ./procedures/team_member/AddMember.sql
 CREATE PROCEDURE dbo.spTeamMember_AddMember @TeamId INT,
-                                            @UserId INT
+                                            @Email NVARCHAR(100)
 AS
 BEGIN
     SET NOCOUNT ON
 
-    -- create member with default role (1) and join_time (current utc time)
-    INSERT INTO team_member (team_id, user_id) VALUES (@TeamId, @UserId)
+    DECLARE @Id INT
+    SELECT @Id = id FROM [user] WHERE email = @Email
+
+    IF @Id IS NOT NULL 
+        -- create member with default role (1) and join_time (current utc time)
+        INSERT INTO team_member (team_id, user_id) VALUES (@TeamId, @Id)
 END
 go
 
