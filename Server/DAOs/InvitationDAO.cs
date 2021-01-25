@@ -60,32 +60,22 @@ namespace Server.DAOs
 
         public async Task<int> InviteAllUsers(int meetingId, List<int> users)
         {
-            using var connection = _connectionFactory.CreateConnection();
-
-            int counter = 0;
-
-            foreach (var user in users)
+            try
             {
-                var transaction = connection.BeginTransaction();
-                try
+                var tasks = new List<Task<bool>>();
+                foreach (var user in users)
                 {
-
-                    await transaction.Connection.QueryFirstOrDefaultAsync<bool>($"{_prefix}_InviteUser",
-                        new { MeetingId = meetingId, UserId = user },
-                        commandType: CommandType.StoredProcedure);
-                    transaction.Commit();
-                    counter++;
-                }
-                catch (SqlException e)
-                {
-                    transaction.Rollback();
-                    _logger.LogCritical(e.Message);
-                    return -1;
+                    tasks.Add(InviteUser(meetingId, user));
                 }
 
+                await Task.WhenAll(tasks);
+                return tasks.Count;
             }
-
-            return counter;
+            catch (Exception e)
+            {
+                _logger.LogCritical(e.Message);
+                return -1;
+            }
         }
 
     }
