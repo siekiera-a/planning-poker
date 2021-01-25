@@ -17,6 +17,7 @@
                   VerticalAlignment="Top"
                   Name="MyCalendar"
                   SelectionMode="SingleRange"
+                  SelectedDate="{Binding MyDateTime, UpdateSourceTrigger=PropertyChanged}"
                   SelectedDatesChanged="MyCalendarSelectedDatesChanged"
                   Style="{StaticResource StyleCalendar}" />
 
@@ -27,13 +28,25 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <TextBlock Text="Meetings in day: " FontSize="20"/>
-                <TextBlock Name="MyDate"  FontSize="20"/>
+                <TextBlock Text="Meetings in selected date: " FontSize="20" />
+                <TextBlock Name="MyDate" FontSize="20" />
             </StackPanel>
 
-            <ListView Grid.Row="1"
-                      Name="DayMeetings" 
-                      FontSize="15"/>
+            <ListView Grid.Row="1" ItemsSource="{Binding Meetings}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Header="Team Name" Width="Auto"
+                                            DisplayMemberBinding="{Binding Path=TeamName}" />
+                            <GridViewColumn Header="StartTime" Width="Auto"
+                                            DisplayMemberBinding="{Binding Path=StartTime}" />
+                            <GridViewColumn Header="OrganizerName" Width="Auto"
+                                            DisplayMemberBinding="{Binding Path=OrganizerName}" />
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
 
         </Grid>
 
