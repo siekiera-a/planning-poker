@@ -110,5 +110,20 @@ namespace Server.Controllers
             var meetings = await _meetingService.GetMeetings(request.DateTime);
             return Ok(meetings); // List<MeetingDetails>
         }
+
+        [HttpPost("{id}/assign")]
+        public async Task<IActionResult> AssignUserToTask(int id, AssignRquest request)
+        {
+            try
+            {
+                var success = await _meetingService.AssignUserToTask(id, request.UserId, request.TaskId, request.EstimatedTime);
+                return Ok(new BoolResponse { Success = success });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+        }
+
     }
 }

@@ -101,7 +101,7 @@ namespace Server.DAOs
             try
             {
                 var meetings = await connection.QueryAsync<MeetingDetails>(
-                    "dbo.ufnGetMeetingsOnTheGivenDay(@UserId, @Date)",
+                    "SELECT * FROM dbo.ufnGetMeetingsOnTheGivenDay(@UserId, @Date)",
                     new {UserId = userId, Date = date}, commandType: CommandType.Text);
                 return meetings.AsList();
             }

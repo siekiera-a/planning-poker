@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Server.DAOs;
+using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
 using Server.Services.Authentication;
 using Server.Services.Authorization;
@@ -18,14 +20,16 @@ namespace Server.Services.Meeting
         private readonly MeetingDAO _meetingDao;
         private readonly InvitationDAO _invitationDao;
         private readonly TaskDAO _taskDao;
+        private readonly ResultDAO _resultDao;
         private readonly int _userId;
 
-        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao, InvitationDAO invitationDao, TaskDAO taskDao)
+        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao, InvitationDAO invitationDao, TaskDAO taskDao, ResultDAO resultDao)
         {
             _userAuthorization = userAuthorization;
             _meetingDao = meetingDao;
             _invitationDao = invitationDao;
             _taskDao = taskDao;
+            _resultDao = resultDao;
             _userId = userProvider.GetUserId();
         }
 
@@ -69,9 +73,35 @@ namespace Server.Services.Meeting
             throw new NotImplementedException();
         }
 
-        public async Task<List<MeetingDetails>> GetMeetings(DateTime date)
+        public async Task<List<MeetingDetailsResponse>> GetMeetings(DateTime date)
         {
-            return await _meetingDao.GetMeetingsOnTheGivenDay(_userId, date);
+            var result = await _meetingDao.GetMeetingsOnTheGivenDay(_userId, date);
+            return result.Select(x =>
+            {
+
+                DateTime now = DateTime.UtcNow;
+                bool canJoin = false;
+
+                if (x.EndTime == new DateTime())
+                {
+                    if (now >= x.StartTime)
+                    {
+                        canJoin = true;
+                    }
+                }
+
+                return new MeetingDetailsResponse
+                {
+                    Id = x.Id,
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime,
+                    OrganizerId = x.OrganizerId,
+                    OrganizerName = x.OrganizerName,
+                    TeamId = x.TeamId,
+                    TeamName = x.TeamName,
+                    CanJoin = canJoin
+                };
+            }).AsList();
         }
 
         public async Task<bool> InviteUser(int meetingId, int userId)
@@ -116,10 +146,40 @@ namespace Server.Services.Meeting
 
             if (hasPermissions)
             {
-                return await _invitationDao.InviteAllUsers(meetingId, users);
+                var usersWithOrganizer = new HashSet<int>(users);
+                usersWithOrganizer.Add(_userId);
+                return await _invitationDao.InviteAllUsers(meetingId, usersWithOrganizer.AsList());
             }
 
             throw new UnauthorizedAccessException();
+        }
+
+        public async Task<bool> AssignUserToTask(int meetingId, int userId, int taskId, short estimatedTime)
+        {
+            var hasPermissions = await _userAuthorization.Authorize(_userId, meetingId, MeetingAction.AssignUser);
+
+            if (hasPermissions)
+            {
+                return await _resultDao.AssignUserToTask(userId, taskId, estimatedTime);
+            }
+
+            throw new UnauthorizedAccessException();
+        }
+
+        public async Task<List<UserResultResponse>> GetResults(DateTime from)
+        {
+            var response = await _resultDao.GetResults(_userId, from);
+
+            return response.Select(x => new UserResultResponse
+            {
+                Description = x.Description,
+                EstimatedTime = x.EstimatedTime,
+                StartTime = x.StartTime,
+                EndTime = x.EndTime,
+                TeamName = x.TeamName,
+                TeamId = x.TeamId,
+                IsFinished = x.EndTime != new DateTime()
+            }).AsList();
         }
     }
 }

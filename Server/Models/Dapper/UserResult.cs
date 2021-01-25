@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 
 namespace Server.Models.Dapper
 {
-    public class MeetingDetails
+    public class UserResult
     {
 
-        public int Id { get; set; }
+        public string Description { get; set; }
+        public Int16 EstimatedTime { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public int OrganizerId { get; set; }
-        public string OrganizerName { get; set; }
-        public int TeamId { get; set; }
         public string TeamName { get; set; }
+        public int TeamId { get; set; }
 
     }
 }

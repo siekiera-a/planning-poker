@@ -59,7 +59,7 @@ namespace Server.DAOs
             using var connection = _connectionFactory.CreateConnection();
             try
             {
-                return await connection.QueryFirstOrDefaultAsync<bool>($"{_prefix}_RemoveTask", new {Id = taskId},
+                return await connection.QueryFirstOrDefaultAsync<bool>($"{_prefix}_RemoveTask", new { Id = taskId },
                     commandType: CommandType.StoredProcedure);
             }
             catch (SqlException e)
@@ -71,31 +71,24 @@ namespace Server.DAOs
 
         public async Task<int> AddAllTasks(int meetingId, List<string> tasks)
         {
-            using var connection = _connectionFactory.CreateConnection();
+            var taskList = new List<Task<Optional<int>>>();
 
-            int counter = 0;
-
-            foreach (var task in tasks)
+            try
             {
-                var transaction = connection.BeginTransaction();
-                try
+                
+                foreach (var task in tasks)
                 {
-                    await transaction.Connection.QueryFirstOrDefaultAsync<int>($"{_prefix}_AddTask",
-                        new {Description = task, MeetingId = meetingId},
-                        commandType: CommandType.StoredProcedure);
-                    transaction.Commit();
-                    counter++;
-                }
-                catch (SqlException e)
-                {
-                    transaction.Rollback();
-                    _logger.LogCritical(e.Message);
-                    return -1;
+                    taskList.Add(AddTask(task, meetingId));
                 }
 
+                await Task.WhenAll(taskList);
+                return taskList.Count;
             }
-
-            return counter;
+            catch (Exception e)
+            {
+                _logger.LogCritical(e.Message);
+                return -1;
+            }
         }
 
     }
