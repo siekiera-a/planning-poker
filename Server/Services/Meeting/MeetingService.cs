@@ -73,9 +73,35 @@ namespace Server.Services.Meeting
             throw new NotImplementedException();
         }
 
-        public async Task<List<MeetingDetails>> GetMeetings(DateTime date)
+        public async Task<List<MeetingDetailsResponse>> GetMeetings(DateTime date)
         {
-            return await _meetingDao.GetMeetingsOnTheGivenDay(_userId, date);
+            var result = await _meetingDao.GetMeetingsOnTheGivenDay(_userId, date);
+            return result.Select(x =>
+            {
+
+                DateTime now = DateTime.UtcNow;
+                bool canJoin = false;
+
+                if (x.EndTime == new DateTime())
+                {
+                    if (now >= x.StartTime)
+                    {
+                        canJoin = true;
+                    }
+                }
+
+                return new MeetingDetailsResponse
+                {
+                    Id = x.Id,
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime,
+                    OrganizerId = x.OrganizerId,
+                    OrganizerName = x.OrganizerName,
+                    TeamId = x.TeamId,
+                    TeamName = x.TeamName,
+                    CanJoin = canJoin
+                };
+            }).AsList();
         }
 
         public async Task<bool> InviteUser(int meetingId, int userId)
