@@ -66,19 +66,40 @@
             <mah:DateTimePicker Grid.Row="0" Margin="8" />
 
             <ComboBox Grid.Row="1" Margin="8"
-                      mah:TextBoxHelper.Watermark="Choose team"/>
+                      mah:TextBoxHelper.Watermark="Choose team"
+                      ItemsSource="{Binding Teams}"
+                      DisplayMemberPath="Name"
+                      SelectionChanged="Teams_OnSelectionChanged"/>
 
             <ComboBox Grid.Row="2" Margin="8"
-                      mah:TextBoxHelper.Watermark="Choose members"/>
+                      mah:TextBoxHelper.Watermark="Choose members"
+                      ItemsSource="{Binding Members}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectionChanged="Members_OnSelectionChanged"/>
+
+            <ListView Grid.Row="3" Margin="8"
+                      Name="MemberList"
+                      ItemsSource="{Binding SelectedMembers}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"/>
 
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-
                 <Button Grid.Column="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Padding="10"
+                        Margin="6" 
+                        Content="X"
+                        Click="DeleteSelectedMembers"/>
+
+                <Button Grid.Column="1"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
                         Content="Cancel"
@@ -87,7 +108,7 @@
                         Padding="10"
                         Margin="6" />
 
-                <Button Grid.Column="1"
+                <Button Grid.Column="2"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
                         Content="Create meeting"

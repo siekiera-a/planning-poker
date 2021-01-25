@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.ViewModels.Teams;
 using Microsoft.Win32;
+using Server.Dtos.Outgoing;
+using Server.Models.Dapper;
 
 namespace Client.Views.Teams
 {
@@ -24,6 +26,7 @@ namespace Client.Views.Teams
         public CreateView()
         {
             InitializeComponent();
+            Loaded += FetchTeams;
         }
 
         private void AddTaskButtonClick(object sender, RoutedEventArgs e)
@@ -40,6 +43,50 @@ namespace Client.Views.Teams
                 TaskListBox.SelectedItem != null)
             {
                 context.DeleteTask(TaskListBox.SelectedItem.ToString());
+            }
+        }
+
+        private async void FetchTeams(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is CreateViewModel context)
+            {
+                await context.FetchTeams();
+            }
+        }
+
+        private async void Teams_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataContext is CreateViewModel context)
+            {
+                if (e.AddedItems.Count > 0)
+                {
+                    if (e.AddedItems[0] is TeamResponse selectedItem)
+                    {
+                        await context.FetchMembers(selectedItem.Id);
+                    }
+                }
+            }
+        }
+
+        private void Members_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataContext is CreateViewModel context)
+            {
+                if (e.AddedItems.Count > 0)
+                {
+                    if (e.AddedItems[0] is User user)
+                    {
+                        context.FetchMembersToMeeting(user.Id);
+                    }
+                }
+            }
+        }
+
+        private void DeleteSelectedMembers(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is CreateViewModel context)
+            {
+                context.DeleteSelectedMembers(MemberList.SelectedItems);
             }
         }
     }
