@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Server.Models.Dapper;
 using Server.Services.DataAccess;
 
 namespace Server.DAOs
@@ -35,6 +36,22 @@ namespace Server.DAOs
             {
                 _logger.LogError(e.Message);
                 return false;
+            }
+        }
+
+        public async Task<List<UserResult>> GetResults(int userId, DateTime from)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            try
+            {
+                var results = await connection.QueryAsync<UserResult>("SELECT * FROM dbo.ufnGetResultsForUser(@UserId, @StartTime)",
+                    new {UserId = userId, StartTime = from}, commandType: CommandType.Text);
+                return results.AsList();
+            }
+            catch (SqlException e)
+            {
+                _logger.LogError(e.Message);
+                return new List<UserResult>();
             }
         }
 

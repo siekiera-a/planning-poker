@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Server.DAOs;
+using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
 using Server.Services.Authentication;
 using Server.Services.Authorization;
@@ -137,6 +138,22 @@ namespace Server.Services.Meeting
             }
 
             throw new UnauthorizedAccessException();
+        }
+
+        public async Task<List<UserResultResponse>> GetResults(DateTime from)
+        {
+            var response = await _resultDao.GetResults(_userId, from);
+
+            return response.Select(x => new UserResultResponse
+            {
+                Description = x.Description,
+                EstimatedTime = x.EstimatedTime,
+                StartTime = x.StartTime,
+                EndTime = x.EndTime,
+                TeamName = x.TeamName,
+                TeamId = x.TeamId,
+                IsFinished = x.EndTime != new DateTime()
+            }).AsList();
         }
     }
 }

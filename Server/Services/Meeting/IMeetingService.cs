@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
 using Server.Utils;
 
@@ -23,5 +24,6 @@ namespace Server.Services.Meeting
         Task<int> AddAllTasks(int meetingId, List<string> tasks);
         Task<int> InviteAllUsers(int meetingId, List<int> users);
         Task<bool> AssignUserToTask(int meetingId, int userId, int taskId, Int16 estimatedTime);
+        Task<List<UserResultResponse>> GetResults(DateTime from);
     }
 }
