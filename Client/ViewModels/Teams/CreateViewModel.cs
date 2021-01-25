@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Client.Service;
 using Dapper;
+using Server.Dtos.Incoming;
 using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
 
@@ -21,6 +23,19 @@ namespace Client.ViewModels.Teams
         public ObservableCollection<TeamResponse> Teams { get; }
         public ObservableCollection<User> Members { get; }
         public ObservableCollection<User> SelectedMembers { get; }
+        private DateTime _dateTime;
+
+        public string NotificationText { get; set; } = "";
+
+        public DateTime DateTime
+        {
+            get => _dateTime;
+            set
+            {
+                _dateTime = value;
+                OnPropertyChanged(nameof(DateTime));
+            }
+        }
 
         public string NewTask
         {
@@ -118,6 +133,54 @@ namespace Client.ViewModels.Teams
             Teams.Clear();
             Members.Clear();
             SelectedMembers.Clear();
+            DateTime = DateTime.Today.ToUniversalTime();
+        }
+
+        public async Task CreateMeeting()
+        {
+            if (Tasks.Count > 0 && SelectedMembers.Count > 0)
+            {
+                var cos = new DateTimeRequest {DateTime = DateTime};
+
+                var response = await _apiClient.PostAsyncAuth<MeetingIdResponse>($"/meeting/team/{_teamId}",
+                    new DateTimeRequest {DateTime = DateTime});
+
+                if (response.IsOk)
+                {
+                    int meetingId = response.Value.MeetingId;
+
+                    foreach (var member in SelectedMembers)
+                    {
+                        var invitation = await _apiClient.PostAsyncAuth<BoolResponse>($"/meeting/{meetingId}/invite",
+                            new UserIdRequest {UserId = member.Id});
+
+                        if (invitation.IsOk)
+                        {
+                        }
+                        else if (invitation.HttpStatusCode == HttpStatusCode.Forbidden)
+                        {
+                            NotificationText = "You don't have access";
+                        }
+                    }
+
+                    // foreach (var task in Tasks)
+                    // {
+                    //     var tasks = await _apiClient.PostAsyncAuth<>()
+                    // }
+                    NotificationText = "Meeting created successfully";
+                }
+                else
+                {
+                    if (response.HttpStatusCode == HttpStatusCode.Forbidden)
+                    {
+                        NotificationText = "You don't have access";
+                    }
+                    else if (response.HttpStatusCode == HttpStatusCode.BadRequest)
+                    {
+                        NotificationText = response.Error.Message;
+                    }
+                }
+            }
         }
 
         public CreateViewModel()

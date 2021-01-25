@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Client.Views.Teams"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:controls="clr-namespace:Notifications.Wpf.Core.Controls;assembly=Notifications.Wpf.Core"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="{StaticResource MahApps.Brushes.Accent4}">
@@ -63,7 +64,8 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <mah:DateTimePicker Grid.Row="0" Margin="8" />
+            <mah:DateTimePicker Grid.Row="0" Margin="8"
+                                SelectedDateTime="{Binding DateTime, UpdateSourceTrigger=PropertyChanged}"/>
 
             <ComboBox Grid.Row="1" Margin="8"
                       mah:TextBoxHelper.Watermark="Choose team"
@@ -116,11 +118,18 @@
                         Background="{StaticResource MahApps.Brushes.Accent}"
                         Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                         Padding="10"
-                        Margin="6" />
+                        Margin="6"
+                        Click="CreateMeeting_OnButtonClick"/>
             </Grid>
 
 
         </Grid>
+
+        <controls:NotificationArea Grid.Column="1"
+                                        x:Name="WindowArea"
+                                        MaxItems="2"
+                                        Position="BottomRight"
+                                        DataContext="{Binding NotificationText}"/>
 
 
     </Grid>

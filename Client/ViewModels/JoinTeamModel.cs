@@ -46,13 +46,7 @@ namespace Client.ViewModels
             _apiClient = Services.GetService<IApiClient>();
         }
 
-        private string _notificationText = "";
-
-        public string NotificationText
-        {
-            get => _notificationText;
-            set => _notificationText = value;
-        }
+        public string NotificationText { get; set; } = "";
 
         public async Task FetchDataJoinTeam()
         {

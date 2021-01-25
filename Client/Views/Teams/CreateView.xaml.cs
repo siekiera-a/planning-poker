@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.ViewModels.Teams;
 using Microsoft.Win32;
+using Notifications.Wpf.Core;
 using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
 
@@ -96,6 +97,26 @@ namespace Client.Views.Teams
             {
                 context.CancelCreating();
             }
+        }
+
+        private async void CreateMeeting_OnButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is CreateViewModel context)
+            {
+                await context.CreateMeeting();
+                ShowNotification(context);
+            }
+        }
+
+        private async void ShowNotification(CreateViewModel context)
+        {
+            var notificationManager = new NotificationManager();
+            await notificationManager.ShowAsync(
+                new NotificationContent
+                {
+                    Title = context.NotificationText,
+                },
+                areaName: "WindowArea");
         }
     }
 }
