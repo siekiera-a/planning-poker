@@ -19,5 +19,9 @@ namespace Server.Services.Meeting
         Task<bool> InviteUser(int meetingId, int userId);
         Task<bool> RemoveInvitation(int meetingId, int userId);
 
+        // it should not look like that !!!!
+        Task<int> AddAllTasks(int meetingId, List<string> tasks);
+        Task<int> InviteAllUsers(int meetingId, List<int> users);
+        
     }
 }

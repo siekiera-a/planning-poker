@@ -17,13 +17,15 @@ namespace Server.Services.Meeting
         private readonly IUserAuthorization _userAuthorization;
         private readonly MeetingDAO _meetingDao;
         private readonly InvitationDAO _invitationDao;
+        private readonly TaskDAO _taskDao;
         private readonly int _userId;
 
-        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao, InvitationDAO invitationDao)
+        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao, InvitationDAO invitationDao, TaskDAO taskDao)
         {
             _userAuthorization = userAuthorization;
             _meetingDao = meetingDao;
             _invitationDao = invitationDao;
+            _taskDao = taskDao;
             _userId = userProvider.GetUserId();
         }
 
@@ -91,6 +93,30 @@ namespace Server.Services.Meeting
             if (hasPermissions)
             {
                 return await _invitationDao.RemoveInvitation(meetingId, userId);
+            }
+
+            throw new UnauthorizedAccessException();
+        }
+
+        public async Task<int> AddAllTasks(int meetingId, List<string> tasks)
+        {
+            var hasPermissions = await _userAuthorization.Authorize(_userId, meetingId, MeetingAction.AddTask);
+
+            if (hasPermissions)
+            {
+                return await _taskDao.AddAllTasks(meetingId, tasks);
+            }
+
+            throw new UnauthorizedAccessException();
+        }
+
+        public async Task<int> InviteAllUsers(int meetingId, List<int> users)
+        {
+            var hasPermissions = await _userAuthorization.Authorize(_userId, meetingId, MeetingAction.InviteUser);
+
+            if (hasPermissions)
+            {
+                return await _invitationDao.InviteAllUsers(meetingId, users);
             }
 
             throw new UnauthorizedAccessException();

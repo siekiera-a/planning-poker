@@ -69,6 +69,7 @@ namespace Server.Services.Authorization
                 case MeetingAction.AssignUser:
                 case MeetingAction.InviteUser:
                 case MeetingAction.RemoveInvitation:
+                case MeetingAction.AddTask:
                     return isOrganizer;
 
                 case MeetingAction.RescheduleMeeting:

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using Server.Services.DataAccess;
+using Server.Utils;
 
 namespace Server.DAOs
 {
@@ -54,6 +56,36 @@ namespace Server.DAOs
                 _logger.LogError(e.Message);
                 return false;
             }
+        }
+
+        public async Task<int> InviteAllUsers(int meetingId, List<int> users)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            int counter = 0;
+
+            foreach (var user in users)
+            {
+                var transaction = connection.BeginTransaction();
+                try
+                {
+
+                    await transaction.Connection.QueryFirstOrDefaultAsync<bool>($"{_prefix}_InviteUser",
+                        new { MeetingId = meetingId, UserId = user },
+                        commandType: CommandType.StoredProcedure);
+                    transaction.Commit();
+                    counter++;
+                }
+                catch (SqlException e)
+                {
+                    transaction.Rollback();
+                    _logger.LogCritical(e.Message);
+                    return -1;
+                }
+
+            }
+
+            return counter;
         }
 
     }
