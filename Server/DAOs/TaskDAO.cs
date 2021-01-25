@@ -69,5 +69,34 @@ namespace Server.DAOs
             }
         }
 
+        public async Task<int> AddAllTasks(int meetingId, List<string> tasks)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            int counter = 0;
+
+            foreach (var task in tasks)
+            {
+                var transaction = connection.BeginTransaction();
+                try
+                {
+                    await transaction.Connection.QueryFirstOrDefaultAsync<int>($"{_prefix}_AddTask",
+                        new {Description = task, MeetingId = meetingId},
+                        commandType: CommandType.StoredProcedure);
+                    transaction.Commit();
+                    counter++;
+                }
+                catch (SqlException e)
+                {
+                    transaction.Rollback();
+                    _logger.LogCritical(e.Message);
+                    return -1;
+                }
+
+            }
+
+            return counter;
+        }
+
     }
 }

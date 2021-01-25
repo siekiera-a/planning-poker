@@ -26,13 +26,13 @@ namespace Server.Controllers
         }
 
         [HttpPost("team/{id}")]
-        public async Task<IActionResult> CreateMeeting(int id, DateTimeRequest request)
+        public async Task<IActionResult> CreateMeeting(int id, MeetingRequest request)
         {
             try
             {
                 Optional<int> meetingId;
 
-                if (request != null)
+                if (request.DateTime != new DateTime())
                 {
                     meetingId = await _meetingService.CreateMeeting(request.DateTime, id);
                 }
@@ -47,7 +47,23 @@ namespace Server.Controllers
                     return StatusCode(500);
                 }
 
-                return Ok(new MeetingIdResponse { MeetingId = meetingId.Value });
+                int meeting = meetingId.Value;
+
+                int rowsAffected = await _meetingService.AddAllTasks(meeting, request.Tasks);
+
+                if (rowsAffected < 0)
+                {
+                    return StatusCode(500);
+                }
+
+                rowsAffected = await _meetingService.InviteAllUsers(meeting, request.InvitedUsers);
+
+                if (rowsAffected < 0)
+                {
+                    return StatusCode(500);
+                }
+
+                return Ok(new MeetingIdResponse { MeetingId = meeting });
 
             }
             catch (UnauthorizedAccessException)
@@ -58,12 +74,6 @@ namespace Server.Controllers
             {
                 return BadRequest(new ErrorResponse { Message = e.Message });
             }
-        }
-
-        [HttpPost("team/{id}/now")]
-        public async Task<IActionResult> CreateMeeting(int id)
-        {
-            return await CreateMeeting(id, null);
         }
 
         [HttpPost("{id}/invite")]
