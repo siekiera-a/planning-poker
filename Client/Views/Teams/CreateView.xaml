@@ -14,21 +14,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <TextBox Grid.Row="0"
-                     Padding="10"
-                     Margin="8"
-                     FontSize="15"
-                     mah:TextBoxHelper.ClearTextButton="True"
-                     mah:TextBoxHelper.Watermark="Write meeting name"
-                     mah:TextBoxHelper.IsWaitingForData="True"
-                     VerticalAlignment="Center" />
-
-            <Grid Grid.Row="1">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -45,19 +31,21 @@
                          mah:TextBoxHelper.IsWaitingForData="True"
                          VerticalAlignment="Center"
                          TextWrapping="WrapWithOverflow"
-                         Name="TaskDescription" />
+                         Name="TaskDescription"
+                         Text="{Binding NewTask, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Button Grid.Row="0" Grid.Column="1"
                         Margin="8"
-                        Name="AddButton"
                         Click="AddTaskButtonClick"
                         Content="Add"
                         Padding="10" />
 
-                <ListBox Grid.Row="1" Grid.Column="0" Margin="8" Name="TaskListBox" />
+                <ListBox Grid.Row="1" Grid.Column="0"
+                         Margin="8"
+                         Name="TaskListBox"
+                         ItemsSource="{Binding Tasks}"/>
 
                 <Button Grid.Row="1" Grid.Column="1"
-                        Name="DeleteButton"
                         Click="DeleteTaskButtonClick"
                         Content="X"
                         VerticalAlignment="Top"

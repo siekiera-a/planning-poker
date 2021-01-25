@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Client.ViewModels.Teams;
 using Microsoft.Win32;
 
 namespace Client.Views.Teams
@@ -27,19 +28,18 @@ namespace Client.Views.Teams
 
         private void AddTaskButtonClick(object sender, RoutedEventArgs e)
         {
-            if (TaskDescription.Text.Length > 0)
+            if (DataContext is CreateViewModel context)
             {
-                TaskListBox.Items.Add(TaskDescription.Text);
-                TaskDescription.Clear();
+                context.AddTask();
             }
         }
 
         private void DeleteTaskButtonClick(object sender, RoutedEventArgs e)
         {
-            if (TaskListBox.SelectedItem != null)
+            if (DataContext is CreateViewModel context &&
+                TaskListBox.SelectedItem != null)
             {
-                TaskListBox.Items.Remove(TaskListBox.SelectedItem);
-                TaskListBox.Items.Refresh();
+                context.DeleteTask(TaskListBox.SelectedItem.ToString());
             }
         }
     }
