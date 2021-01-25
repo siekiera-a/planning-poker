@@ -15,7 +15,7 @@ namespace Server.Services.Meeting
         Task<Optional<Models.Dapper.Meeting>> EndMeeting(int meetingId);
         Task<bool> RemoveMeeting(int meetingId);
         Task<bool> RescheduleMeeting(int meetingId, DateTime newStartTime);
-        Task<List<MeetingDetails>> GetFutureMeetings();
+        Task<List<MeetingDetails>> GetMeetings(DateTime date);
         Task<bool> InviteUser(int meetingId, int userId);
         Task<bool> RemoveInvitation(int meetingId, int userId);
 

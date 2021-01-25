@@ -148,12 +148,13 @@ go
 
 
 
--- from: ./functions/GetFutureMeetings.sql
-CREATE FUNCTION dbo.ufnGetFutureMeetings(@UserId INT)
+-- from: ./functions/GetMeetingsOnTheGivenDay.sql
+CREATE FUNCTION dbo.ufnGetMeetingsOnTheGivenDay(@UserId INT, @Date DATE)
     RETURNS TABLE AS
         RETURN
         SELECT m.id         AS Id,
                m.start_time AS StartTime,
+               m.end_time   AS EndTime,
                m.organizer  AS OrganizerId,
                u.name       AS OrganizerName,
                m.team_id    AS TeamId,
@@ -163,7 +164,7 @@ CREATE FUNCTION dbo.ufnGetFutureMeetings(@UserId INT)
                  JOIN team t on m.team_id = t.id
                  JOIN [user] u on u.id = m.organizer
         WHERE i.user_id = @UserId
-          AND m.start_time > SYSUTCDATETIME()
+          AND CONVERT(DATE, m.start_time) = @Date
 go
 
 
@@ -174,7 +175,7 @@ CREATE FUNCTION dbo.ufnGetPastMeetingsForTeam(@TeamId INT, @StartTime DATETIME2)
     RETURNS TABLE AS
         RETURN
         SELECT t.id             AS TeamId,
-               t.name           AS Nam,
+               t.name           AS Name,
                m.start_time     AS StartTime,
                m.end_time       AS EndTime,
                u.name           AS 'User',

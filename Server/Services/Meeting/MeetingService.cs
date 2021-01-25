@@ -67,9 +67,9 @@ namespace Server.Services.Meeting
             throw new NotImplementedException();
         }
 
-        public async Task<List<MeetingDetails>> GetFutureMeetings()
+        public async Task<List<MeetingDetails>> GetMeetings(DateTime date)
         {
-            return await _meetingDao.GetFutureMeetings(_userId);
+            return await _meetingDao.GetMeetingsOnTheGivenDay(_userId, date);
         }
 
         public async Task<bool> InviteUser(int meetingId, int userId)

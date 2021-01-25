@@ -34,7 +34,7 @@ namespace Server.Controllers
 
                 if (request != null)
                 {
-                    meetingId = await _meetingService.CreateMeeting(request.StartTime, id);
+                    meetingId = await _meetingService.CreateMeeting(request.DateTime, id);
                 }
                 else
                 {
@@ -94,10 +94,10 @@ namespace Server.Controllers
             }
         }
 
-        [HttpGet("")]
-        public async Task<IActionResult> GetFutureMeetings()
+        [HttpPost("")]
+        public async Task<IActionResult> GetMeetings(DateTimeRequest request)
         {
-            var meetings = await _meetingService.GetFutureMeetings();
+            var meetings = await _meetingService.GetMeetings(request.DateTime);
             return Ok(meetings); // List<MeetingDetails>
         }
     }

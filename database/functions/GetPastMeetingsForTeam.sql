@@ -3,7 +3,7 @@ CREATE FUNCTION dbo.ufnGetPastMeetingsForTeam(@TeamId INT, @StartTime DATETIME2)
     RETURNS TABLE AS
         RETURN
         SELECT t.id             AS TeamId,
-               t.name           AS Nam,
+               t.name           AS Name,
                m.start_time     AS StartTime,
                m.end_time       AS EndTime,
                u.name           AS 'User',
