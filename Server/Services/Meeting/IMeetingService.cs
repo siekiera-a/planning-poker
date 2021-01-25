@@ -22,6 +22,6 @@ namespace Server.Services.Meeting
         // it should not look like that !!!!
         Task<int> AddAllTasks(int meetingId, List<string> tasks);
         Task<int> InviteAllUsers(int meetingId, List<int> users);
-        
+        Task<bool> AssignUserToTask(int meetingId, int userId, int taskId, Int16 estimatedTime);
     }
 }

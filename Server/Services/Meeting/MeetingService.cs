@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Server.DAOs;
 using Server.Models.Dapper;
 using Server.Services.Authentication;
@@ -18,14 +19,16 @@ namespace Server.Services.Meeting
         private readonly MeetingDAO _meetingDao;
         private readonly InvitationDAO _invitationDao;
         private readonly TaskDAO _taskDao;
+        private readonly ResultDAO _resultDao;
         private readonly int _userId;
 
-        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao, InvitationDAO invitationDao, TaskDAO taskDao)
+        public MeetingService(IUserAuthorization userAuthorization, IUserProvider userProvider, MeetingDAO meetingDao, InvitationDAO invitationDao, TaskDAO taskDao, ResultDAO resultDao)
         {
             _userAuthorization = userAuthorization;
             _meetingDao = meetingDao;
             _invitationDao = invitationDao;
             _taskDao = taskDao;
+            _resultDao = resultDao;
             _userId = userProvider.GetUserId();
         }
 
@@ -116,7 +119,21 @@ namespace Server.Services.Meeting
 
             if (hasPermissions)
             {
-                return await _invitationDao.InviteAllUsers(meetingId, users);
+                var usersWithOrganizer = new HashSet<int>(users);
+                usersWithOrganizer.Add(_userId);
+                return await _invitationDao.InviteAllUsers(meetingId, usersWithOrganizer.AsList());
+            }
+
+            throw new UnauthorizedAccessException();
+        }
+
+        public async Task<bool> AssignUserToTask(int meetingId, int userId, int taskId, short estimatedTime)
+        {
+            var hasPermissions = await _userAuthorization.Authorize(_userId, meetingId, MeetingAction.AssignUser);
+
+            if (hasPermissions)
+            {
+                return await _resultDao.AssignUserToTask(userId, taskId, estimatedTime);
             }
 
             throw new UnauthorizedAccessException();
