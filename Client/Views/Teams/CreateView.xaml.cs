@@ -95,7 +95,7 @@ namespace Client.Views.Teams
         {
             if (DataContext is CreateViewModel context)
             {
-                context.CancelCreating();
+                context.ClearFields();
             }
         }
 

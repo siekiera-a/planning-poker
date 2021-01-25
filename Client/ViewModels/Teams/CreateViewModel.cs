@@ -23,7 +23,7 @@ namespace Client.ViewModels.Teams
         public ObservableCollection<TeamResponse> Teams { get; }
         public ObservableCollection<User> Members { get; }
         public ObservableCollection<User> SelectedMembers { get; }
-        private DateTime _dateTime;
+        private DateTime _dateTime = DateTime.Today.ToLocalTime();
 
         public string NotificationText { get; set; } = "";
 
@@ -49,11 +49,12 @@ namespace Client.ViewModels.Teams
 
         public void AddTask()
         {
-            if (NewTask.Length > 0 && !Tasks.Contains(NewTask))
+            if (NewTask.Length > 0 && !Tasks.Contains(NewTask) && NewTask.Trim().Length > 0)
             {
                 Tasks.Add(NewTask);
-                NewTask = "";
             }
+
+            NewTask = "";
         }
 
         public void DeleteTask(string taskName)
@@ -126,61 +127,48 @@ namespace Client.ViewModels.Teams
             }
         }
 
-        public void CancelCreating()
-        {
-            NewTask = "";
-            Tasks.Clear();
-            Teams.Clear();
-            Members.Clear();
-            SelectedMembers.Clear();
-            DateTime = DateTime.Today.ToUniversalTime();
-        }
-
         public async Task CreateMeeting()
         {
             if (Tasks.Count > 0 && SelectedMembers.Count > 0)
             {
-                var cos = new DateTimeRequest {DateTime = DateTime};
-
                 var response = await _apiClient.PostAsyncAuth<MeetingIdResponse>($"/meeting/team/{_teamId}",
-                    new DateTimeRequest {DateTime = DateTime});
+                    new MeetingRequest
+                    {
+                        Tasks = Tasks.AsList(), DateTime = DateTime,
+                        InvitedUsers = SelectedMembers.Select(x => x.Id).AsList()
+                    });
 
                 if (response.IsOk)
                 {
-                    int meetingId = response.Value.MeetingId;
-
-                    foreach (var member in SelectedMembers)
-                    {
-                        var invitation = await _apiClient.PostAsyncAuth<BoolResponse>($"/meeting/{meetingId}/invite",
-                            new UserIdRequest {UserId = member.Id});
-
-                        if (invitation.IsOk)
-                        {
-                        }
-                        else if (invitation.HttpStatusCode == HttpStatusCode.Forbidden)
-                        {
-                            NotificationText = "You don't have access";
-                        }
-                    }
-
-                    // foreach (var task in Tasks)
-                    // {
-                    //     var tasks = await _apiClient.PostAsyncAuth<>()
-                    // }
                     NotificationText = "Meeting created successfully";
+                    ClearFields();
                 }
-                else
+                else if (response.HttpStatusCode == HttpStatusCode.Forbidden)
                 {
-                    if (response.HttpStatusCode == HttpStatusCode.Forbidden)
-                    {
-                        NotificationText = "You don't have access";
-                    }
-                    else if (response.HttpStatusCode == HttpStatusCode.BadRequest)
-                    {
-                        NotificationText = response.Error.Message;
-                    }
+                    NotificationText = "You don't have access";
+                }
+                else if (response.HttpStatusCode == HttpStatusCode.BadRequest)
+                {
+                    NotificationText = response.Error.Message;
+                }
+                else if (response.HttpStatusCode == HttpStatusCode.InternalServerError)
+                {
+                    NotificationText = "Operation failed";
                 }
             }
+            else
+            {
+                NotificationText = "Fill all fields";
+            }
+        }
+
+        public void ClearFields()
+        {
+            NewTask = "";
+            Tasks.Clear();
+            Members.Clear();
+            SelectedMembers.Clear();
+            DateTime = DateTime.Today.ToLocalTime();
         }
 
         public CreateViewModel()
