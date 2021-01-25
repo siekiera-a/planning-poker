@@ -46,7 +46,7 @@ namespace Server.Services.Meeting
 
             if (hasPermissions)
             {
-                return await _meetingDao.CreateMeeting(startTime, teamId, _userId);
+                return await _meetingDao.CreateMeeting(startTime.ToUniversalTime(), teamId, _userId);
             }
 
             throw new UnauthorizedAccessException();

@@ -23,13 +23,11 @@ namespace Server.Controllers
 
         private readonly IUserService _userService;
         private readonly IJwtTokenManager _tokenManager;
-        private readonly IMeetingService _meetingService;
 
-        public UserController(IUserService userService, IJwtTokenManager tokenManager, IMeetingService meetingService)
+        public UserController(IUserService userService, IJwtTokenManager tokenManager)
         {
             _userService = userService;
             _tokenManager = tokenManager;
-            _meetingService = meetingService;
         }
 
         private LoginResponse MapUserToResponse(User user)
@@ -70,14 +68,6 @@ namespace Server.Controllers
             }
 
             return Ok(MapUserToResponse(user.Value));
-        }
-
-        [Authorize]
-        [HttpGet("results")]
-        public async Task<IActionResult> GetResults(DateTimeRequest request)
-        {
-            var response = await _meetingService.GetResults(request.DateTime);
-            return Ok(response); // List<UserResultResponse>
         }
 
 

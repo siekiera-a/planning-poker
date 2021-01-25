@@ -1,4 +1,4 @@
-create database planning_poker
+create database planning_poker collate Polish_CS_AS
 go
 
 use planning_poker
