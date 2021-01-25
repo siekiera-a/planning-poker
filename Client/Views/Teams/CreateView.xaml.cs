@@ -89,5 +89,13 @@ namespace Client.Views.Teams
                 context.DeleteSelectedMembers(MemberList.SelectedItems);
             }
         }
+
+        private void CancelCreatingMeeting(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is CreateViewModel context)
+            {
+                context.CancelCreating();
+            }
+        }
     }
 }

@@ -106,7 +106,8 @@
                         Background="{StaticResource MahApps.Brushes.Accent}"
                         Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                         Padding="10"
-                        Margin="6" />
+                        Margin="6"
+                        Click="CancelCreatingMeeting"/>
 
                 <Button Grid.Column="2"
                         VerticalAlignment="Bottom"

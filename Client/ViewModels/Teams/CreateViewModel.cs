@@ -111,6 +111,15 @@ namespace Client.ViewModels.Teams
             }
         }
 
+        public void CancelCreating()
+        {
+            NewTask = "";
+            Tasks.Clear();
+            Teams.Clear();
+            Members.Clear();
+            SelectedMembers.Clear();
+        }
+
         public CreateViewModel()
         {
             _apiClient = Services.GetService<IApiClient>();
