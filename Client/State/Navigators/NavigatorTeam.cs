@@ -26,8 +26,6 @@ namespace Client.State.Navigators
         {
             switch (type)
             {
-                case TeamViewType.Meetings:
-                    return new MeetingsViewModel();
                 case TeamViewType.Results:
                     return new ResultsViewModel();
                 case TeamViewType.Create:

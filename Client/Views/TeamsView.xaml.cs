@@ -52,9 +52,12 @@ namespace Client.Views
         {
             if (DataContext is TeamsViewModel context)
             {
-                if (e.AddedItems[0] is TeamResponse selectedItem)
+                if (e.AddedItems.Count > 0)
                 {
-                    await context.FetchMembers(selectedItem.Id);
+                    if (e.AddedItems[0] is TeamResponse selectedItem)
+                    {
+                        await context.FetchMembers(selectedItem.Id);
+                    }
                 }
             }
         }

@@ -17,22 +17,16 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Column="0"
-                Content="Meetings"
-                Command="{Binding UpdateCurrentViewModelCommand}"
-                CommandParameter="{x:Static nav:TeamViewType.Meetings}"
-                HorizontalAlignment="Center" />
 
-        <Button Grid.Column="1"
+        <Button Grid.Column="0"
                 Content="Results"
                 Command="{Binding UpdateCurrentViewModelCommand}"
                 CommandParameter="{x:Static nav:TeamViewType.Results}"
                 HorizontalAlignment="Center" />
 
-        <Button Grid.Column="2"
+        <Button Grid.Column="1"
                 Content="Create"
                 Command="{Binding UpdateCurrentViewModelCommand}"
                 CommandParameter="{x:Static nav:TeamViewType.Create}"

@@ -38,10 +38,6 @@
                 <teams1:CreateView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type teams:MeetingsViewModel}">
-                <teams1:MeetingsView/>
-            </DataTemplate>
-            
             <DataTemplate DataType="{x:Type teams:ResultsViewModel}">
                 <teams1:ResultsView/>
             </DataTemplate>
