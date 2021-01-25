@@ -107,7 +107,7 @@ namespace Server.Controllers
         [HttpPost("")]
         public async Task<IActionResult> GetMeetings(DateTimeRequest request)
         {
-            var meetings = await _meetingService.GetMeetings(request.DateTime.ToUniversalTime());
+            var meetings = await _meetingService.GetMeetings(request.DateTime);
             return Ok(meetings); // List<MeetingDetailsResponse>
         }
 
