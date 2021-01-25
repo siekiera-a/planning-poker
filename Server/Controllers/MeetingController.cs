@@ -125,5 +125,12 @@ namespace Server.Controllers
             }
         }
 
+        [HttpGet("results")]
+        public async Task<IActionResult> GetResults(DateTimeRequest request)
+        {
+            var response = await _meetingService.GetResults(request.DateTime);
+            return Ok(response); // List<UserResultResponse>
+        }
+
     }
 }
