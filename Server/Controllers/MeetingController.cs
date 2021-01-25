@@ -32,9 +32,9 @@ namespace Server.Controllers
             {
                 Optional<int> meetingId;
 
-                if (request.DateTime != new DateTime())
+                if (request.DateTime != new DateTime().ToUniversalTime())
                 {
-                    meetingId = await _meetingService.CreateMeeting(request.DateTime, id);
+                    meetingId = await _meetingService.CreateMeeting(request.DateTime.ToUniversalTime(), id);
                 }
                 else
                 {
@@ -107,8 +107,8 @@ namespace Server.Controllers
         [HttpPost("")]
         public async Task<IActionResult> GetMeetings(DateTimeRequest request)
         {
-            var meetings = await _meetingService.GetMeetings(request.DateTime);
-            return Ok(meetings); // List<MeetingDetails>
+            var meetings = await _meetingService.GetMeetings(request.DateTime.ToUniversalTime());
+            return Ok(meetings); // List<MeetingDetailsResponse>
         }
 
         [HttpPost("{id}/assign")]
@@ -128,7 +128,7 @@ namespace Server.Controllers
         [HttpGet("results")]
         public async Task<IActionResult> GetResults(DateTimeRequest request)
         {
-            var response = await _meetingService.GetResults(request.DateTime);
+            var response = await _meetingService.GetResults(request.DateTime.ToUniversalTime());
             return Ok(response); // List<UserResultResponse>
         }
 
