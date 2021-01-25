@@ -93,14 +93,16 @@ namespace Server.DAOs
             }
         }
 
-        public async Task<List<MeetingDetails>> GetFutureMeetings(int userId)
+        public async Task<List<MeetingDetails>> GetMeetingsOnTheGivenDay(int userId, DateTime date)
         {
+
             using var connection = _connectionFactory.CreateConnection();
 
             try
             {
-                var meetings = await connection.QueryAsync<MeetingDetails>("SELECT * FROM ufnGetFutureMeetings(@UserId)",
-                    new { UserId = userId }, commandType: CommandType.Text);
+                var meetings = await connection.QueryAsync<MeetingDetails>(
+                    "dbo.ufnGetMeetingsOnTheGivenDay(@UserId, @Date)",
+                    new {UserId = userId, Date = date}, commandType: CommandType.Text);
                 return meetings.AsList();
             }
             catch (SqlException e)

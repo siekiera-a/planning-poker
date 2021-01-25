@@ -8,7 +8,7 @@ namespace Server.Dtos.Incoming
     public class DateTimeRequest
     {
 
-        public DateTime StartTime { get; set; }
+        public DateTime DateTime { get; set; }
 
     }
 }
