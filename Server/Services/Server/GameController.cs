@@ -14,31 +14,13 @@ namespace Server.Services.Server
     {
 
         private readonly IDictionary<int, GroupManager> _managers;
-        private readonly IMeetingService _meetingService;
-        private readonly IUserAuthorization _userAuthorization;
-        private readonly IUserProvider _userProvider;
 
-        public GameController(IMeetingService meetingService, IUserAuthorization userAuthorization, IUserProvider userProvider)
+        public GameController()
         {
-            _meetingService = meetingService;
-            _userAuthorization = userAuthorization;
-            _userProvider = userProvider;
             _managers = new Dictionary<int, GroupManager>();
         }
 
-        public GroupManager GetManager(int meetingId)
-        {
-            GroupManager manager;
-
-            lock (_managers)
-            {
-                manager = _managers[meetingId];
-            }
-
-            return manager;
-        }
-
-        public async Task<Optional<GroupManager>> GetOrCreateGroupManager(int meetingId)
+        public Optional<GroupManager> GetManager(int meetingId)
         {
             lock (_managers)
             {
@@ -48,92 +30,64 @@ namespace Server.Services.Server
                 }
             }
 
-            var manager = new GroupManager(meetingId, _meetingService);
+            return Optional<GroupManager>.Empty();
+        }
 
+        public async Task<bool> AddGroupManager(int meetingId, GroupManager manager)
+        {
             lock (_managers)
             {
                 _managers.Add(meetingId, manager);
             }
-
-            var success = await manager.Load();
-
-            return success ? Optional<GroupManager>.of(manager) : Optional<GroupManager>.Empty();
+            return await manager.Load();
         }
 
-        public async Task<Models.Dapper.Meeting> EndMeeting(int meetingId)
+
+        public void RemoveManager(int meetingId)
         {
             lock (_managers)
             {
                 _managers.Remove(meetingId);
             }
-
-            var success = await _meetingService.EndMeeting(meetingId);
-
-            if (success.IsPresent)
-            {
-                return success.Value;
-            }
-
-            return null;
         }
 
-        public async Task<bool> AssignUser(int meetingId, int userId)
-        {
-            var hasPermission =
-                await _userAuthorization.Authorize(_userProvider.GetUserId(), meetingId, MeetingAction.AssignUser);
-
-            if (hasPermission)
-            {
-                var manager = GetManager(meetingId);
-
-                var estimatedTime = manager.GetEstimatedTime(userId);
-
-                if (estimatedTime.IsPresent)
-                {
-                    return await _meetingService.AssignUserToTask(meetingId, userId, manager.Task.Id, estimatedTime.Value);
-                }
-            }
-
-            return false;
-        }
-
-        public async Task<bool> CanRewind(int meetingId)
-        {
-            return await _userAuthorization.Authorize(_userProvider.GetUserId(), meetingId, MeetingAction.Rewind);
-        }
-
-        public async Task<bool> CanChangeTask(int meetingId)
-        {
-            return await _userAuthorization.Authorize(_userProvider.GetUserId(), meetingId, MeetingAction.NextTask);
-        }
-
-        public async Task<ClientResponse> Next(int meetingId)
+        public ClientResponse Next(int meetingId)
         {
             var manager = GetManager(meetingId);
 
-            manager.Next();
+            if (manager.IsEmpty)
+            {
+                return new ClientResponse
+                {
+                    IsFinished = true,
+                    Description = ""
+                };
+            }
+
+            var mg = manager.Value;
+            mg.Next();
 
             var response = new ClientResponse
             {
-                IsFinished = manager.IsFinished,
+                IsFinished = mg.IsFinished,
                 Description = ""
             };
 
-            if (!manager.IsFinished)
+            mg.Clients.ForEach(x => x.EstimatedTime = 0);
+
+            if (!mg.IsFinished)
             {
-                response.Description = manager.Task.Description;
+                response.Description = mg.Task.Description;
             }
 
             return response;
         }
 
-        public async Task<bool> Submit(int meetingId, short estimatedTime)
+        public bool Submit(int meetingId, int userId, short estimatedTime)
         {
-            GroupManager manager = GetManager(meetingId);
+            var manager = GetManager(meetingId);
 
-            var id = _userProvider.GetUserId();
-
-            var user = manager.Clients.Find(x => x.Id == id);
+            var user = manager.Value.Clients.Find(x => x.Id == userId);
 
             if (user != null)
             {
@@ -151,9 +105,9 @@ namespace Server.Services.Server
             var manager = GetManager(meetingId);
             return new OrganizerResponse
             {
-                Clients = manager.Clients,
-                IsFinished = manager.IsFinished,
-                Description = manager.Task.Description
+                Clients = manager.Value.Clients,
+                IsFinished = manager.Value.IsFinished,
+                Description = manager.Value.Task.Description
             };
         }
 
