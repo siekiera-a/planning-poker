@@ -1,4 +1,3 @@
--- zwróci wszystkie wyniki powiązane z użytkownikiem z danego czasu
 CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
     RETURNS TABLE AS
         RETURN
@@ -13,8 +12,8 @@ CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
                  INNER JOIN meeting m on t.meeting_id = m.id
                  INNER JOIN team tm ON m.team_id = tm.id
         WHERE r.user_id = @UserId
-          AND m.end_time IS NOT NULL 
-          AND m.end_time BETWEEN @StartTime AND SYSUTCDATETIME()
+          AND (m.end_time IS NULL OR
+               m.end_time BETWEEN @StartTime AND SYSUTCDATETIME())
 go
 
 
