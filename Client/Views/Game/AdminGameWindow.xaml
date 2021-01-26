@@ -7,8 +7,9 @@
         xmlns:question="clr-namespace:Client.Controls.Game"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Planning Poker" Height="450" Width="800">
-    <Grid Background="{StaticResource MahApps.Brushes.Accent4}">
+        Title="Planning Poker" Height="450" Width="800"
+        Foreground="{StaticResource MahApps.Brushes.Gray10}">
+    <Grid Background="{StaticResource MahApps.Brushes.Gray1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -52,14 +53,33 @@
                     </ListView>
                 </ListView>
 
-                <Button Grid.Row="3"
-                        Margin="8"
-                        Padding="10"
-                        Content="Choose winner"
-                        VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right"
-                        Background="{StaticResource MahApps.Brushes.Accent}"
-                        Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Margin="8"
+                            Padding="10"
+                            Content="Rewind"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Right"
+                            Background="{StaticResource MahApps.Brushes.Gray2}"
+                            Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
+
+                    <Button Grid.Column="1"
+                            Margin="8"
+                            Padding="10"
+                            Content="Choose winner"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Right"
+                            Background="{StaticResource MahApps.Brushes.Gray2}"
+                            Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
+
+                </Grid>
+
 
             </Grid>
 

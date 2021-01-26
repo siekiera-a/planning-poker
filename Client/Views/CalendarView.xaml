@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:Client.Views"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="{StaticResource MahApps.Brushes.Accent4}">
+             Background="{StaticResource MahApps.Brushes.Gray1}"
+             Foreground="{StaticResource MahApps.Brushes.Gray10}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -52,8 +53,8 @@
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     Content="Join"
-                    Background="{StaticResource MahApps.Brushes.Accent}"
-                    Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
+                    Background="{StaticResource MahApps.Brushes.Gray2}"
+                    Foreground="{StaticResource MahApps.Brushes.Gray10}"
                     Padding="10"
                     Margin="6" 
                     Click="JoinMeetingButtonClick"/>

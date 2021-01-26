@@ -9,7 +9,7 @@
              xmlns:controls1="clr-namespace:Notifications.Wpf.Core.Controls;assembly=Notifications.Wpf.Core"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="{StaticResource MahApps.Brushes.Accent4}">
+             Background="{StaticResource MahApps.Brushes.Gray1}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="230" />
@@ -58,7 +58,7 @@
                             Click="AddMemberByEmail"
                             Content="Add"
                             Padding="10"
-                            Background="{StaticResource MahApps.Brushes.Accent}"
+                            Background="{StaticResource MahApps.Brushes.Gray2}"
                             Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
 
                 </Grid>
@@ -83,7 +83,7 @@
                             Click="GenerateCodeButtonClick"
                             Content="Generate"
                             Padding="10"
-                            Background="{StaticResource MahApps.Brushes.Accent}"
+                            Background="{StaticResource MahApps.Brushes.Gray2}"
                             Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
 
                     <Button Grid.Column="2"
@@ -91,14 +91,14 @@
                             Content="x"
                             Padding="5"
                             Click="DeleteJoinCodeButtonClick"
-                            Background="{StaticResource MahApps.Brushes.Accent}"
+                            Background="{StaticResource MahApps.Brushes.Gray2}"
                             Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"/>
 
                 </Grid>
             </Grid>
 
             <ListView Grid.Row="2" Margin="8" Name="Members"
-                      Background="{StaticResource MahApps.Brushes.Accent3}"
+                      Background="{StaticResource MahApps.Brushes.Gray2}"
                       ItemsSource="{Binding Members}"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Id" />

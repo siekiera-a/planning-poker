@@ -8,8 +8,9 @@
         xmlns:question="clr-namespace:Client.Controls.Game"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Planning Poker" Height="450" Width="800">
-    <Grid Background="{StaticResource MahApps.Brushes.Accent4}">
+        Title="Planning Poker" Height="450" Width="800"
+        Foreground="{StaticResource MahApps.Brushes.Gray10}">
+    <Grid Background="{StaticResource MahApps.Brushes.Gray1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -23,7 +24,7 @@
         <Button Grid.Row="2"
                 Name="SendAnswerButton"
                 FontSize="20"
-                Background="{StaticResource MahApps.Brushes.Accent}"
+                Background="{StaticResource MahApps.Brushes.Gray2}"
                 Padding="10"
                 Margin="10"
                 VerticalAlignment="Bottom"

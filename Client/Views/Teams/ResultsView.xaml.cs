@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Client.ViewModels.Teams;
 
 namespace Client.Views.Teams
 {
@@ -21,6 +22,15 @@ namespace Client.Views.Teams
         public ResultsView()
         {
             InitializeComponent();
+            // Loaded += FetchTasks;
         }
+
+        // private async void FetchTasks(object sender, RoutedEventArgs e)
+        // {
+        //     if (DataContext is ResultsViewModel context)
+        //     {
+        //         await context.FetchTasks();
+        //     }
+        // }
     }
 }

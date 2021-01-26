@@ -7,7 +7,7 @@
              xmlns:nav="clr-namespace:Client.State.Navigators"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="100"
-             Background="{StaticResource MahApps.Brushes.Accent}">
+             Background="{StaticResource MahApps.Brushes.Gray2}">
     <Grid>
         <!-- <Grid.Resources> -->
         <!--     <Style BasedOn="{StaticResource MahApps.Styles.Button.Square.Accent}" TargetType="Button" /> -->
@@ -25,28 +25,28 @@
         <Button Grid.Row="1" Content="Home"
                 Command="{Binding UpdateCurrentViewModelCommand}"
                 CommandParameter="{x:Static nav:ViewType.Home}"
-                Background="{StaticResource MahApps.Brushes.Accent}"
+                Background="{StaticResource MahApps.Brushes.Gray3}"
                 Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                 BorderThickness="0" />
 
         <Button Grid.Row="2" Content="Teams"
                 Command="{Binding UpdateCurrentViewModelCommand}"
                 CommandParameter="{x:Static nav:ViewType.Teams}"
-                Background="{StaticResource MahApps.Brushes.Accent}"
+                Background="{StaticResource MahApps.Brushes.Gray3}"
                 Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                 BorderThickness="0" />
 
         <Button Grid.Row="3" Content="Join Team"
                 Command="{Binding UpdateCurrentViewModelCommand}"
                 CommandParameter="{x:Static nav:ViewType.Join}"
-                Background="{StaticResource MahApps.Brushes.Accent}"
+                Background="{StaticResource MahApps.Brushes.Gray3}"
                 Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                 BorderThickness="0" />
 
         <Button Grid.Row="4" Content="Calendar"
                 Command="{Binding UpdateCurrentViewModelCommand}"
                 CommandParameter="{x:Static nav:ViewType.Calendar}"
-                Background="{StaticResource MahApps.Brushes.Accent}"
+                Background="{StaticResource MahApps.Brushes.Gray3}"
                 Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                 BorderThickness="0" />
 
