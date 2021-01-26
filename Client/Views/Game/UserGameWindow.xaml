@@ -17,34 +17,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <question:GameBase Grid.Row="0"/>
+        <TextBlock Grid.Row="0"
+                   TextWrapping="Wrap"
+                   Name="Task"
+                   Text="{Binding QuestionText, UpdateSourceTrigger=PropertyChanged}"
+                   HorizontalAlignment="Center" FontSize="22" />
 
         <cards:CardListView Grid.Row="1" x:Name="Cards" />
-
-        <Button Grid.Row="2"
-                Name="SendAnswerButton"
-                FontSize="20"
-                Background="{StaticResource MahApps.Brushes.Gray2}"
-                Padding="10"
-                Margin="10"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Right"
-                Content="Send answer"
-                Click="SendAnswerButtonClickAsync" />
-
-        <!-- <mah:CustomDialog Grid.Row="2" -->
-        <!--     Style="{StaticResource NewCustomDialogStyle}" -->
-        <!--     Title="This dialog allows arbitrary content. It will close in 5 seconds." -->
-        <!--     x:Name="CustomTestDialog" -->
-        <!--     Visibility="Hidden"> -->
-        <!--     <StackPanel> -->
-        <!--         <TextBlock Height="30" -->
-        <!--                    Text="This dialog allows arbitrary content. You have to close it yourself by clicking the close button below." -->
-        <!--                    TextWrapping="Wrap" -->
-        <!--                    Foreground="{DynamicResource AccentColorBrush}" /> -->
-        <!--         ~1~ <Button Content="Close Me!" /> @1@ -->
-        <!--     </StackPanel> -->
-        <!-- </mah:CustomDialog> -->
 
     </Grid>
 </Window>

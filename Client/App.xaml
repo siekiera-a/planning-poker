@@ -5,49 +5,60 @@
              xmlns:views="clr-namespace:Client.Views"
              xmlns:teams="clr-namespace:Client.ViewModels.Teams"
              xmlns:teams1="clr-namespace:Client.Views.Teams"
+             xmlns:game="clr-namespace:Client.Views.Game"
+             xmlns:game1="clr-namespace:Client.ViewModels.Game"
              xmlns:local="clr-namespace:Client">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
 
-                <ResourceDictionary Source="/Styles/Common.xaml"/>
-                <ResourceDictionary Source="/Styles/NavigationButton.xaml"/>
-                <ResourceDictionary Source="/Styles/CalendarStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Common.xaml" />
+                <ResourceDictionary Source="/Styles/NavigationButton.xaml" />
+                <ResourceDictionary Source="/Styles/CalendarStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <DataTemplate DataType="{x:Type game1:AdminGameViewModel}">
+                <game:AdminGameWindow />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type game1:UserGameViewModel}">
+                <game:GameWindow />
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
-                <views:HomeView/>
+                <views:HomeView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewmodels:TeamsViewModel}">
-                <views:TeamsView/>
+                <views:TeamsView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewmodels:JoinTeamModel}">
-                <views:JoinTeamView/>
+                <views:JoinTeamView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewmodels:CalendarViewModel}">
-                <views:CalendarView/>
+                <views:CalendarView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type teams:CreateViewModel}">
-                <teams1:CreateView/>
+                <teams1:CreateView />
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type teams:ResultsViewModel}">
-                <teams1:ResultsView/>
+                <teams1:ResultsView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
-                <views:LoginView/>
+                <views:LoginView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewmodels:RegisterViewModel}">
-                <views:RegisterView/>
+                <views:RegisterView />
             </DataTemplate>
 
         </ResourceDictionary>

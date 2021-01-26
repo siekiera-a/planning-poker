@@ -19,14 +19,6 @@
                 <ColumnDefinition Width="80" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"
-                       Margin="8"
-                       FontSize="17">
-                <Run Text="Round:" />
-                <Run Text="Numer" />
-                <Run Text="/" />
-                <Run Text="Ilosc" />
-            </TextBlock>
 
             <TextBlock Grid.Column="1"
                        Text="Left game play time: "

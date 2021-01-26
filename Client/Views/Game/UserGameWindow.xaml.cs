@@ -9,8 +9,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Client.Service;
+using Client.ViewModels.Game;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.AspNetCore.SignalR.Client;
+using Server.Models.Server;
 
 namespace Client.Views.Game
 {
@@ -19,16 +23,23 @@ namespace Client.Views.Game
     /// </summary>
     public partial class GameWindow :Window
     {
+        private readonly IGameManager _connection;
         public GameWindow()
         {
             InitializeComponent();
+            _connection = Services.GetService<IGameManager>();
+            Loaded += TaskDescription;
         }
 
-        private async void SendAnswerButtonClickAsync(object sender, RoutedEventArgs e)
+        public async void TaskDescription(object sender, RoutedEventArgs e)
         {
-            // MahApps.Metro.Controls.Dialogs.MessageDialogResult result =
-            //     await this.ShowMessageAsync("Information", "This is simple dialog");
-            
+            if (DataContext is UserGameViewModel context)
+            {
+                var clientResponse =  await _connection._connection.InvokeAsync<ClientResponse>("currentTask", _connection.MeetingId);
+                Task.Text = clientResponse.Description;
+                
+                context.Description(clientResponse);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Client.Models;
+using Client.Service;
 
 namespace Client.Controls
 {
@@ -14,6 +15,7 @@ namespace Client.Controls
     /// </summary>
     public partial class CardListView : UserControl
     {
+        private IGameManager _gameManager;
         private readonly List<CardIndex> _cardValues = new List<CardIndex>()
         {
             new CardIndex() {Name = "1", Value = 1},
@@ -34,7 +36,7 @@ namespace Client.Controls
         {
             InitializeComponent();
             Loop();
-            
+            _gameManager = Services.GetService<IGameManager>();
         }
 
         public void Loop()
@@ -49,9 +51,10 @@ namespace Client.Controls
 
         }
 
-        private void CardClicked(object sender, MouseButtonEventArgs e)
+        public void CardClicked(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show((sender as CardView).Card.Name );
+            _gameManager.Submit((sender as CardView).Card.Value);
+            // MessageBox.Show((sender as CardView).Card.Name );
         }
     }
 }

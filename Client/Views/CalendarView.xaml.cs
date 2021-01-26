@@ -25,7 +25,7 @@ namespace Client.Views
             }
         }
 
-        private void JoinMeetingButtonClick(object sender, RoutedEventArgs e)
+        private async void JoinMeetingButtonClick(object sender, RoutedEventArgs e)
         {
             if (DataContext is CalendarViewModel context)
             {

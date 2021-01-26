@@ -40,6 +40,7 @@ namespace Client
             services.AddSingleton<IApiClient, ApiClient>();
             services.AddSingleton<ITokenManager, TokenManager>();
             services.AddSingleton<IUserDataProvider, UserDataProvider>();
+            services.AddSingleton<IGameManager, GameManager>();
         }
         
 	}
