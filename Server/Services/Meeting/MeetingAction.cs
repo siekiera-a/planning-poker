@@ -12,6 +12,8 @@ namespace Server.Services.Meeting
         RemoveInvitation,
         RescheduleMeeting,
         RemoveMeeting,
-        AddTask
+        AddTask,
+        Rewind,
+        NextTask
     }
 }

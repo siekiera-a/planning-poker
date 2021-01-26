@@ -10,6 +10,6 @@ namespace Server.Models.Server
 
         public int Id { get; set; }
         public string Email { get; set; }
-
+        public Int16 EstimatedTime { get; set; }
     }
 }

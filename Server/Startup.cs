@@ -86,6 +86,8 @@ namespace Server
 
             services.AddSignalR();
 
+            services.AddSingleton<GameController>();
+
             AddDAOs(services);
             AddServices(services);
 
