@@ -125,7 +125,7 @@ namespace Server.Controllers
             }
         }
 
-        [HttpGet("results")]
+        [HttpPost("results")]
         public async Task<IActionResult> GetResults(DateTimeRequest request)
         {
             var response = await _meetingService.GetResults(request.DateTime.ToUniversalTime());
