@@ -17,14 +17,16 @@ namespace Server.Services.Server
 
         private readonly IMeetingService _meetingService;
         private readonly IUserProvider _userProvider;
+        private readonly IUserAuthorization _userAuthorization;
 
         private readonly GameController _controller;
 
-        public Game(IMeetingService meetingService, GameController controller, IUserProvider userProvider)
+        public Game(IMeetingService meetingService, GameController controller, IUserProvider userProvider, IUserAuthorization userAuthorization)
         {
             _meetingService = meetingService;
             _controller = controller;
             _userProvider = userProvider;
+            _userAuthorization = userAuthorization;
         }
 
         public async Task<JoinResponse> Join(int meetingId)
@@ -42,68 +44,108 @@ namespace Server.Services.Server
 
             var p = permissions.Value;
 
-            var manager = await _controller.GetOrCreateGroupManager(meetingId);
+            var mg = _controller.GetManager(meetingId);
+            GroupManager manager;
 
-            if (manager.IsEmpty)
+            if (mg.IsEmpty)
             {
-                return new JoinResponse
+                manager = new GroupManager(meetingId, _meetingService);
+                if (!(await _controller.AddGroupManager(meetingId, manager)))
                 {
-                    IsOrganizer = false,
-                    Success = false
-                };
+                    return new JoinResponse
+                    {
+                        IsOrganizer = false,
+                        Success = false
+                    };
+                }
+            }
+            else
+            {
+                manager = mg.Value;
             }
 
-            manager.Value.Clients.Add(new Client { Email = p.Email, Id = _userProvider.GetUserId() });
+            manager.Clients.Add(new Client { Email = p.Email, Id = _userProvider.GetUserId() });
             await Groups.AddToGroupAsync(Context.ConnectionId, meetingId.ToString());
             return new JoinResponse { Success = true, IsOrganizer = p.IsOrganizer };
         }
 
         public async Task<bool> AssignUser(int meetingId, int userId)
         {
-            return await _controller.AssignUser(meetingId, userId);
+            var manager = _controller.GetManager(meetingId);
+
+            if (manager.IsPresent)
+            {
+                var estimatedTime = manager.Value.GetEstimatedTime(userId);
+
+                if (estimatedTime.IsPresent)
+                {
+                    return await _meetingService.AssignUserToTask(meetingId, userId, manager.Value.Task.Id,
+                        estimatedTime.Value);
+                }
+            }
+
+            return false;
         }
 
         public async Task Rewind(int meetingId)
         {
-            if (await _controller.CanRewind(meetingId))
+            var manager = _controller.GetManager(meetingId);
+
+            if (manager.IsPresent)
             {
-                var manager = await _controller.GetOrCreateGroupManager(meetingId);
-
-                if (manager.IsPresent)
-                {
-                    var task = manager.Value.Task;
-                    await Clients.Group(meetingId.ToString()).SendAsync("TaskChange",
-                        new ClientResponse { Description = task.Description, IsFinished = manager.Value.IsFinished });
-                    await Clients.Group(meetingId.ToString()).SendAsync("Submitted", _controller.GetResponse(meetingId));
-                }
-
+                var task = manager.Value.Task;
+                manager.Value.Clients.ForEach(x => x.EstimatedTime = 0);
+                await Clients.Group(meetingId.ToString()).SendAsync("TaskChange",
+                    new ClientResponse { Description = task.Description, IsFinished = manager.Value.IsFinished });
+                await Clients.Group(meetingId.ToString()).SendAsync("Submitted", _controller.GetResponse(meetingId));
             }
         }
 
         public async Task Next(int meetingId)
         {
-            if (await _controller.CanChangeTask(meetingId))
+            var response = _controller.Next(meetingId);
+            if (response.IsFinished)
             {
-                var response = await _controller.Next(meetingId);
-                if (response.IsFinished)
-                {
-                    await _controller.EndMeeting(meetingId);
-                    await Clients.Group(meetingId.ToString()).SendAsync("CloseWindow");
-                }
-                else
-                {
-                    await Clients.Group(meetingId.ToString()).SendAsync("TaskChange", response);
-                    await Clients.Group(meetingId.ToString()).SendAsync("Submitted", _controller.GetResponse(meetingId));
-                }
+                _controller.RemoveManager(meetingId);
+                await _meetingService.EndMeeting(meetingId);
+                await Clients.Group(meetingId.ToString()).SendAsync("CloseWindow");
+            }
+            else
+            {
+                await Clients.Group(meetingId.ToString()).SendAsync("TaskChange", response);
+                await Clients.Group(meetingId.ToString()).SendAsync("Submitted", _controller.GetResponse(meetingId));
             }
         }
 
         public async Task Submit(int meetingId, ClientRequest request)
         {
-            if (await _controller.Submit(meetingId, request.EstimatedTime))
+            if (_controller.Submit(meetingId, _userProvider.GetUserId(), request.EstimatedTime))
             {
                 await Clients.Group(meetingId.ToString()).SendAsync("Submitted", _controller.GetResponse(meetingId));
             }
+            
+        }
+
+        public ClientResponse CurrentTask(int meetingId)
+        {
+            var manager = _controller.GetManager(meetingId);
+
+            if (manager.IsEmpty)
+            {
+                new ClientResponse
+                {
+                    IsFinished = true,
+                    Description = ""
+                };
+            }
+
+            var task = manager.Value.Task;
+
+            return new ClientResponse
+            {
+                IsFinished = manager.Value.IsFinished,
+                Description = task.Description
+            };
         }
 
 
