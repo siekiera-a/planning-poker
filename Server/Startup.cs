@@ -19,6 +19,7 @@ using Server.Services.Authentication;
 using Server.Services.Authorization;
 using Server.Services.DataAccess;
 using Server.Services.Meeting;
+using Server.Services.Server;
 using Server.Services.Team;
 
 namespace Server
@@ -83,6 +84,8 @@ namespace Server
             services.AddSwaggerDocument();
             services.AddHttpContextAccessor();
 
+            services.AddSignalR();
+
             AddDAOs(services);
             AddServices(services);
 
@@ -110,6 +113,7 @@ namespace Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<Game>("/game");
             });
         }
     }
