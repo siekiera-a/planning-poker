@@ -67,6 +67,11 @@ namespace Client.Views
                     ErrorMessage.Text = response.Error.Message;
                     ErrorMessage.Visibility = Visibility.Visible;
                 }
+                else if (response.HttpStatusCode == HttpStatusCode.BadRequest)
+                {
+                    ErrorMessage.Text = response.Error.Message;
+                    ErrorMessage.Visibility = Visibility.Visible;
+                }
             }
         }
 
