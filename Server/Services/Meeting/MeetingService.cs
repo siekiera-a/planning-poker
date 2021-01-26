@@ -80,6 +80,7 @@ namespace Server.Services.Meeting
             {
 
                 DateTime now = DateTime.UtcNow;
+
                 bool canJoin = false;
 
                 if (x.EndTime == new DateTime())
@@ -180,6 +181,16 @@ namespace Server.Services.Meeting
                 TeamId = x.TeamId,
                 IsFinished = x.EndTime != new DateTime()
             }).AsList();
+        }
+
+        public async Task<List<TaskInfo>> GetTasksForMeeting(int meetingId)
+        {
+            return await _taskDao.GetTasksForMeeting(meetingId);
+        }
+
+        public async Task<Optional<Permissions>> JoinMeetingPermission(int meetingId)
+        {
+            return await _meetingDao.JoinMeetingPermission(_userId, meetingId);
         }
     }
 }

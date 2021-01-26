@@ -78,7 +78,6 @@ go
 
 
 -- from: ./functions/GetResultsForUser.sql
--- zwróci wszystkie wyniki powiązane z użytkownikiem z danego czasu
 CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
     RETURNS TABLE AS
         RETURN
@@ -93,8 +92,8 @@ CREATE FUNCTION dbo.ufnGetResultsForUser(@UserId INT, @StartTime DATETIME2)
                  INNER JOIN meeting m on t.meeting_id = m.id
                  INNER JOIN team tm ON m.team_id = tm.id
         WHERE r.user_id = @UserId
-          AND m.end_time IS NOT NULL 
-          AND m.end_time BETWEEN @StartTime AND SYSUTCDATETIME()
+          AND (m.end_time IS NULL OR
+               m.end_time BETWEEN @StartTime AND SYSUTCDATETIME())
 go
 
 
@@ -107,6 +106,17 @@ CREATE FUNCTION dbo.ufnGetRoles(@UserId INT, @TeamId INT)
                         INNER JOIN team_member tm on r.id = tm.role
                WHERE tm.user_id = @UserId
                  AND tm.team_id = @TeamId
+go
+
+
+
+-- from: ./functions/GetTasksForMeeting.sql
+CREATE FUNCTION dbo.ufnGetTasksForMeeting(@MeetingId INT)
+    RETURNS TABLE AS RETURN
+        SELECT t.id AS Id, t.description AS Description, r.estimated_time AS EstimatedTime
+        FROM task t
+                 LEFT JOIN result r ON t.id = r.task_id
+        WHERE t.meeting_id = @MeetingId
 go
 
 
@@ -145,6 +155,22 @@ CREATE FUNCTION dbo.ufnIsTheMeetingOrganizer(@UserId INT, @MeetingId INT)
                FROM meeting
                WHERE id = @MeetingId
                  AND organizer = @UserId
+go
+
+
+
+-- from: ./functions/JoinMeetingPermission.sql
+CREATE FUNCTION dbo.ufnJoinMeetingPermission(@UserId INT, @MeetingId INT)
+    RETURNS TABLE AS RETURN
+        SELECT u.name                          AS Name,
+               u.email                         AS Email,
+               (IIF(u.id = m.organizer, 1, 0)) AS IsOrganizer,
+               1                               AS IsInvited
+        FROM invitation i
+                 JOIN [user] u ON i.user_id = u.id
+                 JOIN meeting m on i.meeting_id = m.id
+        WHERE i.user_id = @UserId
+          AND i.meeting_id = @MeetingId
 go
 
 
