@@ -90,7 +90,8 @@
                     FontSize="15"
                     Command="{Binding LoginCommand}"
                     Click="LoginButtonClick"
-                    Content="Login" />
+                    Content="Login"
+                    IsDefault="True"/>
 
             <TextBlock Grid.Row="4"
                        Visibility="Hidden"

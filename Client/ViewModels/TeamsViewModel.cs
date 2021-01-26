@@ -69,6 +69,7 @@ namespace Client.ViewModels
             var members = await _apiClient.GetAsyncAuth<GetMembersResponse>($"/team/{_teamId}/members");
 
             Members.Clear();
+            Code = "";
 
             if (members.IsOk)
             {

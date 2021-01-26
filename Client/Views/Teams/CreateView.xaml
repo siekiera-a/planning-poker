@@ -39,7 +39,8 @@
                         Margin="8"
                         Click="AddTaskButtonClick"
                         Content="Add"
-                        Padding="10" />
+                        Padding="10"
+                        IsDefault="True"/>
 
                 <ListBox Grid.Row="1" Grid.Column="0"
                          Margin="8"

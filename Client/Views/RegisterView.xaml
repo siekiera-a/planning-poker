@@ -118,7 +118,8 @@
                     Background="{StaticResource MahApps.Brushes.Accent}"
                     Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
                     Click="CreateAccountButtonClick"
-                    Command="{Binding RegisterCommand}" />
+                    Command="{Binding RegisterCommand}"
+                    IsDefault="True"/>
 
             <TextBlock Grid.Row="4"
                        Visibility="Hidden"
