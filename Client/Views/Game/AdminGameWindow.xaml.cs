@@ -21,12 +21,15 @@ namespace Client.Views.Game
     /// </summary>
     public partial class AdminGameWindow : Window
     {
-        private readonly IGameManager _connection;
+        private readonly IGameManager _manager;
+
         public AdminGameWindow()
         {
             InitializeComponent();
-            _connection = Services.GetService<IGameManager>();
+            _manager = Services.GetService<IGameManager>();
             Loaded += FetchMembers;
+            _manager.SubmittedEvent += HandleSubmitted;
+            _manager.CloseEvent += CloseWindow;
         }
 
         private async void FetchMembers(object sender, RoutedEventArgs e)
@@ -34,20 +37,19 @@ namespace Client.Views.Game
             if (DataContext is AdminGameViewModel context)
             {
 
-                var users = await _connection._connection.InvokeAsync<OrganizerResponse>("currentTask", _connection.MeetingId);
+                var response = await _manager._connection.InvokeAsync<OrganizerResponse>("currentTask", _manager.MeetingId);
 
-                if (users.Clients != null)
+                if (response.Clients != null)
                 {
                     context.Users.Clear();
-                    foreach (var c in users.Clients)
+                    foreach (var c in response.Clients)
                     {
                         context.Users.Add(c);
                     }
                 }
 
-                
-                var clientResponse = await _connection._connection.InvokeAsync<ClientResponse>("currentTask", _connection.MeetingId);
-                Task.Text = clientResponse.Description;
+
+                Task.Text = response.Description;
             }
         }
 
@@ -55,9 +57,39 @@ namespace Client.Views.Game
         {
             if (DataContext is AdminGameViewModel context)
             {
-                var x = ListView.SelectedItem;
-                await _connection._connection.InvokeAsync<bool>("currentTask", _connection.MeetingId);
+                if (ListView.SelectedItem is Server.Models.Server.Client client)
+                {
+                    await _manager._connection.InvokeAsync<bool>("assignUser", _manager.MeetingId, client.Id);
+                    await _manager._connection.InvokeAsync("next", _manager.MeetingId);
+                }
             }
         }
+
+        private void HandleSubmitted(object o, OrganizerResponse e)
+        {
+            if (DataContext is AdminGameViewModel context)
+            {
+                if (e.Clients != null)
+                {
+                    context.Users.Clear();
+                    foreach (var c in e.Clients)
+                    {
+                        context.Users.Add(c);
+                    }
+                }
+                Task.Text = e.Description;
+            }
+        }
+
+        private void CloseWindow(object sender, EventArgs e)
+        {
+            Window.GetWindow(this)?.Close();
+        }
+
+        private async void Rewind_Button(object sender, RoutedEventArgs e)
+        {
+            await _manager._connection.InvokeAsync("rewind", _manager.MeetingId);
+        }
     }
+
 }

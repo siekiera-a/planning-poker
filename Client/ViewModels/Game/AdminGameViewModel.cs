@@ -18,15 +18,11 @@ namespace Client.ViewModels.Game
             set;
         }
 
-        public async Task FetchMembers()
-        {
-            
-        }
-
         public AdminGameViewModel()
         {
             _gameManager = Services.GetService<IGameManager>();
             _gameManager.TaskChangedEvent += (sender, e) => QuestionText = e.Description;
+
             Users = new ObservableCollection<Server.Models.Server.Client>();
         }
     }

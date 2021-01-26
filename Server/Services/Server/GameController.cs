@@ -105,7 +105,7 @@ namespace Server.Services.Server
             var manager = GetManager(meetingId);
             return new OrganizerResponse
             {
-                Clients = manager.Value.Clients,
+                Clients = manager.Value.Clients.FindAll(x => x.Id != manager.Value.OrganizerId),
                 IsFinished = manager.Value.IsFinished,
                 Description = manager.Value.Task.Description
             };

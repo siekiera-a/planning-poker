@@ -68,6 +68,7 @@
                         Content="Rewind"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
+                        Click="Rewind_Button"
                         Background="{StaticResource MahApps.Brushes.Gray2}"
                         Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}" />
 

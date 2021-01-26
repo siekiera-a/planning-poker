@@ -19,6 +19,7 @@ namespace Server.Services.Server
         public List<Client> Clients { get; }
         private readonly List<TaskInfo> _tasks;
         private int _index;
+        public int OrganizerId { get; set; }
 
         public GroupManager(int meetingId, IMeetingService meetingService)
         {

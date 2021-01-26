@@ -64,8 +64,16 @@ namespace Server.Services.Server
                 manager = mg.Value;
             }
 
+            if (p.IsOrganizer)
+            {
+                manager.OrganizerId = _userProvider.GetUserId();
+            }
+
             manager.Clients.Add(new Client { Email = p.Email, Id = _userProvider.GetUserId() });
             await Groups.AddToGroupAsync(Context.ConnectionId, meetingId.ToString());
+
+            await Clients.Group(meetingId.ToString()).SendAsync("Submitted", _controller.GetResponse(meetingId));
+
             return new JoinResponse { Success = true, IsOrganizer = p.IsOrganizer };
         }
 
