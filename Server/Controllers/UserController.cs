@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Server.Dtos.Incoming;
 using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
+using Server.Services;
 using Server.Services.Authentication;
 using Server.Services.Meeting;
 
@@ -23,11 +25,13 @@ namespace Server.Controllers
 
         private readonly IUserService _userService;
         private readonly IJwtTokenManager _tokenManager;
+        private readonly EmailValidator _emailValidator;
 
-        public UserController(IUserService userService, IJwtTokenManager tokenManager)
+        public UserController(IUserService userService, IJwtTokenManager tokenManager, EmailValidator emailValidator)
         {
             _userService = userService;
             _tokenManager = tokenManager;
+            _emailValidator = emailValidator;
         }
 
         private LoginResponse MapUserToResponse(User user)
@@ -60,6 +64,11 @@ namespace Server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest credentials)
         {
+            if (!_emailValidator.IsValidEmail(credentials.Email))
+            {
+                return BadRequest(new ErrorResponse { Message = "Invalid user email!" });
+            }
+
             var user = await _userService.Register(credentials.Username, credentials.Email, credentials.Password);
 
             if (user.IsEmpty)
@@ -69,12 +78,6 @@ namespace Server.Controllers
 
             return Ok(MapUserToResponse(user.Value));
         }
-
-
-        //public async Task<IActionResult> Logout()
-        //{
-        //    throw new NotImplementedException("logout");
-        //}
 
     }
 }

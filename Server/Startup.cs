@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Server.Dtos.Incoming;
 using Server.DAOs;
+using Server.Services;
 using Server.Services.Authentication;
 using Server.Services.Authorization;
 using Server.Services.DataAccess;
@@ -87,6 +88,7 @@ namespace Server
             services.AddSignalR();
 
             services.AddSingleton<GameController>();
+            services.AddSingleton<EmailValidator>();
 
             AddDAOs(services);
             AddServices(services);
