@@ -37,7 +37,7 @@ namespace Client.Views.Game
             if (DataContext is AdminGameViewModel context)
             {
 
-                var response = await _manager._connection.InvokeAsync<OrganizerResponse>("currentTask", _manager.MeetingId);
+                var response = await _manager.Connection.InvokeAsync<OrganizerResponse>("currentTask", _manager.MeetingId);
 
                 if (response.Clients != null)
                 {
@@ -59,8 +59,8 @@ namespace Client.Views.Game
             {
                 if (ListView.SelectedItem is Server.Models.Server.Client client)
                 {
-                    await _manager._connection.InvokeAsync<bool>("assignUser", _manager.MeetingId, client.Id);
-                    await _manager._connection.InvokeAsync("next", _manager.MeetingId);
+                    await _manager.Connection.InvokeAsync<bool>("assignUser", _manager.MeetingId, client.Id);
+                    await _manager.Connection.InvokeAsync("next", _manager.MeetingId);
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace Client.Views.Game
 
         private async void Rewind_Button(object sender, RoutedEventArgs e)
         {
-            await _manager._connection.InvokeAsync("rewind", _manager.MeetingId);
+            await _manager.Connection.InvokeAsync("rewind", _manager.MeetingId);
         }
     }
 

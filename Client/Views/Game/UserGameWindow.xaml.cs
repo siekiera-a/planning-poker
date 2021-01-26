@@ -21,34 +21,42 @@ namespace Client.Views.Game
     /// <summary>
     /// Interaction logic for GameWindow.xaml
     /// </summary>
-    public partial class GameWindow :Window
+    public partial class GameWindow : Window
     {
-        private readonly IGameManager _connection;
+        private readonly IGameManager _manager;
         public GameWindow()
         {
             InitializeComponent();
-            _connection = Services.GetService<IGameManager>();
-            _connection.TaskChangedEvent += HandleTask;
+            _manager = Services.GetService<IGameManager>();
             Loaded += TaskDescription;
+            _manager.CloseEvent += WindowClose;
+            _manager.TaskChangedEvent += HandleTask;
         }
 
         public async void TaskDescription(object sender, RoutedEventArgs e)
         {
             if (DataContext is UserGameViewModel context)
             {
-                var clientResponse =  await _connection._connection.InvokeAsync<ClientResponse>("currentTask", _connection.MeetingId);
-                Task.Text = clientResponse.Description;
-                
-                context.Description(clientResponse);
+                var clientResponse = await _manager.Connection.InvokeAsync<ClientResponse>("currentTask", _manager.MeetingId);
+                Question.Text = clientResponse.Description;
             }
         }
 
-        private void HandleTask(object o, ClientResponse e)
+
+        public void WindowClose(object sender, EventArgs e)
+        {
+            Window.GetWindow(this)?.Close();
+        }
+
+        public void HandleTask(object sender, ClientResponse e)
         {
             if (DataContext is UserGameViewModel context)
             {
                 context.QuestionText = e.Description;
+                Question.Text = e.Description;
+
             }
         }
+
     }
 }

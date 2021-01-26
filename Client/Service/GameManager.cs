@@ -14,14 +14,14 @@ namespace Client.Service
         event EventHandler<ClientResponse> TaskChangedEvent;
         event EventHandler<OrganizerResponse> SubmittedEvent;
         event EventHandler CloseEvent;
-        HubConnection _connection { get; set; }
+        HubConnection Connection { get; set; }
         int MeetingId { get; set; }
 
     }
     public class GameManager : IGameManager
     {
         private readonly ITokenManager _token;
-        public HubConnection _connection { get; set; }
+        public HubConnection Connection { get; set; }
         public int MeetingId { get; set; }
         public event EventHandler<ClientResponse> TaskChangedEvent;
         public event EventHandler<OrganizerResponse> SubmittedEvent;
@@ -34,24 +34,24 @@ namespace Client.Service
 
         public async Task Submit(double cardValue)
         {
-            await _connection.InvokeAsync("submit", MeetingId,
+            await Connection.InvokeAsync("submit", MeetingId,
                 new ClientRequest {EstimatedTime = Convert.ToInt16(cardValue)});
         }
 
         public async Task<JoinResponse> Connect(int meetingId)
         {
             MeetingId = meetingId;
-            _connection = new HubConnectionBuilder()
+            Connection = new HubConnectionBuilder()
                 .WithUrl("http://192.168.0.73:5000/game",
                     options => { options.Headers.Add("Authorization", $"Bearer {_token.Token}"); })
                 .Build();
-            await _connection.StartAsync();
+            await Connection.StartAsync();
 
-            _connection.On<ClientResponse>("TaskChange", OnTaskChanged);
-            _connection.On<OrganizerResponse>("Submitted", OnSubmitted);
-            _connection.On("CloseWindow", OnCLoseWindow);
+            Connection.On<ClientResponse>("TaskChange", OnTaskChanged);
+            Connection.On<OrganizerResponse>("Submitted", OnSubmitted);
+            Connection.On("CloseWindow", OnCLoseWindow);
 
-            return await _connection.InvokeAsync<JoinResponse>("join", MeetingId);
+            return await Connection.InvokeAsync<JoinResponse>("join", MeetingId);
         }
 
         protected virtual void OnTaskChanged(ClientResponse e)

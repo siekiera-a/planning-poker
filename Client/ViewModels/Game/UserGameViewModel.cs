@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Client.Service;
 using Server.Models.Server;
 
@@ -12,29 +13,19 @@ namespace Client.ViewModels.Game
         private IGameManager _gameManager;
         private int _meetingId;
 
-        private string _questionText;
-
         public string QuestionText
         {
-            get => _questionText;
-            set
-            {
-                value = _questionText;
-                OnPropertyChanged(nameof(QuestionText));
-            }
+            get;
+            set;
         }
-
-        public void Description(ClientResponse value)
-        {
-            _questionText = value.Description;
-        }
-
         
-
         public UserGameViewModel(int meetingId)
         {
             _meetingId = meetingId;
             _gameManager = Services.GetService<IGameManager>();
         }
+
+        
+
     }
 }

@@ -35,12 +35,6 @@
                        Text="Round ended:"
                        FontSize="18" />
 
-            <TextBox Grid.Row="1"
-                     Margin="8"
-                     mah:TextBoxHelper.ClearTextButton="True"
-                     mah:TextBoxHelper.Watermark="Write number"
-                     Name="AnswerFilter" />
-
             <ListView Grid.Row="2" Margin="8"
                       Background="{StaticResource MahApps.Brushes.Gray2}"
                       ItemsSource="{Binding Users}"

@@ -19,7 +19,7 @@
 
         <TextBlock Grid.Row="0"
                    TextWrapping="Wrap"
-                   Name="Task"
+                   Name="Question"
                    Text="{Binding QuestionText, UpdateSourceTrigger=PropertyChanged}"
                    HorizontalAlignment="Center" FontSize="22" />
 
