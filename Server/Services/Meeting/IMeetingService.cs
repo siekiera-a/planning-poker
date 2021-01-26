@@ -25,5 +25,8 @@ namespace Server.Services.Meeting
         Task<int> InviteAllUsers(int meetingId, List<int> users);
         Task<bool> AssignUserToTask(int meetingId, int userId, int taskId, Int16 estimatedTime);
         Task<List<UserResultResponse>> GetResults(DateTime from);
+        Task<List<TaskInfo>> GetTasksForMeeting(int meetingId);
+        Task<Optional<Permissions>> JoinMeetingPermission(int meetingId);
+
     }
 }
