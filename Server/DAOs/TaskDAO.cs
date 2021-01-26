@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Server.Models.Dapper;
 using Server.Services.DataAccess;
 using Server.Utils;
 
@@ -75,7 +76,7 @@ namespace Server.DAOs
 
             try
             {
-                
+
                 foreach (var task in tasks)
                 {
                     taskList.Add(AddTask(task, meetingId));
@@ -88,6 +89,22 @@ namespace Server.DAOs
             {
                 _logger.LogCritical(e.Message);
                 return -1;
+            }
+        }
+
+        public async Task<List<TaskInfo>> GetTasksForMeeting(int meetingId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            try
+            {
+                var tasks = await connection.QueryAsync<TaskInfo>("SELECT * FROM dbo.ufnGetTasksForMeeting(@MeetingId) ORDER BY Id",
+                    new { MeetingId = meetingId }, commandType: CommandType.Text);
+                return tasks.AsList();
+            }
+            catch (SqlException e)
+            {
+                _logger.LogError(e.Message);
+                return new List<TaskInfo>();
             }
         }
 

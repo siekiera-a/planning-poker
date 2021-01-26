@@ -102,7 +102,7 @@ namespace Server.DAOs
             {
                 var meetings = await connection.QueryAsync<MeetingDetails>(
                     "SELECT * FROM dbo.ufnGetMeetingsOnTheGivenDay(@UserId, @Date)",
-                    new {UserId = userId, Date = date}, commandType: CommandType.Text);
+                    new { UserId = userId, Date = date }, commandType: CommandType.Text);
                 return meetings.AsList();
             }
             catch (SqlException e)
@@ -125,6 +125,23 @@ namespace Server.DAOs
             {
                 _logger.LogError(e.Message);
                 return false;
+            }
+        }
+
+        public async Task<Optional<Permissions>> JoinMeetingPermission(int userId, int meetingId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            try
+            {
+                var permissions = await connection.QueryFirstOrDefaultAsync<Permissions>("SELECT * FROM dbo.ufnJoinMeetingPermission(@UserId, @MeetingId)",
+                    new { UserId = userId, MeetingId = meetingId }, commandType: CommandType.Text);
+                return Optional<Permissions>.ofNullable(permissions);
+            }
+            catch (SqlException e)
+            {
+                _logger.LogError(e.Message);
+                return Optional<Permissions>.Empty();
             }
         }
 
