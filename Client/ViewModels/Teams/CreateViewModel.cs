@@ -23,7 +23,7 @@ namespace Client.ViewModels.Teams
         public ObservableCollection<TeamResponse> Teams { get; }
         public ObservableCollection<User> Members { get; }
         public ObservableCollection<User> SelectedMembers { get; }
-        private DateTime _dateTime = DateTime.Today.ToLocalTime();
+        private DateTime _dateTime = DateTime.Today.ToUniversalTime();
 
         public string NotificationText { get; set; } = "";
 
@@ -131,6 +131,8 @@ namespace Client.ViewModels.Teams
         {
             if (Tasks.Count > 0 && SelectedMembers.Count > 0)
             {
+                // var selectedTimeUtc = DateTime.ToUniversalTime();
+                var e = 1;
                 var response = await _apiClient.PostAsyncAuth<MeetingIdResponse>($"/meeting/team/{_teamId}",
                     new MeetingRequest
                     {

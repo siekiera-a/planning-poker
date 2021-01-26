@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;
 using Client.Service;
+using Client.Views.Game;
 using Server.Dtos.Incoming;
+using Server.Dtos.Outgoing;
 using Server.Models.Dapper;
 
 namespace Client.ViewModels
@@ -11,8 +14,9 @@ namespace Client.ViewModels
     public class CalendarViewModel : ViewModelBase
     {
         private readonly IApiClient _apiClient;
-        private DateTime _dateTime = DateTime.Today.ToLocalTime();
-        public ObservableCollection<MeetingDetails> Meetings { get; }
+        private readonly IUserDataProvider _userData;
+        private DateTime _dateTime = DateTime.Today.ToUniversalTime();
+        public ObservableCollection<MeetingDetailsResponse> Meetings { get; }
 
         public DateTime MyDateTime
         {
@@ -27,7 +31,7 @@ namespace Client.ViewModels
         public async Task FetchMeetings()
         {
             var response =
-                await _apiClient.PostAsyncAuth<List<MeetingDetails>>($"/meeting",
+                await _apiClient.PostAsyncAuth<List<MeetingDetailsResponse>>("/meeting",
                     new DateTimeRequest {DateTime = MyDateTime});
 
             Meetings.Clear();
@@ -41,10 +45,29 @@ namespace Client.ViewModels
             }
         }
 
+        public void JoinMeeting(MeetingDetailsResponse meeting)
+        {
+            if (meeting != null && meeting.CanJoin)
+            {
+                // if ()
+                // {
+                //     Window window = new AdminGameWindow();
+                //     window.Show();
+                // }
+                // else
+                // {
+                //     Window window = new GameWindow();
+                //     window.Show();
+                // }
+            }
+            
+        }
+
         public CalendarViewModel()
         {
             _apiClient = Services.GetService<IApiClient>();
-            Meetings = new ObservableCollection<MeetingDetails>();
+            _userData = Services.GetService<IUserDataProvider>();
+            Meetings = new ObservableCollection<MeetingDetailsResponse>();
         }
     }
 }

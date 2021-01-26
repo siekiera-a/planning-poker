@@ -25,6 +25,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -32,20 +33,30 @@
                 <TextBlock Name="MyDate" FontSize="20" />
             </StackPanel>
 
-            <ListView Grid.Row="1" ItemsSource="{Binding Meetings}">
+            <ListView Grid.Row="1" Name="MeetingList" ItemsSource="{Binding Meetings}">
                 <ListView.View>
                     <GridView>
                         <GridView.Columns>
                             <GridViewColumn Header="Team Name" Width="Auto"
                                             DisplayMemberBinding="{Binding Path=TeamName}" />
-                            <GridViewColumn Header="StartTime" Width="Auto"
+                            <GridViewColumn Header="Start Time" Width="Auto"
                                             DisplayMemberBinding="{Binding Path=StartTime}" />
-                            <GridViewColumn Header="OrganizerName" Width="Auto"
+                            <GridViewColumn Header="Organizer Name" Width="Auto"
                                             DisplayMemberBinding="{Binding Path=OrganizerName}" />
                         </GridView.Columns>
                     </GridView>
                 </ListView.View>
             </ListView>
+
+            <Button Grid.Row="2"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Content="Join"
+                    Background="{StaticResource MahApps.Brushes.Accent}"
+                    Foreground="{StaticResource MahApps.Brushes.Badged.Foreground}"
+                    Padding="10"
+                    Margin="6" 
+                    Click="JoinMeetingButtonClick"/>
 
 
         </Grid>
