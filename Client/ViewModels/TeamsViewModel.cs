@@ -163,7 +163,7 @@ namespace Client.ViewModels
 
         public TeamsViewModel()
         {
-            NavigatorTeam.UpdateCurrentViewModelCommand.Execute(TeamViewType.Results);
+            NavigatorTeam.UpdateCurrentViewModelCommand.Execute(TeamViewType.Create);
             _apiClient = Services.GetService<IApiClient>();
             Teams = new ObservableCollection<TeamResponse>();
             Members = new ObservableCollection<User>();

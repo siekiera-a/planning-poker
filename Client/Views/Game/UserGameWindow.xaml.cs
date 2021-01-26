@@ -28,6 +28,7 @@ namespace Client.Views.Game
         {
             InitializeComponent();
             _connection = Services.GetService<IGameManager>();
+            _connection.TaskChangedEvent += HandleTask;
             Loaded += TaskDescription;
         }
 
@@ -39,6 +40,14 @@ namespace Client.Views.Game
                 Task.Text = clientResponse.Description;
                 
                 context.Description(clientResponse);
+            }
+        }
+
+        private void HandleTask(object o, ClientResponse e)
+        {
+            if (DataContext is UserGameViewModel context)
+            {
+                context.QuestionText = e.Description;
             }
         }
     }

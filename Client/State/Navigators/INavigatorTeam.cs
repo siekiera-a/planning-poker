@@ -8,7 +8,6 @@ namespace Client.State.Navigators
 {
     public enum TeamViewType
     {
-        Results,
         Create
     }
 

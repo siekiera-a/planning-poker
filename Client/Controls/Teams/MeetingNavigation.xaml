@@ -14,20 +14,7 @@
             <Style BasedOn="{StaticResource MahApps.Styles.Button.MetroSquare}" TargetType="Button" />
         </Grid.Resources>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-
-        <Button Grid.Column="0"
-                Content="Results"
-                Command="{Binding UpdateCurrentViewModelCommand}"
-                CommandParameter="{x:Static nav:TeamViewType.Results}"
-                HorizontalAlignment="Center" />
-
-        <Button Grid.Column="1"
-                Content="Create"
+        <Button Content="Create"
                 Command="{Binding UpdateCurrentViewModelCommand}"
                 CommandParameter="{x:Static nav:TeamViewType.Create}"
                 HorizontalAlignment="Center" />
