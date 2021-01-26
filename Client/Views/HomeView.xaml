@@ -29,16 +29,17 @@
             <TextBlock Grid.Row="0"
                        Margin="30,20"
                        FontSize="20"
-                       Text="Your tasks from last week: " />
+                       Text="Your last tasks: " />
 
             <ListView Grid.Row="1" Margin="8"
-                      Background="{StaticResource MahApps.Brushes.Accent3}">
+                      Background="{StaticResource MahApps.Brushes.Accent3}" ItemsSource="{Binding Tasks}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Team Name" Width="100" />
-                        <GridViewColumn Header="Meeting Name" Width="100" />
-                        <GridViewColumn Header="Task Details" Width="300" />
-                        <GridViewColumn Header="Time" Width="80" />
+                        <GridView.Columns>
+                            <GridViewColumn Header="Time" Width="Auto" DisplayMemberBinding="{Binding EstimatedTime}" />
+                            <GridViewColumn Header="Team Name" Width="Auto" DisplayMemberBinding="{Binding TeamName}" />
+                            <GridViewColumn Header="Description" Width="auto" DisplayMemberBinding="{Binding Description}" />
+                        </GridView.Columns>
                     </GridView>
                 </ListView.View>
             </ListView>
