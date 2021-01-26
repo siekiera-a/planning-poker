@@ -4,9 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
+        xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Planning Poker"
+        Height="450" Width="800"
+        MinHeight="400" MinWidth="650"
+        BorderBrush="{DynamicResource MahApps.Brushes.Gray2}"
+        BorderThickness="1">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <controls:NavigationView Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Stretch" DataContext="{Binding Navigator}" />
+
+        <Button Grid.Column="0"
+                Content="Logout"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Center"
+                Click="LogoutButtonClick"
+                Style="{DynamicResource MahApps.Styles.Button.Hamburger}"/>
+
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ContentControl  Content="{Binding Navigator.CurrentViewModel}" /> 
+        </ScrollViewer>
 
     </Grid>
 </Window>

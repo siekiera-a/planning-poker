@@ -1,0 +1,2 @@
+INSERT INTO role VALUES ('MEMBER'), ('ADMIN'), ('MODERATOR')
+go

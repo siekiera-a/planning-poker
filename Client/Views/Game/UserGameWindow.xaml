@@ -1,0 +1,29 @@
+﻿<Window x:Class="Client.Views.Game.GameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client.Views.Game"
+        xmlns:cards="clr-namespace:Client.Controls"
+        xmlns:question="clr-namespace:Client.Controls.Game"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="Planning Poker" Height="450" Width="800"
+        Foreground="{StaticResource MahApps.Brushes.Gray10}">
+    <Grid Background="{StaticResource MahApps.Brushes.Gray1}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   TextWrapping="Wrap"
+                   Name="Question"
+                   Text="{Binding QuestionText, UpdateSourceTrigger=PropertyChanged}"
+                   HorizontalAlignment="Center" FontSize="22" />
+
+        <cards:CardListView Grid.Row="1" x:Name="Cards" />
+
+    </Grid>
+</Window>

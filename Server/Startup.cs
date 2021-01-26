@@ -9,43 +9,116 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Server.Dtos.Incoming;
+using Server.DAOs;
+using Server.Services;
+using Server.Services.Authentication;
+using Server.Services.Authorization;
+using Server.Services.DataAccess;
+using Server.Services.Meeting;
+using Server.Services.Server;
+using Server.Services.Team;
 
 namespace Server
 {
-	public class Startup
-	{
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-		public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddControllers();
-		}
+        private void AddDAOs(IServiceCollection services)
+        {
+            services.AddScoped<UserDAO>();
+            services.AddScoped<RefreshTokenDAO>();
+            services.AddScoped<TeamDAO>();
+            services.AddScoped<TeamMemberDAO>();
+            services.AddScoped<RolesDAO>();
+            services.AddScoped<MeetingDAO>();
+            services.AddScoped<InvitationDAO>();
+            services.AddScoped<TaskDAO>();
+            services.AddScoped<ResultDAO>();
+        }
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
+        private void AddServices(IServiceCollection services)
+        {
+            services.AddSingleton<IConnectionFactory, ConnectionFactory>();
+            services.AddSingleton<IPasswordEncoder, PasswordEncoder>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserProvider, UserProvider>();
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IUserAuthorization, UserAuthorization>();
+            services.AddScoped<IMeetingService, MeetingService>();
+        }
 
-			app.UseHttpsRedirection();
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers();
 
-			app.UseRouting();
+            string tokenKey = Configuration.GetSection("TokenKey").Value;
 
-			app.UseAuthorization();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllers();
-			});
-		}
-	}
+            services.AddSwaggerDocument();
+            services.AddHttpContextAccessor();
+
+            services.AddSignalR();
+
+            services.AddSingleton<GameController>();
+            services.AddSingleton<EmailValidator>();
+
+            AddDAOs(services);
+            AddServices(services);
+
+            services.AddSingleton<IJwtTokenManager>(new JwtTokenManager(tokenKey));
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            //app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<Game>("/game");
+            });
+        }
+    }
 }

@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="Client.Views.CalendarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Client.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="{StaticResource MahApps.Brushes.Gray1}"
+             Foreground="{StaticResource MahApps.Brushes.Gray10}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Calendar Grid.Column="0"
+                  VerticalAlignment="Top"
+                  Name="MyCalendar"
+                  SelectionMode="SingleRange"
+                  SelectedDate="{Binding MyDateTime, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedDatesChanged="MyCalendarSelectedDatesChanged"
+                  Style="{StaticResource StyleCalendar}" />
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="Meetings in selected date: " FontSize="20" />
+                <TextBlock Name="MyDate" FontSize="20" />
+            </StackPanel>
+
+            <ListView Grid.Row="1" Name="MeetingList" ItemsSource="{Binding Meetings}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Header="Team Name" Width="Auto"
+                                            DisplayMemberBinding="{Binding Path=TeamName}" />
+                            <GridViewColumn Header="Start Time" Width="Auto"
+                                            DisplayMemberBinding="{Binding Path=StartTime}" />
+                            <GridViewColumn Header="Organizer Name" Width="Auto"
+                                            DisplayMemberBinding="{Binding Path=OrganizerName}" />
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Button Grid.Row="2"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Content="Join"
+                    Background="{StaticResource MahApps.Brushes.Gray2}"
+                    Foreground="{StaticResource MahApps.Brushes.Gray10}"
+                    Padding="10"
+                    Margin="6" 
+                    Click="JoinMeetingButtonClick"/>
+
+
+        </Grid>
+
+
+    </Grid>
+</UserControl>
